@@ -1,0 +1,124 @@
+.artificer-foundry.crafting-app {
+    min-width: 600px;
+    min-height: 400px;
+}
+
+.artificer-foundry .window-content {
+    padding: 5px;
+}
+
+.artificer-foundry .recipe-list-container {
+    flex: 1;
+    border-right: 1px solid #000;
+    padding-right: 10px;
+    overflow-y: auto;
+}
+
+.artificer-foundry .crafting-station {
+    flex: 2;
+    padding-left: 10px;
+}
+
+.artificer-foundry .recipe-item {
+    padding: 5px;
+    margin-bottom: 5px;
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid #777;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.artificer-foundry .recipe-item:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.artificer-foundry .recipe-item.selected {
+    border-color: #ff6400;
+    box-shadow: 0 0 5px #ff6400;
+}
+
+.artificer-foundry .recipe-item h4 {
+    margin: 0 5px 0 0;
+    flex-grow: 1;
+}
+
+.artificer-foundry .recipe-item .fa-check-circle {
+    color: green;
+}
+
+.artificer-foundry .learn-recipe-btn {
+    color: #4a5c4a;
+    cursor: pointer;
+}
+
+.artificer-foundry .learn-recipe-btn:hover {
+    color: #5c755c;
+}
+
+.artificer-foundry .ingredient-drop-zone {
+    border: 2px dashed #777;
+    border-radius: 5px;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 0;
+    background: rgba(0, 0, 0, 0.02);
+    text-align: center;
+    color: #555;
+}
+
+.artificer-foundry .ingredient-drop-zone.disabled {
+    background: rgba(0, 0, 0, 0.1);
+    color: #999;
+}
+
+.artificer-foundry .station-controls {
+    margin-top: auto;
+    gap: 10px;
+}
+
+.artificer-foundry .craft-btn, .artificer-foundry .clear-station-btn {
+    padding: 10px;
+    font-size: 1.1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    flex: 1;
+}
+
+.artificer-foundry .craft-btn {
+    background: #4a5c4a;
+    color: white;
+}
+
+.artificer-foundry .craft-btn:hover:not(:disabled) {
+    background: #5c755c;
+}
+
+.artificer-foundry .clear-station-btn {
+    background: #a94442;
+    color: white;
+}
+
+.artificer-foundry .clear-station-btn:hover:not(:disabled) {
+    background: #c15755;
+}
+
+.artificer-foundry button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.artificer-foundry .requirements ul {
+    list-style: none;
+    padding: 0;
+}
+
+.artificer-foundry .requirements .fulfilled {
+    color: green;
+}
+
+.artificer-foundry .requirements .missing {
+    color: #a94442;
+}

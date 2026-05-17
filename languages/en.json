@@ -1,0 +1,12 @@
+{
+  "ARTIFICER_FOUNDRY": {
+    "Title": "Alchemy & Crafting Recipe Book",
+    "Recipes": "Recipes",
+    "CraftingStation": "Crafting Station",
+    "DragDrop": "Drag and drop ingredients here",
+    "CraftItem": "Craft Item",
+    "Learned": "Learned",
+    "Unlearned": "Unlearned",
+    "SelectRecipe": "Select a recipe to view details and required ingredients."
+  }
+}

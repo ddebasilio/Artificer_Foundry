@@ -1,0 +1,59 @@
+<div class="artificer-foundry crafting-app flexrow">
+    <div class="recipe-list-container">
+        <h2>Recipes</h2>
+        <div class="recipe-list">
+            {{#each recipes}}
+                <div class="recipe-item {{#if (eq ../selectedRecipe.id this.id)}}selected{{/if}}" data-recipe-id="{{this.id}}">
+                    <div class="flexrow">
+                        <h4>{{this.name}}</h4>
+                        {{#if this.isLearned}}
+                            <i class="fas fa-check-circle" title="Learned"></i>
+                        {{else}}
+                            <a class="learn-recipe-btn" data-recipe-id="{{this.id}}" title="Learn this recipe"><i class="fas fa-book-medical"></i></a>
+                        {{/if}}
+                    </div>
+                    <span class="rarity {{this.rarity}}">{{this.rarity}}</span>
+                    <span class="time"><i class="fas fa-clock"></i> {{this.time}}</span>
+                </div>
+            {{/each}}
+        </div>
+    </div>
+
+    <div class="crafting-station flexcol">
+        <h2>Crafting Station</h2>
+        <div class="selected-recipe-details">
+            {{#if selectedRecipe}}
+                <h3>{{selectedRecipe.name}}</h3>
+                <p><em>{{selectedRecipe.description}}</em></p>
+                <div class="requirements">
+                    <h4>Required Ingredients:</h4>
+                    <ul>
+                        {{#each mappedIngredients}}
+                            <li class="{{#if this.fulfilled}}fulfilled{{else}}missing{{/if}}">
+                                {{this.name}}: {{this.provided}} / {{this.quantity}}
+                                {{#if this.fulfilled}}
+                                    <i class="fas fa-check"></i>
+                                {{/if}}
+                            </li>
+                        {{/each}}
+                    </ul>
+                </div>
+            {{else}}
+                <p class="placeholder-text">Select a recipe from the list to view its details and begin crafting.</p>
+            {{/if}}
+        </div>
+
+        <div class="ingredient-drop-zone {{#unless selectedRecipe}}disabled{{/unless}}" id="ingredient-drop-zone">
+            {{#if selectedRecipe}}
+                <p><i class="fas fa-box-open fa-2x"></i><br/>Drag and drop required ingredients here from your inventory.</p>
+            {{else}}
+                <p>Select a recipe first.</p>
+            {{/if}}
+        </div>
+
+        <div class="flexrow station-controls">
+            <button class="clear-station-btn" {{#unless selectedRecipe}}disabled{{/unless}}><i class="fas fa-trash"></i> Clear Station</button>
+            <button class="craft-btn" {{#unless canCraft}}disabled{{/unless}}><i class="fas fa-hammer"></i> Craft Item</button>
+        </div>
+    </div>
+</div>
