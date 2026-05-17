@@ -159,7 +159,7 @@ function injectCraftingTab(app, htmlArg) {
         const navItem = document.createElement('a');
         navItem.className = 'item af-crafting-nav-item';
         navItem.title = 'Alchemy & Crafting Station';
-        navItem.innerHTML = `<i class="fas fa-flask"></i><span> Crafting</span>`;
+        navItem.innerHTML = `<i class="fas fa-flask"></i>`;
 
         navItem.addEventListener('click', e => {
             e.preventDefault();
