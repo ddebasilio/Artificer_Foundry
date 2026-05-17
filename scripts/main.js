@@ -38,8 +38,9 @@ Hooks.once('ready', async function() {
 
 // Add a button to the actor sheet to open the crafting app
 Hooks.on('getActorSheetHeaderButtons', (app, buttons) => {
-    // Only add for characters
-    if (app.actor.type === 'character') {
+    // Adding the button to all actors that have an inventory/sheet for testing
+    // Foundry's dnd5e system uses 'character' for PCs and 'npc' for monsters.
+    if (app.actor) {
         buttons.unshift({
             class: 'artificer-foundry-btn',
             icon: 'fas fa-flask',
