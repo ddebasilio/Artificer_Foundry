@@ -15,7 +15,6 @@ export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
     // ── Application V2 config ─────────────────────────────────────────────────
 
     static DEFAULT_OPTIONS = {
-        id: "artificer-foundry-app",
         window: {
             title: "Alchemy & Crafting Station",
             icon: "fas fa-flask",
@@ -25,8 +24,6 @@ export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
         position: {
             width: 960,
             height: 680,
-            top: Math.max(20, (window.innerHeight - 680) / 2),
-            left: Math.max(20, (window.innerWidth  - 960) / 2),
         }
     };
 
