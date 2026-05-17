@@ -19,7 +19,7 @@ export class RecipeManager {
                     { name: "Bloodgrass", quantity: 2, type: "common_herb" },
                     { name: "Pure Water", quantity: 1, type: "liquid" }
                 ],
-                output: { name: "Potion of Healing", img: "icons/consumables/potions/potion-flask-corked-red.webp", type: "consumable", quantity: 1 }
+                output: { name: "Potion of Healing", img: "icons/consumables/potions/bottle-corked-red.webp", type: "consumable", quantity: 1 }
             },
             {
                 id: "antitoxin",
@@ -32,7 +32,7 @@ export class RecipeManager {
                     { name: "Silverleaf", quantity: 2, type: "common_herb" },
                     { name: "Charcoal Powder", quantity: 1, type: "common_component" }
                 ],
-                output: { name: "Antitoxin", img: "icons/consumables/potions/potion-flask-corked-blue.webp", type: "consumable", quantity: 1 }
+                output: { name: "Antitoxin", img: "icons/consumables/potions/bottle-corked-blue.webp", type: "consumable", quantity: 1 }
             },
             {
                 id: "oil-slipperiness",
@@ -45,7 +45,7 @@ export class RecipeManager {
                     { name: "Toadstool", quantity: 3, type: "common_herb" },
                     { name: "Rendered Fat", quantity: 1, type: "common_component" }
                 ],
-                output: { name: "Oil of Slipperiness", img: "icons/consumables/potions/potion-flask-corked-empty.webp", type: "consumable", quantity: 1 }
+                output: { name: "Oil of Slipperiness", img: "icons/consumables/potions/bottle-corked-empty.webp", type: "consumable", quantity: 1 }
             },
             {
                 id: "potion-climbing",
@@ -58,7 +58,7 @@ export class RecipeManager {
                     { name: "Spidergrass", quantity: 2, type: "common_herb" },
                     { name: "Pine Resin", quantity: 1, type: "common_component" }
                 ],
-                output: { name: "Potion of Climbing", img: "icons/consumables/potions/potion-flask-corked-green.webp", type: "consumable", quantity: 1 }
+                output: { name: "Potion of Climbing", img: "icons/consumables/potions/bottle-corked-green.webp", type: "consumable", quantity: 1 }
             },
             {
                 id: "alchemist-fire",
@@ -71,7 +71,7 @@ export class RecipeManager {
                     { name: "Sulphur", quantity: 2, type: "common_component" },
                     { name: "Naphtha Oil", quantity: 1, type: "liquid" }
                 ],
-                output: { name: "Alchemist's Fire", img: "icons/weapons/thrown/bomb-fuse-red.webp", type: "consumable", quantity: 1 }
+                output: { name: "Alchemist's Fire", img: "icons/weapons/thrown/bomb-fuse-red-black.webp", type: "consumable", quantity: 1 }
             },
 
             // ─────────────────────────────────────────────────────────────
@@ -89,7 +89,7 @@ export class RecipeManager {
                     { name: "Mandrake Root", quantity: 1, type: "uncommon_herb" },
                     { name: "Wolf Fang", quantity: 1, type: "monster_part" }
                 ],
-                output: { name: "Potion of Greater Healing", img: "icons/consumables/potions/potion-flask-corked-red.webp", type: "consumable", quantity: 1 }
+                output: { name: "Potion of Greater Healing", img: "icons/consumables/potions/bottle-corked-red.webp", type: "consumable", quantity: 1 }
             },
             {
                 id: "potion-water-breathing",
@@ -102,7 +102,7 @@ export class RecipeManager {
                     { name: "Sea Kelp", quantity: 3, type: "uncommon_herb" },
                     { name: "Merfolk Scale", quantity: 1, type: "monster_part" }
                 ],
-                output: { name: "Potion of Water Breathing", img: "icons/consumables/potions/potion-flask-corked-blue.webp", type: "consumable", quantity: 1 }
+                output: { name: "Potion of Water Breathing", img: "icons/consumables/potions/bottle-corked-blue.webp", type: "consumable", quantity: 1 }
             },
             {
                 id: "potion-animal-friendship",
@@ -116,7 +116,7 @@ export class RecipeManager {
                     { name: "Pixie Dust", quantity: 1, type: "uncommon_component" },
                     { name: "Rabbit Foot", quantity: 1, type: "monster_part" }
                 ],
-                output: { name: "Potion of Animal Friendship", img: "icons/consumables/potions/potion-flask-corked-green.webp", type: "consumable", quantity: 1 }
+                output: { name: "Potion of Animal Friendship", img: "icons/consumables/potions/bottle-corked-green.webp", type: "consumable", quantity: 1 }
             },
             {
                 id: "potion-fire-breath",
@@ -130,7 +130,7 @@ export class RecipeManager {
                     { name: "Magmin Ash", quantity: 2, type: "uncommon_component" },
                     { name: "Salamander Scale", quantity: 1, type: "monster_part" }
                 ],
-                output: { name: "Potion of Fire Breath", img: "icons/consumables/potions/potion-flask-corked-red.webp", type: "consumable", quantity: 1 }
+                output: { name: "Potion of Fire Breath", img: "icons/consumables/potions/bottle-corked-red.webp", type: "consumable", quantity: 1 }
             },
             {
                 id: "elixir-hill-giant-strength",
@@ -143,7 +143,7 @@ export class RecipeManager {
                     { name: "Giant Toenail", quantity: 1, type: "monster_part" },
                     { name: "Mandrake Root", quantity: 2, type: "uncommon_herb" }
                 ],
-                output: { name: "Elixir of Hill Giant Strength", img: "icons/consumables/potions/potion-flask-corked-empty.webp", type: "consumable", quantity: 1 }
+                output: { name: "Elixir of Hill Giant Strength", img: "icons/consumables/potions/bottle-corked-empty.webp", type: "consumable", quantity: 1 }
             },
             {
                 id: "smoke-bomb",
@@ -157,7 +157,7 @@ export class RecipeManager {
                     { name: "Powdered Charcoal", quantity: 2, type: "common_component" },
                     { name: "Goblin Teeth", quantity: 3, type: "monster_part" }
                 ],
-                output: { name: "Smoke Bomb", img: "icons/weapons/thrown/bomb-fuse-red.webp", type: "consumable", quantity: 1 }
+                output: { name: "Smoke Bomb", img: "icons/weapons/thrown/bomb-fuse-red-black.webp", type: "consumable", quantity: 1 }
             },
             {
                 id: "potion-growth",
@@ -170,7 +170,7 @@ export class RecipeManager {
                     { name: "Giant's Ear Mushroom", quantity: 2, type: "uncommon_herb" },
                     { name: "Troll Blood", quantity: 1, type: "monster_part" }
                 ],
-                output: { name: "Potion of Growth", img: "icons/consumables/potions/potion-flask-corked-green.webp", type: "consumable", quantity: 1 }
+                output: { name: "Potion of Growth", img: "icons/consumables/potions/bottle-corked-green.webp", type: "consumable", quantity: 1 }
             },
 
             // ─────────────────────────────────────────────────────────────
@@ -189,7 +189,7 @@ export class RecipeManager {
                     { name: "Troll Blood", quantity: 2, type: "monster_part" },
                     { name: "Basilisk Eye", quantity: 1, type: "rare_monster_part" }
                 ],
-                output: { name: "Potion of Superior Healing", img: "icons/consumables/potions/potion-flask-corked-red.webp", type: "consumable", quantity: 1 }
+                output: { name: "Potion of Superior Healing", img: "icons/consumables/potions/bottle-corked-red.webp", type: "consumable", quantity: 1 }
             },
             {
                 id: "potion-speed",
@@ -203,7 +203,7 @@ export class RecipeManager {
                     { name: "Harpy Feather", quantity: 3, type: "rare_monster_part" },
                     { name: "Manticore Spine", quantity: 1, type: "rare_monster_part" }
                 ],
-                output: { name: "Potion of Speed", img: "icons/consumables/potions/potion-flask-corked-blue.webp", type: "consumable", quantity: 1 }
+                output: { name: "Potion of Speed", img: "icons/consumables/potions/bottle-corked-blue.webp", type: "consumable", quantity: 1 }
             },
             {
                 id: "potion-flying",
@@ -217,7 +217,7 @@ export class RecipeManager {
                     { name: "Griffon Feather", quantity: 2, type: "rare_monster_part" },
                     { name: "Pegasus Hair", quantity: 1, type: "rare_monster_part" }
                 ],
-                output: { name: "Potion of Flying", img: "icons/consumables/potions/potion-flask-corked-blue.webp", type: "consumable", quantity: 1 }
+                output: { name: "Potion of Flying", img: "icons/consumables/potions/bottle-corked-blue.webp", type: "consumable", quantity: 1 }
             },
             {
                 id: "potion-mind-reading",
@@ -231,7 +231,7 @@ export class RecipeManager {
                     { name: "Dreamfern", quantity: 2, type: "uncommon_herb" },
                     { name: "Aboleth Slime", quantity: 1, type: "rare_monster_part" }
                 ],
-                output: { name: "Potion of Mind Reading", img: "icons/consumables/potions/potion-flask-corked-empty.webp", type: "consumable", quantity: 1 }
+                output: { name: "Potion of Mind Reading", img: "icons/consumables/potions/bottle-corked-empty.webp", type: "consumable", quantity: 1 }
             },
             {
                 id: "elixir-stone-giant-strength",
@@ -245,7 +245,7 @@ export class RecipeManager {
                     { name: "Mandrake Root", quantity: 3, type: "uncommon_herb" },
                     { name: "Gargoyle Dust", quantity: 2, type: "rare_monster_part" }
                 ],
-                output: { name: "Elixir of Stone Giant Strength", img: "icons/consumables/potions/potion-flask-corked-empty.webp", type: "consumable", quantity: 1 }
+                output: { name: "Elixir of Stone Giant Strength", img: "icons/consumables/potions/bottle-corked-empty.webp", type: "consumable", quantity: 1 }
             },
             {
                 id: "potion-clairvoyance",
@@ -258,7 +258,7 @@ export class RecipeManager {
                     { name: "Beholder Eyestalk", quantity: 1, type: "rare_monster_part" },
                     { name: "Moonpetal Flower", quantity: 3, type: "uncommon_herb" }
                 ],
-                output: { name: "Potion of Clairvoyance", img: "icons/consumables/potions/potion-flask-corked-blue.webp", type: "consumable", quantity: 1 }
+                output: { name: "Potion of Clairvoyance", img: "icons/consumables/potions/bottle-corked-blue.webp", type: "consumable", quantity: 1 }
             },
 
             // ─────────────────────────────────────────────────────────────
@@ -277,7 +277,7 @@ export class RecipeManager {
                     { name: "Unicorn Horn Shaving", quantity: 1, type: "very_rare_component" },
                     { name: "Phoenix Ash", quantity: 1, type: "very_rare_component" }
                 ],
-                output: { name: "Potion of Supreme Healing", img: "icons/consumables/potions/potion-flask-corked-red.webp", type: "consumable", quantity: 1 }
+                output: { name: "Potion of Supreme Healing", img: "icons/consumables/potions/bottle-corked-red.webp", type: "consumable", quantity: 1 }
             },
             {
                 id: "potion-invisibility",
@@ -291,7 +291,7 @@ export class RecipeManager {
                     { name: "Ethereal Dust", quantity: 2, type: "rare_component" },
                     { name: "Shadow Essence", quantity: 1, type: "very_rare_component" }
                 ],
-                output: { name: "Potion of Invisibility", img: "icons/consumables/potions/potion-flask-corked-empty.webp", type: "consumable", quantity: 1 }
+                output: { name: "Potion of Invisibility", img: "icons/consumables/potions/bottle-corked-empty.webp", type: "consumable", quantity: 1 }
             },
             {
                 id: "potion-vitality",
@@ -306,7 +306,7 @@ export class RecipeManager {
                     { name: "Bloodgrass", quantity: 8, type: "common_herb" },
                     { name: "Wyvern Poison Gland", quantity: 1, type: "rare_monster_part" }
                 ],
-                output: { name: "Potion of Vitality", img: "icons/consumables/potions/potion-flask-corked-red.webp", type: "consumable", quantity: 1 }
+                output: { name: "Potion of Vitality", img: "icons/consumables/potions/bottle-corked-red.webp", type: "consumable", quantity: 1 }
             },
             {
                 id: "potion-heroism",
@@ -320,7 +320,7 @@ export class RecipeManager {
                     { name: "Celestial Feather", quantity: 1, type: "very_rare_component" },
                     { name: "Mandrake Root", quantity: 4, type: "uncommon_herb" }
                 ],
-                output: { name: "Potion of Heroism", img: "icons/consumables/potions/potion-flask-corked-blue.webp", type: "consumable", quantity: 1 }
+                output: { name: "Potion of Heroism", img: "icons/consumables/potions/bottle-corked-blue.webp", type: "consumable", quantity: 1 }
             },
             {
                 id: "elixir-cloud-giant-strength",
@@ -334,7 +334,7 @@ export class RecipeManager {
                     { name: "Mandrake Root", quantity: 6, type: "uncommon_herb" },
                     { name: "Storm Eagle Talon", quantity: 2, type: "rare_monster_part" }
                 ],
-                output: { name: "Elixir of Cloud Giant Strength", img: "icons/consumables/potions/potion-flask-corked-empty.webp", type: "consumable", quantity: 1 }
+                output: { name: "Elixir of Cloud Giant Strength", img: "icons/consumables/potions/bottle-corked-empty.webp", type: "consumable", quantity: 1 }
             },
             {
                 id: "potion-gaseous-form",
@@ -348,7 +348,7 @@ export class RecipeManager {
                     { name: "Ethereal Dust", quantity: 3, type: "rare_component" },
                     { name: "Medusa Blood", quantity: 1, type: "very_rare_component" }
                 ],
-                output: { name: "Potion of Gaseous Form", img: "icons/consumables/potions/potion-flask-corked-empty.webp", type: "consumable", quantity: 1 }
+                output: { name: "Potion of Gaseous Form", img: "icons/consumables/potions/bottle-corked-empty.webp", type: "consumable", quantity: 1 }
             },
 
             // ─────────────────────────────────────────────────────────────
@@ -366,7 +366,7 @@ export class RecipeManager {
                     { name: "Lightning-Struck Wood", quantity: 2, type: "very_rare_component" },
                     { name: "Cloud Giant Heartstring", quantity: 1, type: "very_rare_component" }
                 ],
-                output: { name: "Elixir of Storm Giant Strength", img: "icons/consumables/potions/potion-flask-corked-empty.webp", type: "consumable", quantity: 1 }
+                output: { name: "Elixir of Storm Giant Strength", img: "icons/consumables/potions/bottle-corked-empty.webp", type: "consumable", quantity: 1 }
             },
             {
                 id: "philosopher-stone",
@@ -381,7 +381,7 @@ export class RecipeManager {
                     { name: "Unicorn Horn", quantity: 1, type: "legendary_component" },
                     { name: "Phoenix Ash", quantity: 3, type: "very_rare_component" }
                 ],
-                output: { name: "Philosopher's Stone", img: "icons/commodities/gems/gem-rough-red-yellow.webp", type: "loot", quantity: 1 }
+                output: { name: "Philosopher's Stone", img: "icons/commodities/gems/gem-rough-cushion-red.webp", type: "loot", quantity: 1 }
             },
             {
                 id: "potion-dragon-strength",
@@ -395,7 +395,536 @@ export class RecipeManager {
                     { name: "Dragon Blood", quantity: 2, type: "legendary_component" },
                     { name: "Demon Horn Fragment", quantity: 1, type: "legendary_component" }
                 ],
-                output: { name: "Potion of Dragon Strength", img: "icons/consumables/potions/potion-flask-corked-red.webp", type: "consumable", quantity: 1 }
+                output: { name: "Potion of Dragon Strength", img: "icons/consumables/potions/bottle-corked-red.webp", type: "consumable", quantity: 1 }
+            },
+
+            // ─────────────────────────────────────────────────────────────
+            // ADDITIONAL COMMON RECIPES
+            // ─────────────────────────────────────────────────────────────
+            {
+                id: "potion-watchful-rest",
+                name: "Potion of Watchful Rest",
+                rarity: "common",
+                time: "1 hour",
+                learned: true,
+                description: "Grants the benefits of a long rest after only 1 hour of sleep, while remaining alert.",
+                ingredients: [
+                    { name: "Dreamfern", quantity: 2, type: "uncommon_herb" },
+                    { name: "Silverleaf", quantity: 1, type: "common_herb" },
+                    { name: "Pure Water", quantity: 1, type: "liquid" }
+                ],
+                output: { name: "Potion of Watchful Rest", img: "icons/consumables/potions/flask-corked-yellow-glow.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "potion-comprehension",
+                name: "Potion of Comprehension",
+                rarity: "common",
+                time: "1 hour",
+                learned: true,
+                description: "Read and understand any written language for 24 hours.",
+                ingredients: [
+                    { name: "Catnip", quantity: 2, type: "common_herb" },
+                    { name: "Pixie Dust", quantity: 1, type: "uncommon_component" }
+                ],
+                output: { name: "Potion of Comprehension", img: "icons/consumables/potions/bottle-round-label-cork-blue.webp", type: "consumable", quantity: 1 }
+            },
+
+            // ─────────────────────────────────────────────────────────────
+            // ADDITIONAL UNCOMMON RECIPES
+            // ─────────────────────────────────────────────────────────────
+            {
+                id: "potion-acid-resistance",
+                name: "Potion of Acid Resistance",
+                rarity: "uncommon",
+                time: "4 hours",
+                learned: false,
+                description: "Resistance to acid damage for 1 hour.",
+                ingredients: [
+                    { name: "Toadstool", quantity: 2, type: "common_herb" },
+                    { name: "Magmin Ash", quantity: 1, type: "uncommon_component" },
+                    { name: "Goblin Teeth", quantity: 1, type: "monster_part" }
+                ],
+                output: { name: "Potion of Acid Resistance", img: "icons/consumables/potions/bottle-conical-fumes-green.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "potion-advantage",
+                name: "Potion of Advantage",
+                rarity: "uncommon",
+                time: "4 hours",
+                learned: false,
+                description: "Advantage on attack rolls for 1 minute.",
+                ingredients: [
+                    { name: "Mandrake Root", quantity: 2, type: "uncommon_herb" },
+                    { name: "Pixie Dust", quantity: 2, type: "uncommon_component" }
+                ],
+                output: { name: "Potion of Advantage", img: "icons/consumables/potions/bottle-round-corked-yellow.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "bottled-breath",
+                name: "Bottled Breath",
+                rarity: "uncommon",
+                time: "4 hours",
+                learned: false,
+                description: "Hold your breath indefinitely or breathe comfortably in any environment for 1 hour.",
+                ingredients: [
+                    { name: "Sea Kelp", quantity: 3, type: "uncommon_herb" },
+                    { name: "Merfolk Scale", quantity: 1, type: "monster_part" }
+                ],
+                output: { name: "Bottled Breath", img: "icons/consumables/potions/bottle-conical-corked-labeled-shell-cyan.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "potion-cold-resistance",
+                name: "Potion of Cold Resistance",
+                rarity: "uncommon",
+                time: "4 hours",
+                learned: false,
+                description: "Resistance to cold damage for 1 hour.",
+                ingredients: [
+                    { name: "Mandrake Root", quantity: 1, type: "uncommon_herb" },
+                    { name: "Silverleaf", quantity: 2, type: "common_herb" },
+                    { name: "Troll Blood", quantity: 1, type: "monster_part" }
+                ],
+                output: { name: "Potion of Cold Resistance", img: "icons/consumables/potions/bottle-conical-corked-cyan.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "potion-fire-resistance",
+                name: "Potion of Fire Resistance",
+                rarity: "uncommon",
+                time: "4 hours",
+                learned: false,
+                description: "Resistance to fire damage for 1 hour.",
+                ingredients: [
+                    { name: "Firebloom", quantity: 1, type: "uncommon_herb" },
+                    { name: "Salamander Scale", quantity: 2, type: "monster_part" }
+                ],
+                output: { name: "Potion of Fire Resistance", img: "icons/consumables/potions/bottle-round-corked-orange.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "potion-force-resistance",
+                name: "Potion of Force Resistance",
+                rarity: "uncommon",
+                time: "4 hours",
+                learned: false,
+                description: "Resistance to force damage for 1 hour.",
+                ingredients: [
+                    { name: "Dreamfern", quantity: 2, type: "uncommon_herb" },
+                    { name: "Pixie Dust", quantity: 2, type: "uncommon_component" }
+                ],
+                output: { name: "Potion of Force Resistance", img: "icons/consumables/potions/bottle-conical-corked-purple.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "potion-lightning-resistance",
+                name: "Potion of Lightning Resistance",
+                rarity: "uncommon",
+                time: "4 hours",
+                learned: false,
+                description: "Resistance to lightning damage for 1 hour.",
+                ingredients: [
+                    { name: "Quicksilver Herb", quantity: 2, type: "uncommon_herb" },
+                    { name: "Mandrake Root", quantity: 1, type: "uncommon_herb" },
+                    { name: "Goblin Teeth", quantity: 1, type: "monster_part" }
+                ],
+                output: { name: "Potion of Lightning Resistance", img: "icons/consumables/potions/bottle-round-corked-yellow.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "potion-necrotic-resistance",
+                name: "Potion of Necrotic Resistance",
+                rarity: "uncommon",
+                time: "4 hours",
+                learned: false,
+                description: "Resistance to necrotic damage for 1 hour.",
+                ingredients: [
+                    { name: "Mandrake Root", quantity: 2, type: "uncommon_herb" },
+                    { name: "Wolf Fang", quantity: 1, type: "monster_part" },
+                    { name: "Charcoal Powder", quantity: 1, type: "common_component" }
+                ],
+                output: { name: "Potion of Necrotic Resistance", img: "icons/consumables/potions/bottle-ornate-bat-teal.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "potion-poison",
+                name: "Potion of Poison",
+                rarity: "uncommon",
+                time: "2 hours",
+                learned: false,
+                description: "A creature that drinks this takes 3d6 poison damage and must succeed on a DC 13 Constitution save or be poisoned for 24 hours.",
+                ingredients: [
+                    { name: "Toadstool", quantity: 3, type: "common_herb" },
+                    { name: "Goblin Teeth", quantity: 2, type: "monster_part" },
+                    { name: "Naphtha Oil", quantity: 1, type: "liquid" }
+                ],
+                output: { name: "Potion of Poison", img: "icons/consumables/potions/potion-jar-corked-labeled-poison-skull-green.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "potion-poison-resistance",
+                name: "Potion of Poison Resistance",
+                rarity: "uncommon",
+                time: "4 hours",
+                learned: false,
+                description: "Resistance to poison damage and advantage on saving throws against being poisoned for 1 hour.",
+                ingredients: [
+                    { name: "Silverleaf", quantity: 3, type: "common_herb" },
+                    { name: "Toadstool", quantity: 1, type: "common_herb" },
+                    { name: "Charcoal Powder", quantity: 1, type: "common_component" }
+                ],
+                output: { name: "Potion of Poison Resistance", img: "icons/consumables/potions/bottle-corked-green.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "potion-psychic-resistance",
+                name: "Potion of Psychic Resistance",
+                rarity: "uncommon",
+                time: "4 hours",
+                learned: false,
+                description: "Resistance to psychic damage for 1 hour.",
+                ingredients: [
+                    { name: "Dreamfern", quantity: 3, type: "uncommon_herb" },
+                    { name: "Pixie Dust", quantity: 1, type: "uncommon_component" }
+                ],
+                output: { name: "Potion of Psychic Resistance", img: "icons/consumables/potions/bottle-bulb-corked-purple.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "potion-psionic-fortitude",
+                name: "Potion of Psionic Fortitude",
+                rarity: "uncommon",
+                time: "4 hours",
+                learned: false,
+                description: "Advantage on Intelligence and Wisdom saving throws for 1 hour.",
+                ingredients: [
+                    { name: "Dreamfern", quantity: 3, type: "uncommon_herb" },
+                    { name: "Mandrake Root", quantity: 1, type: "uncommon_herb" }
+                ],
+                output: { name: "Potion of Psionic Fortitude", img: "icons/consumables/potions/bottle-conical-corked-purple.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "potion-polychromy",
+                name: "Potion of Polychromy",
+                rarity: "uncommon",
+                time: "4 hours",
+                learned: false,
+                description: "Change your skin, hair, and eye color to any color you choose for 1 hour.",
+                ingredients: [
+                    { name: "Catnip", quantity: 2, type: "common_herb" },
+                    { name: "Pixie Dust", quantity: 2, type: "uncommon_component" },
+                    { name: "Moonpetal Flower", quantity: 1, type: "uncommon_herb" }
+                ],
+                output: { name: "Potion of Polychromy", img: "icons/consumables/potions/bottle-round-corked-pink.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "potion-pugilism",
+                name: "Potion of Pugilism",
+                rarity: "uncommon",
+                time: "4 hours",
+                learned: false,
+                description: "Unarmed strikes deal 1d6 bludgeoning damage and count as magical for 1 hour.",
+                ingredients: [
+                    { name: "Mandrake Root", quantity: 2, type: "uncommon_herb" },
+                    { name: "Giant Toenail", quantity: 1, type: "monster_part" },
+                    { name: "Troll Blood", quantity: 1, type: "monster_part" }
+                ],
+                output: { name: "Potion of Pugilism", img: "icons/consumables/potions/bottle-round-corked-red.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "potion-radiant-resistance",
+                name: "Potion of Radiant Resistance",
+                rarity: "uncommon",
+                time: "4 hours",
+                learned: false,
+                description: "Resistance to radiant damage for 1 hour.",
+                ingredients: [
+                    { name: "Moonpetal Flower", quantity: 3, type: "uncommon_herb" },
+                    { name: "Mandrake Root", quantity: 1, type: "uncommon_herb" }
+                ],
+                output: { name: "Potion of Radiant Resistance", img: "icons/consumables/potions/bottle-round-corked-yellow.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "potion-resistance",
+                name: "Potion of Resistance",
+                rarity: "uncommon",
+                time: "4 hours",
+                learned: false,
+                description: "Resistance to one damage type of the brewer's choice for 1 hour.",
+                ingredients: [
+                    { name: "Mandrake Root", quantity: 2, type: "uncommon_herb" },
+                    { name: "Pixie Dust", quantity: 1, type: "uncommon_component" },
+                    { name: "Toadstool", quantity: 1, type: "common_herb" }
+                ],
+                output: { name: "Potion of Resistance", img: "icons/consumables/potions/bottle-corked-blue.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "potion-thunder-resistance",
+                name: "Potion of Thunder Resistance",
+                rarity: "uncommon",
+                time: "4 hours",
+                learned: false,
+                description: "Resistance to thunder damage for 1 hour.",
+                ingredients: [
+                    { name: "Quicksilver Herb", quantity: 1, type: "uncommon_herb" },
+                    { name: "Goblin Teeth", quantity: 3, type: "monster_part" }
+                ],
+                output: { name: "Potion of Thunder Resistance", img: "icons/consumables/potions/bottle-conical-bubbling-blue.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "philter-of-love",
+                name: "Philter of Love",
+                rarity: "uncommon",
+                time: "4 hours",
+                learned: false,
+                description: "The next creature the drinker sees within 10 minutes becomes their true love for 1 hour.",
+                ingredients: [
+                    { name: "Catnip", quantity: 3, type: "common_herb" },
+                    { name: "Moonpetal Flower", quantity: 2, type: "uncommon_herb" },
+                    { name: "Rabbit Foot", quantity: 1, type: "monster_part" }
+                ],
+                output: { name: "Philter of Love", img: "icons/consumables/potions/bottle-pear-corked-pink.webp", type: "consumable", quantity: 1 }
+            },
+
+            // ─────────────────────────────────────────────────────────────
+            // ADDITIONAL RARE RECIPES
+            // ─────────────────────────────────────────────────────────────
+            {
+                id: "potion-aqueous-form",
+                name: "Potion of Aqueous Form",
+                rarity: "rare",
+                time: "1 day",
+                learned: false,
+                description: "Transform into a pool of water for up to 10 minutes. You can't attack or cast spells.",
+                ingredients: [
+                    { name: "Sea Kelp", quantity: 3, type: "uncommon_herb" },
+                    { name: "Merfolk Scale", quantity: 2, type: "monster_part" },
+                    { name: "Ethereal Dust", quantity: 1, type: "rare_component" }
+                ],
+                output: { name: "Potion of Aqueous Form", img: "icons/consumables/potions/bottle-round-corked-blue.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "elixir-of-health",
+                name: "Elixir of Health",
+                rarity: "rare",
+                time: "1 day",
+                learned: false,
+                description: "Cures all diseases and removes blinded, deafened, paralyzed, and poisoned conditions.",
+                ingredients: [
+                    { name: "Mandrake Root", quantity: 3, type: "uncommon_herb" },
+                    { name: "Bloodgrass", quantity: 4, type: "common_herb" },
+                    { name: "Troll Blood", quantity: 2, type: "monster_part" }
+                ],
+                output: { name: "Elixir of Health", img: "icons/consumables/potions/bottle-corked-green.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "elixir-frost-giant-strength",
+                name: "Elixir of Frost Giant Strength",
+                rarity: "rare",
+                time: "1 day",
+                learned: false,
+                description: "Strength becomes 23 for 1 hour.",
+                ingredients: [
+                    { name: "Frost Giant Knuckle", quantity: 1, type: "rare_monster_part" },
+                    { name: "Mandrake Root", quantity: 3, type: "uncommon_herb" },
+                    { name: "Troll Blood", quantity: 2, type: "monster_part" }
+                ],
+                output: { name: "Elixir of Frost Giant Strength", img: "icons/consumables/potions/bottle-conical-corked-cyan.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "elixir-fire-giant-strength",
+                name: "Elixir of Fire Giant Strength",
+                rarity: "rare",
+                time: "1 day",
+                learned: false,
+                description: "Strength becomes 25 for 1 hour.",
+                ingredients: [
+                    { name: "Fire Giant Heartstring", quantity: 1, type: "rare_monster_part" },
+                    { name: "Mandrake Root", quantity: 3, type: "uncommon_herb" },
+                    { name: "Magmin Ash", quantity: 2, type: "uncommon_component" }
+                ],
+                output: { name: "Elixir of Fire Giant Strength", img: "icons/consumables/potions/bottle-round-corked-orange.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "potion-invulnerability",
+                name: "Potion of Invulnerability",
+                rarity: "rare",
+                time: "1 day",
+                learned: false,
+                description: "Resistance to all damage types for 1 minute.",
+                ingredients: [
+                    { name: "Basilisk Eye", quantity: 2, type: "rare_monster_part" },
+                    { name: "Ethereal Dust", quantity: 2, type: "rare_component" },
+                    { name: "Mandrake Root", quantity: 2, type: "uncommon_herb" }
+                ],
+                output: { name: "Potion of Invulnerability", img: "icons/consumables/potions/flask-corked-red-glow.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "potion-maximum-power",
+                name: "Potion of Maximum Power",
+                rarity: "rare",
+                time: "1 day",
+                learned: false,
+                description: "The next spell you cast deals maximum damage instead of rolling.",
+                ingredients: [
+                    { name: "Mindflayer Tentacle", quantity: 1, type: "rare_monster_part" },
+                    { name: "Harpy Feather", quantity: 2, type: "rare_monster_part" },
+                    { name: "Ethereal Dust", quantity: 1, type: "rare_component" }
+                ],
+                output: { name: "Potion of Maximum Power", img: "icons/consumables/potions/flask-corked-blue-glow.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "potion-mind-control-beast",
+                name: "Potion of Mind Control (Beast)",
+                rarity: "rare",
+                time: "1 day",
+                learned: false,
+                description: "Cast Dominate Beast on a beast that drinks this potion (no save). Duration: 1 hour.",
+                ingredients: [
+                    { name: "Aboleth Slime", quantity: 1, type: "rare_monster_part" },
+                    { name: "Dreamfern", quantity: 3, type: "uncommon_herb" },
+                    { name: "Rabbit Foot", quantity: 1, type: "monster_part" }
+                ],
+                output: { name: "Potion of Mind Control (Beast)", img: "icons/consumables/potions/conical-ornate-purple.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "potion-mind-control-humanoid",
+                name: "Potion of Mind Control (Humanoid)",
+                rarity: "rare",
+                time: "1 day",
+                learned: false,
+                description: "Cast Dominate Person on a humanoid that drinks this potion (no save). Duration: 1 hour.",
+                ingredients: [
+                    { name: "Aboleth Slime", quantity: 1, type: "rare_monster_part" },
+                    { name: "Mindflayer Tentacle", quantity: 1, type: "rare_monster_part" },
+                    { name: "Dreamfern", quantity: 2, type: "uncommon_herb" }
+                ],
+                output: { name: "Potion of Mind Control (Humanoid)", img: "icons/consumables/potions/bottle-pear-corked-labeled-ornamental-purple.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "oil-etherealness",
+                name: "Oil of Etherealness",
+                rarity: "rare",
+                time: "1 day",
+                learned: false,
+                description: "Coats a creature with oil, sending them to the Ethereal Plane for 1 hour.",
+                ingredients: [
+                    { name: "Ethereal Dust", quantity: 3, type: "rare_component" },
+                    { name: "Will-o-Wisp Essence", quantity: 1, type: "rare_monster_part" },
+                    { name: "Displacer Beast Tentacle", quantity: 1, type: "rare_monster_part" }
+                ],
+                output: { name: "Oil of Etherealness", img: "icons/consumables/potions/bottle-pear-corked-labeled-ornamental-purple.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "potion-diminution",
+                name: "Potion of Diminution",
+                rarity: "rare",
+                time: "1 day",
+                learned: false,
+                description: "The drinker shrinks to Tiny size for 1d4 hours, gaining advantage on Dexterity (Stealth) checks.",
+                ingredients: [
+                    { name: "Beholder Eyestalk", quantity: 1, type: "rare_monster_part" },
+                    { name: "Dreamfern", quantity: 2, type: "uncommon_herb" },
+                    { name: "Pixie Dust", quantity: 2, type: "uncommon_component" }
+                ],
+                output: { name: "Potion of Diminution", img: "icons/consumables/potions/bottle-conical-corked-cyan.webp", type: "consumable", quantity: 1 }
+            },
+
+            // ─────────────────────────────────────────────────────────────
+            // ADDITIONAL VERY RARE RECIPES
+            // ─────────────────────────────────────────────────────────────
+            {
+                id: "potion-greater-invisibility",
+                name: "Potion of Greater Invisibility",
+                rarity: "very_rare",
+                time: "2 days",
+                learned: false,
+                description: "Greater Invisibility for 1 minute — you remain invisible even when attacking or casting spells.",
+                ingredients: [
+                    { name: "Shadow Essence", quantity: 2, type: "very_rare_component" },
+                    { name: "Displacer Beast Tentacle", quantity: 2, type: "rare_monster_part" },
+                    { name: "Ethereal Dust", quantity: 2, type: "rare_component" }
+                ],
+                output: { name: "Potion of Greater Invisibility", img: "icons/consumables/potions/bottle-corked-empty.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "potion-longevity",
+                name: "Potion of Longevity",
+                rarity: "very_rare",
+                time: "3 days",
+                learned: false,
+                description: "Reduces the drinker's apparent age by 1d6+6 years, to a minimum of 13.",
+                ingredients: [
+                    { name: "Unicorn Horn Shaving", quantity: 1, type: "very_rare_component" },
+                    { name: "Phoenix Ash", quantity: 1, type: "very_rare_component" },
+                    { name: "Mandrake Root", quantity: 6, type: "uncommon_herb" }
+                ],
+                output: { name: "Potion of Longevity", img: "icons/consumables/potions/flask-corked-yellow-glow.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "potion-mind-control-monster",
+                name: "Potion of Mind Control (Monster)",
+                rarity: "very_rare",
+                time: "3 days",
+                learned: false,
+                description: "Cast Dominate Monster on a creature that drinks this potion (no save). Duration: 1 hour.",
+                ingredients: [
+                    { name: "Cloud Giant Heartstring", quantity: 1, type: "very_rare_component" },
+                    { name: "Aboleth Slime", quantity: 2, type: "rare_monster_part" },
+                    { name: "Mindflayer Tentacle", quantity: 2, type: "rare_monster_part" }
+                ],
+                output: { name: "Potion of Mind Control (Monster)", img: "icons/consumables/potions/flask-corked-purple-glow.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "potion-possibility",
+                name: "Potion of Possibility",
+                rarity: "very_rare",
+                time: "2 days",
+                learned: false,
+                description: "Gain two Fragments of Possibility, each granting +2d4 to one attack roll, ability check, or saving throw.",
+                ingredients: [
+                    { name: "Paladin's Tear", quantity: 1, type: "very_rare_component" },
+                    { name: "Celestial Feather", quantity: 1, type: "very_rare_component" },
+                    { name: "Dreamfern", quantity: 3, type: "uncommon_herb" }
+                ],
+                output: { name: "Potion of Possibility", img: "icons/consumables/potions/flask-corked-blue-glow.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "oil-sharpness",
+                name: "Oil of Sharpness",
+                rarity: "very_rare",
+                time: "2 days",
+                learned: false,
+                description: "Coats a weapon or ammunition, granting a +3 bonus to attack and damage rolls for 1 hour.",
+                ingredients: [
+                    { name: "Wyvern Poison Gland", quantity: 1, type: "rare_monster_part" },
+                    { name: "Medusa Blood", quantity: 1, type: "very_rare_component" },
+                    { name: "Storm Eagle Talon", quantity: 2, type: "rare_monster_part" }
+                ],
+                output: { name: "Oil of Sharpness", img: "icons/consumables/potions/bottle-metal-yellow-gray.webp", type: "consumable", quantity: 1 }
+            },
+
+            // ─────────────────────────────────────────────────────────────
+            // ADDITIONAL LEGENDARY RECIPES
+            // ─────────────────────────────────────────────────────────────
+            {
+                id: "potion-giant-size",
+                name: "Potion of Giant Size",
+                rarity: "legendary",
+                time: "7 days",
+                learned: false,
+                description: "The drinker grows to Huge size for 24 hours, doubling weapon damage dice.",
+                ingredients: [
+                    { name: "Storm Giant Blood", quantity: 2, type: "legendary_component" },
+                    { name: "Cloud Giant Heartstring", quantity: 1, type: "very_rare_component" },
+                    { name: "Dragon Blood", quantity: 1, type: "legendary_component" }
+                ],
+                output: { name: "Potion of Giant Size", img: "icons/consumables/potions/flask-corked-red-glow.webp", type: "consumable", quantity: 1 }
+            },
+            {
+                id: "potion-dragons-majesty",
+                name: "Potion of Dragon's Majesty",
+                rarity: "legendary",
+                time: "7 days",
+                learned: false,
+                description: "Transform into an adult dragon of a type chosen at brewing for 1 hour.",
+                ingredients: [
+                    { name: "Dragon Scale", quantity: 4, type: "legendary_component" },
+                    { name: "Dragon Blood", quantity: 3, type: "legendary_component" },
+                    { name: "Demon Horn Fragment", quantity: 2, type: "legendary_component" }
+                ],
+                output: { name: "Potion of Dragon's Majesty", img: "icons/consumables/potions/flask-corked-red-glow.webp", type: "consumable", quantity: 1 }
             }
         ];
     }

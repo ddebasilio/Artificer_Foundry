@@ -1,17 +1,17 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
-// Type → image path lookup. Foundry v14 ships all of these in its core asset set.
+// Type → image path lookup (verified against Foundry v14 core asset paths).
 const INGREDIENT_IMAGES = {
-    common_herb:          'icons/commodities/biological/leaves-green.webp',
-    uncommon_herb:        'icons/commodities/biological/mushroom-red.webp',
-    liquid:               'icons/consumables/potions/potion-flask-corked-empty.webp',
-    common_component:     'icons/commodities/materials/coal.webp',
-    uncommon_component:   'icons/commodities/materials/ingot-silver.webp',
-    rare_component:       'icons/commodities/materials/ingot-gold.webp',
-    monster_part:         'icons/commodities/biological/bone-foreleg.webp',
-    rare_monster_part:    'icons/commodities/biological/teeth-small.webp',
-    very_rare_component:  'icons/commodities/materials/gem-aquamarine.webp',
-    legendary_component:  'icons/commodities/materials/gem-ruby.webp',
+    common_herb:          'icons/consumables/plants/herb-tied-bundle-green.webp',
+    uncommon_herb:        'icons/consumables/plants/leaf-elm-glowing-green.webp',
+    liquid:               'icons/consumables/potions/bottle-corked-empty.webp',
+    common_component:     'icons/commodities/materials/plant-sprout-seed-green.webp',
+    uncommon_component:   'icons/commodities/materials/powder-teal.webp',
+    rare_component:       'icons/commodities/gems/gem-rough-cushion-teal.webp',
+    monster_part:         'icons/commodities/bones/bone-jaw-teeth-white-grey.webp',
+    rare_monster_part:    'icons/commodities/biological/organ-heart-red.webp',
+    very_rare_component:  'icons/commodities/gems/gem-rough-cushion-purple.webp',
+    legendary_component:  'icons/commodities/gems/gem-rough-cushion-red.webp',
 };
 const DEFAULT_INGREDIENT_IMG = 'icons/svg/item-bag.svg';
 
@@ -68,15 +68,8 @@ export class GathererApp extends HandlebarsApplicationMixin(ApplicationV2) {
         // Collect all types for the filter dropdown
         const allTypes = [...new Set([...ingredientMap.values()].map(i => i.type))].sort();
 
-        // Apply filters to catalog
-        let ingredients = [...ingredientMap.values()].sort((a, b) => a.name.localeCompare(b.name));
-        if (this.filterType !== "all") {
-            ingredients = ingredients.filter(i => i.type === this.filterType);
-        }
-        if (this.searchQuery) {
-            const q = this.searchQuery.toLowerCase();
-            ingredients = ingredients.filter(i => i.name.toLowerCase().includes(q));
-        }
+        // Always pass all ingredients — filtering is done client-side in _onRender
+        const ingredients = [...ingredientMap.values()].sort((a, b) => a.name.localeCompare(b.name));
 
         // Actor inventory — show only items whose names match catalog ingredients
         const inventory = (this.actor?.items?.contents ?? [])
@@ -104,17 +97,41 @@ export class GathererApp extends HandlebarsApplicationMixin(ApplicationV2) {
     _onRender(context, options) {
         const el = this.element;
 
-        // Search
+        // Client-side search + type filter — no re-render on each keystroke
+        const applyFilters = () => {
+            const q = this.searchQuery.toLowerCase();
+            const type = this.filterType;
+            const rows = el.querySelectorAll('.ingredient-catalog-item');
+            let visibleCount = 0;
+            rows.forEach(row => {
+                const nameMatch = !q || row.dataset.name.toLowerCase().includes(q);
+                const typeMatch = type === 'all' || row.dataset.ingType === type;
+                const show = nameMatch && typeMatch;
+                row.style.display = show ? '' : 'none';
+                if (show) visibleCount++;
+            });
+            // Show/hide "no results" message
+            let noResults = el.querySelector('.gatherer-no-results');
+            if (!noResults && rows.length > 0) {
+                noResults = document.createElement('p');
+                noResults.className = 'empty-list gatherer-no-results';
+                noResults.textContent = 'No ingredients match your search.';
+                el.querySelector('.gatherer-catalog-list')?.appendChild(noResults);
+            }
+            if (noResults) noResults.style.display = visibleCount === 0 ? '' : 'none';
+        };
+
         el.querySelector('.gatherer-search')?.addEventListener('input', e => {
             this.searchQuery = e.target.value;
-            this.render();
+            applyFilters();
         });
 
-        // Type filter
         el.querySelector('.gatherer-filter-type')?.addEventListener('change', e => {
             this.filterType = e.target.value;
-            this.render();
+            applyFilters();
         });
+
+        applyFilters(); // restore filter state after any re-render
 
         // Drag sources (catalog items)
         el.querySelectorAll('.ingredient-catalog-item').forEach(row => {
