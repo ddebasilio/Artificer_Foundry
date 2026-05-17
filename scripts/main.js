@@ -22,7 +22,7 @@ Hooks.once('init', function () {
 
     game.settings.register(MODULE_ID, "showCraftingButton", {
         name: "Show Crafting Button",
-        hint: "Display the 'Open Crafting Station' button at the top of the Inventory tab on actor sheets.",
+        hint: "Display the 'Crafting' tab button on actor sheets.",
         scope: "world",
         config: true,
         type: Boolean,
@@ -44,28 +44,50 @@ Hooks.once('ready', function () {
         showCraftingApp: (actor) => new CraftingApp(actor ?? null).render()
     };
 
-    // Watch #interface for new .application windows being added to the DOM.
-    // Works regardless of hook names or Foundry version.
+    // Watch #interface (and all descendants) for .application nodes being added.
     const interfaceEl = document.querySelector('#interface') ?? document.body;
 
     const observer = new MutationObserver(mutations => {
         for (const m of mutations) {
             for (const node of m.addedNodes) {
                 if (node.nodeType !== 1 || !node.classList?.contains('application')) continue;
-                // Wait one frame so the sheet body is fully populated
-                requestAnimationFrame(() => _handleNewSheet(node));
+                requestAnimationFrame(() => _handleNewSheet(node, 0));
             }
         }
     });
 
-    // subtree: true catches windows nested inside sub-containers (e.g. Foundry v14 .windows-app)
     observer.observe(interfaceEl, { childList: true, subtree: true });
     console.log(`${MODULE} | MutationObserver active on #${interfaceEl.id || interfaceEl.tagName}`);
+
+    // Also scan any sheets that are already open when the module loads.
+    setTimeout(_scanOpenSheets, 500);
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
+// SCAN ALREADY-OPEN SHEETS
+// ─────────────────────────────────────────────────────────────────────────────
+
+function _scanOpenSheets() {
+    // V2
+    if (foundry.applications?.instances) {
+        for (const app of foundry.applications.instances.values()) {
+            const actor = app.document ?? app.object ?? app.actor;
+            if (!actor || actor.documentName !== 'Actor') continue;
+            const node = app.element instanceof HTMLElement ? app.element : null;
+            if (node) injectCraftingButton(app, node, actor);
+        }
+    }
+    // V1
+    for (const app of Object.values(ui.windows ?? {})) {
+        const actor = app.document ?? app.object ?? app.actor;
+        if (!actor || actor.documentName !== 'Actor') continue;
+        const node = app.element instanceof HTMLElement ? app.element : app.element?.[0];
+        if (node) injectCraftingButton(app, node, actor);
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // FIND THE APP OBJECT FROM A DOM NODE
-// In Foundry v13+ AppV2 is in foundry.applications.instances, not ui.windows.
 // ─────────────────────────────────────────────────────────────────────────────
 
 function _getAppFromNode(node) {
@@ -81,12 +103,10 @@ function _getAppFromNode(node) {
         }
     }
 
-    // Method 3 — V2 fallback: match by rendered element id attribute
-    if (node.id) {
-        if (foundry.applications?.instances) {
-            for (const app of foundry.applications.instances.values()) {
-                if (app.id === node.id) return app;
-            }
+    // Method 3 — V2 fallback: match by element id attribute
+    if (node.id && foundry.applications?.instances) {
+        for (const app of foundry.applications.instances.values()) {
+            if (app.id === node.id) return app;
         }
     }
 
@@ -97,11 +117,16 @@ function _getAppFromNode(node) {
 // HANDLE A NEW SHEET WINDOW
 // ─────────────────────────────────────────────────────────────────────────────
 
-function _handleNewSheet(node) {
+function _handleNewSheet(node, attempt) {
     const app = _getAppFromNode(node);
 
     if (!app) {
-        console.warn(`${MODULE} | Could not resolve app for node (id="${node.id}", appid="${node.dataset?.appid}")`);
+        // App may not be registered in foundry.applications.instances yet — retry
+        if (attempt < 10) {
+            setTimeout(() => _handleNewSheet(node, attempt + 1), 100);
+        } else {
+            console.warn(`${MODULE} | Could not resolve app for node (id="${node.id}")`);
+        }
         return;
     }
 
@@ -110,17 +135,16 @@ function _handleNewSheet(node) {
 
     console.log(`${MODULE} | Detected actor sheet for: ${actor.name}`);
 
-    // Try immediately; if the inventory tab isn't rendered yet, retry with backoff.
     if (!injectCraftingButton(app, node, actor)) {
         _retryInjection(app, node, actor, 0);
     }
 }
 
-// Retry injection up to ~4 s to handle lazy-rendered tab content.
+// Retry injection up to ~4 s (handles lazy-rendered tab content)
 function _retryInjection(app, node, actor, attempt) {
     if (attempt >= 20) return;
     setTimeout(() => {
-        if (!node.isConnected) return; // sheet was closed
+        if (!node.isConnected) return;
         if (!injectCraftingButton(app, node, actor)) {
             _retryInjection(app, node, actor, attempt + 1);
         }
@@ -131,20 +155,21 @@ function _retryInjection(app, node, actor, attempt) {
 // BUTTON INJECTION
 // ─────────────────────────────────────────────────────────────────────────────
 
-// Returns true when the tab button was successfully injected (or already present),
-// false when the nav bar hasn't rendered yet (caller may retry).
+// Returns true when injected (or already present / not applicable),
+// false when no nav bar found yet (caller should retry).
 function injectCraftingButton(app, root, actor) {
     try {
-        if (!game.settings.get(MODULE_ID, "showCraftingButton")) return true; // intentionally disabled
+        if (!game.settings.get(MODULE_ID, "showCraftingButton")) return true;
         if (!actor) {
             actor = app.document ?? app.object ?? app.actor;
-            if (!actor || actor.documentName !== 'Actor') return true; // not an actor sheet
+            if (!actor || actor.documentName !== 'Actor') return true;
         }
 
-        // Guard: only once per render
+        // Guard: only inject once
         if (root.querySelector('.af-crafting-tab-btn')) return true;
 
-        // Build the tab nav item — no data-tab so dnd5e's tab system ignores it
+        // Build the tab nav item.
+        // No data-tab attribute → dnd5e's tab system ignores it entirely.
         const btn = document.createElement('a');
         btn.className = 'item control af-crafting-tab-btn';
         btn.title = 'Alchemy & Crafting Station';
@@ -155,12 +180,17 @@ function injectCraftingButton(app, root, actor) {
             new CraftingApp(actor).render();
         });
 
-        // Find the primary tab nav bar
+        // Try every plausible nav selector for dnd5e 4.x / Foundry v14
         const nav =
             root.querySelector('nav.tabs[data-group="primary"]') ??
-            root.querySelector('nav.sheet-navigation.tabs') ??
+            root.querySelector('nav.primary-tabs') ??
+            root.querySelector('nav.sheet-navigation') ??
             root.querySelector('nav.tabs') ??
-            root.querySelector('.sheet-tabs');
+            root.querySelector('.sheet-tabs') ??
+            root.querySelector('nav[data-tabs]') ??
+            root.querySelector('[role="tablist"]') ??
+            root.querySelector('ol.tabs') ??
+            root.querySelector('ul.tabs');
 
         if (nav) {
             nav.appendChild(btn);
@@ -168,7 +198,10 @@ function injectCraftingButton(app, root, actor) {
             return true;
         }
 
-        // Nav bar not found yet — caller should retry
+        // Debug: show what nav-like elements exist so we can refine the selector
+        const candidates = [...root.querySelectorAll('nav, [data-group], [data-tabs], [role="tablist"]')]
+            .map(el => `${el.tagName}[class="${el.className}"]`).join(', ');
+        console.warn(`${MODULE} | No nav found for ${actor.name}. Candidates: ${candidates || 'none'}`);
         return false;
 
     } catch (err) {
@@ -179,6 +212,9 @@ function injectCraftingButton(app, root, actor) {
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HOOKS — belt-and-suspenders alongside the MutationObserver
+// In V2, app.element is the FULL application element (including window chrome).
+// The `html` arg passed to render hooks may only be the content area,
+// so we always prefer app.element to ensure the nav bar is within root.
 // ─────────────────────────────────────────────────────────────────────────────
 
 [
@@ -188,7 +224,9 @@ function injectCraftingButton(app, root, actor) {
     'renderActorSheet5eVehicle2',
 ].forEach(hookName => {
     Hooks.on(hookName, (app, html) => {
-        const root = html instanceof HTMLElement ? html : html?.[0];
+        // Prefer app.element (full window) over html (may be content-only)
+        const root = (app.element instanceof HTMLElement ? app.element : null)
+            ?? (html instanceof HTMLElement ? html : html?.[0]);
         if (!root) return;
         const actor = app.document ?? app.object ?? app.actor;
         if (!injectCraftingButton(app, root, actor)) {
@@ -198,7 +236,7 @@ function injectCraftingButton(app, root, actor) {
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-// FALLBACK HEADER BUTTONS (catches sheets that don't match any of the above)
+// FALLBACK HEADER BUTTONS
 // ─────────────────────────────────────────────────────────────────────────────
 
 Hooks.on('getActorSheetHeaderButtons', (app, buttons) => {
