@@ -1,124 +1,582 @@
+/* ═══════════════════════════════════════════════════════════════
+   ARTIFICER FOUNDRY — Alchemy & Crafting Station
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Window ──────────────────────────────────────────────────── */
 .artificer-foundry.crafting-app {
-    min-width: 600px;
-    min-height: 400px;
+    display: flex;
+    flex-direction: row;
+    gap: 0;
+    height: 100%;
+    overflow: hidden;
+    font-family: "Signika", serif;
+    background: #1a1209;
 }
 
-.artificer-foundry .window-content {
-    padding: 5px;
+/* ── Three-panel layout ──────────────────────────────────────── */
+.artificer-foundry .panel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #1f1609;
 }
 
-.artificer-foundry .recipe-list-container {
+.artificer-foundry .recipe-list-panel {
+    flex: 0 0 230px;
+    border-right: 2px solid #5c3a10;
+}
+
+.artificer-foundry .crafting-station-panel {
+    flex: 1 1 0;
+    padding: 0 10px;
+    border-right: 2px solid #5c3a10;
+}
+
+.artificer-foundry .inventory-panel {
+    flex: 0 0 200px;
+}
+
+/* ── Panel header ────────────────────────────────────────────── */
+.artificer-foundry .panel-header {
+    padding: 8px 10px;
+    background: linear-gradient(180deg, #3d200a 0%, #2a1505 100%);
+    border-bottom: 2px solid #6b3f12;
+    flex-shrink: 0;
+}
+
+.artificer-foundry .panel-header h2 {
+    margin: 0;
+    font-size: 1em;
+    color: #f0c070;
+    text-shadow: 1px 1px 3px #000;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+}
+
+.artificer-foundry .panel-header h2 small {
+    font-size: 0.75em;
+    color: #c0a060;
+    margin-left: 5px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   LEFT PANEL — Filters + Recipe List
+   ══════════════════════════════════════════════════════════════ */
+
+.artificer-foundry .recipe-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 8px;
+    background: #170e04;
+    border-bottom: 1px solid #4a2800;
+    flex-shrink: 0;
+}
+
+.artificer-foundry .search-input,
+.artificer-foundry .filter-rarity,
+.artificer-foundry .filter-learned {
+    width: 100%;
+    background: #0e0904;
+    color: #d4b483;
+    border: 1px solid #5c3a10;
+    border-radius: 3px;
+    padding: 4px 6px;
+    font-size: 0.8em;
+}
+
+.artificer-foundry .search-input::placeholder {
+    color: #6b5030;
+}
+
+.artificer-foundry .recipe-list {
     flex: 1;
-    border-right: 1px solid #000;
-    padding-right: 10px;
     overflow-y: auto;
-}
-
-.artificer-foundry .crafting-station {
-    flex: 2;
-    padding-left: 10px;
-}
-
-.artificer-foundry .recipe-item {
     padding: 5px;
-    margin-bottom: 5px;
-    background: rgba(0, 0, 0, 0.05);
-    border: 1px solid #777;
+}
+
+.artificer-foundry .recipe-list::-webkit-scrollbar {
+    width: 6px;
+}
+.artificer-foundry .recipe-list::-webkit-scrollbar-track {
+    background: #0e0904;
+}
+.artificer-foundry .recipe-list::-webkit-scrollbar-thumb {
+    background: #5c3a10;
+    border-radius: 3px;
+}
+
+/* Recipe item card */
+.artificer-foundry .recipe-item {
+    padding: 7px 8px;
+    margin-bottom: 4px;
+    background: rgba(255,255,255,0.04);
+    border-left: 3px solid #5c3a10;
     border-radius: 3px;
     cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
 }
 
 .artificer-foundry .recipe-item:hover {
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(255,255,255,0.09);
 }
 
 .artificer-foundry .recipe-item.selected {
-    border-color: #ff6400;
-    box-shadow: 0 0 5px #ff6400;
+    background: rgba(255, 160, 50, 0.12);
+    border-left-color: #ffa030;
+    box-shadow: inset 0 0 6px rgba(255,160,30,0.15);
 }
 
-.artificer-foundry .recipe-item h4 {
-    margin: 0 5px 0 0;
-    flex-grow: 1;
+.artificer-foundry .recipe-item.unknown {
+    opacity: 0.65;
 }
 
-.artificer-foundry .recipe-item .fa-check-circle {
-    color: green;
-}
-
-.artificer-foundry .learn-recipe-btn {
-    color: #4a5c4a;
-    cursor: pointer;
-}
-
-.artificer-foundry .learn-recipe-btn:hover {
-    color: #5c755c;
-}
-
-.artificer-foundry .ingredient-drop-zone {
-    border: 2px dashed #777;
-    border-radius: 5px;
-    min-height: 100px;
+.artificer-foundry .recipe-item-header {
     display: flex;
     align-items: center;
-    justify-content: center;
-    margin: 10px 0;
-    background: rgba(0, 0, 0, 0.02);
-    text-align: center;
-    color: #555;
+    justify-content: space-between;
+    gap: 4px;
 }
 
-.artificer-foundry .ingredient-drop-zone.disabled {
-    background: rgba(0, 0, 0, 0.1);
-    color: #999;
-}
-
-.artificer-foundry .station-controls {
-    margin-top: auto;
-    gap: 10px;
-}
-
-.artificer-foundry .craft-btn, .artificer-foundry .clear-station-btn {
-    padding: 10px;
-    font-size: 1.1em;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+.artificer-foundry .recipe-name {
+    font-size: 0.82em;
+    color: #e8cfa0;
+    font-weight: bold;
     flex: 1;
+    line-height: 1.3;
 }
 
-.artificer-foundry .craft-btn {
-    background: #4a5c4a;
-    color: white;
+.artificer-foundry .recipe-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
 }
 
-.artificer-foundry .craft-btn:hover:not(:disabled) {
-    background: #5c755c;
+.artificer-foundry .known-badge {
+    color: #5cb85c;
+    font-size: 0.9em;
 }
 
-.artificer-foundry .clear-station-btn {
-    background: #a94442;
-    color: white;
+.artificer-foundry .learn-recipe-btn,
+.artificer-foundry .forget-recipe-btn {
+    color: #c09050;
+    cursor: pointer;
+    font-size: 0.85em;
+    line-height: 1;
+    padding: 2px;
+}
+.artificer-foundry .learn-recipe-btn:hover { color: #f0c060; }
+.artificer-foundry .forget-recipe-btn:hover { color: #e05050; }
+
+.artificer-foundry .recipe-item-meta {
+    display: flex;
+    gap: 5px;
+    margin-top: 4px;
+    align-items: center;
 }
 
-.artificer-foundry .clear-station-btn:hover:not(:disabled) {
-    background: #c15755;
+.artificer-foundry .empty-list {
+    color: #6b5030;
+    font-size: 0.82em;
+    text-align: center;
+    padding: 15px 5px;
 }
 
-.artificer-foundry button:disabled {
-    background: #ccc;
-    cursor: not-allowed;
+/* ══════════════════════════════════════════════════════════════
+   RARITY BADGES & COLORS
+   ══════════════════════════════════════════════════════════════ */
+
+.artificer-foundry .rarity-badge,
+.artificer-foundry .time-badge,
+.artificer-foundry .unknown-badge,
+.artificer-foundry .ingredient-type-badge {
+    display: inline-block;
+    font-size: 0.68em;
+    padding: 1px 5px;
+    border-radius: 10px;
+    font-weight: bold;
+    text-transform: capitalize;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
 }
 
-.artificer-foundry .requirements ul {
+.artificer-foundry .time-badge {
+    background: rgba(100,100,100,0.3);
+    color: #bbb;
+    border: 1px solid #555;
+}
+
+.artificer-foundry .unknown-badge {
+    background: rgba(150,80,30,0.3);
+    color: #c08040;
+    border: 1px solid #7a4010;
+}
+
+/* Rarity colours */
+.artificer-foundry .rarity-badge.rarity-common    { background: rgba(120,140,100,0.25); color: #9db87d; border: 1px solid #5a7040; }
+.artificer-foundry .rarity-badge.rarity-uncommon  { background: rgba(50,130,80,0.25);  color: #4caa70; border: 1px solid #2a7040; }
+.artificer-foundry .rarity-badge.rarity-rare      { background: rgba(50,80,180,0.25);  color: #6090dd; border: 1px solid #304090; }
+.artificer-foundry .rarity-badge.rarity-very_rare { background: rgba(120,40,160,0.25); color: #c060e0; border: 1px solid #701090; }
+.artificer-foundry .rarity-badge.rarity-legendary { background: rgba(180,120,0,0.30);  color: #f0c030; border: 1px solid #a08000; }
+
+/* Recipe-item left-border rarity accent */
+.artificer-foundry .recipe-item.rarity-common    { border-left-color: #6a8a50; }
+.artificer-foundry .recipe-item.rarity-uncommon  { border-left-color: #2e8a4a; }
+.artificer-foundry .recipe-item.rarity-rare      { border-left-color: #3060c0; }
+.artificer-foundry .recipe-item.rarity-very_rare { border-left-color: #9030c0; }
+.artificer-foundry .recipe-item.rarity-legendary { border-left-color: #c09000; }
+
+/* Ingredient type badges */
+.artificer-foundry .ingredient-type-badge {
+    font-size: 0.66em;
+    opacity: 0.85;
+}
+.artificer-foundry .type-common_herb       { background: rgba(80,140,60,0.25);   color: #80c060; border: 1px solid #406030; }
+.artificer-foundry .type-uncommon_herb     { background: rgba(30,140,80,0.25);   color: #40c080; border: 1px solid #207040; }
+.artificer-foundry .type-liquid            { background: rgba(40,100,200,0.25);  color: #60a0e0; border: 1px solid #205090; }
+.artificer-foundry .type-common_component  { background: rgba(120,100,50,0.25);  color: #c0a060; border: 1px solid #705020; }
+.artificer-foundry .type-uncommon_component{ background: rgba(80,60,140,0.25);   color: #a080e0; border: 1px solid #504080; }
+.artificer-foundry .type-rare_component    { background: rgba(40,80,160,0.25);   color: #70a0e0; border: 1px solid #305090; }
+.artificer-foundry .type-monster_part      { background: rgba(160,60,30,0.25);   color: #e07050; border: 1px solid #803010; }
+.artificer-foundry .type-rare_monster_part { background: rgba(120,30,100,0.25);  color: #e050c0; border: 1px solid #702080; }
+.artificer-foundry .type-very_rare_component { background: rgba(140,40,160,0.30); color: #d060e0; border: 1px solid #802090; }
+.artificer-foundry .type-legendary_component { background: rgba(180,130,0,0.35); color: #f0c030; border: 1px solid #a08000; }
+
+/* ══════════════════════════════════════════════════════════════
+   CENTER PANEL — Crafting Station
+   ══════════════════════════════════════════════════════════════ */
+
+.artificer-foundry .crafting-station-panel {
+    overflow-y: auto;
+}
+
+.artificer-foundry .crafting-station-panel::-webkit-scrollbar { width: 6px; }
+.artificer-foundry .crafting-station-panel::-webkit-scrollbar-track { background: #0e0904; }
+.artificer-foundry .crafting-station-panel::-webkit-scrollbar-thumb { background: #5c3a10; border-radius: 3px; }
+
+/* Selected recipe header */
+.artificer-foundry .selected-recipe-header {
+    padding: 10px;
+    border-bottom: 1px solid #4a2800;
+    margin-bottom: 8px;
+}
+
+.artificer-foundry .selected-recipe-header h3 {
+    margin: 0 0 5px 0;
+    color: #f0c070;
+    font-size: 1.1em;
+}
+
+.artificer-foundry .selected-recipe-meta {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+}
+
+.artificer-foundry .recipe-description {
+    margin: 6px 0 0 0;
+    font-size: 0.82em;
+    color: #a08860;
+    font-style: italic;
+}
+
+/* Rarity background tints */
+.artificer-foundry .rarity-bg-common    { background: rgba(80,120,60,0.08); }
+.artificer-foundry .rarity-bg-uncommon  { background: rgba(30,120,70,0.08); }
+.artificer-foundry .rarity-bg-rare      { background: rgba(30,60,180,0.10); }
+.artificer-foundry .rarity-bg-very_rare { background: rgba(100,20,150,0.12); }
+.artificer-foundry .rarity-bg-legendary { background: rgba(160,110,0,0.14); }
+
+/* Ingredient list */
+.artificer-foundry .requirements {
+    padding: 0 4px;
+}
+
+.artificer-foundry .requirements h4 {
+    color: #d4a060;
+    margin: 0 0 5px 0;
+    font-size: 0.85em;
+    border-bottom: 1px solid #4a2800;
+    padding-bottom: 4px;
+}
+
+.artificer-foundry .ingredient-list {
     list-style: none;
+    margin: 0;
     padding: 0;
 }
 
-.artificer-foundry .requirements .fulfilled {
-    color: green;
+.artificer-foundry .ingredient-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 6px;
+    margin-bottom: 3px;
+    border-radius: 3px;
+    font-size: 0.82em;
 }
 
-.artificer-foundry .requirements .missing {
-    color: #a94442;
+.artificer-foundry .ingredient-row.fulfilled {
+    background: rgba(60,120,50,0.18);
+    border-left: 3px solid #4a8a3a;
+}
+
+.artificer-foundry .ingredient-row.missing {
+    background: rgba(140,40,30,0.15);
+    border-left: 3px solid #8a3020;
+}
+
+.artificer-foundry .ingredient-status-icon {
+    font-size: 0.9em;
+    flex-shrink: 0;
+    width: 16px;
+    text-align: center;
+}
+.artificer-foundry .ingredient-row.fulfilled .ingredient-status-icon { color: #5cb85c; }
+.artificer-foundry .ingredient-row.missing   .ingredient-status-icon { color: #c0392b; }
+
+.artificer-foundry .ingredient-name {
+    flex: 1;
+    color: #ddc090;
+    font-weight: bold;
+}
+
+.artificer-foundry .ingredient-count {
+    color: #a08860;
+    font-size: 0.9em;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.artificer-foundry .icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    color: #a08040;
+    transition: color 0.15s;
+    line-height: 1;
+}
+.artificer-foundry .remove-ingredient-btn:hover { color: #e05050; }
+
+/* Drop zone */
+.artificer-foundry .ingredient-drop-zone {
+    margin: 10px 0;
+    border: 2px dashed #5c3a10;
+    border-radius: 6px;
+    padding: 20px;
+    text-align: center;
+    color: #7a5830;
+    background: rgba(0,0,0,0.2);
+    transition: border-color 0.2s, background 0.2s, color 0.2s;
+    cursor: default;
+}
+
+.artificer-foundry .ingredient-drop-zone.drag-over {
+    border-color: #ffa030;
+    background: rgba(255,140,30,0.08);
+    color: #e0a050;
+}
+
+.artificer-foundry .ingredient-drop-zone p {
+    margin: 8px 0 0 0;
+    font-size: 0.82em;
+}
+
+.artificer-foundry .ingredient-drop-zone small {
+    color: #5a4020;
+}
+
+/* Station controls */
+.artificer-foundry .station-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+    padding: 0 4px 10px 4px;
+}
+
+.artificer-foundry .craft-btn,
+.artificer-foundry .clear-station-btn {
+    flex: 1;
+    padding: 10px;
+    font-size: 0.95em;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.15s;
+    letter-spacing: 0.02em;
+}
+
+.artificer-foundry .craft-btn {
+    background: linear-gradient(180deg, #3a6030 0%, #254020 100%);
+    color: #c0e0a0;
+    border: 1px solid #3a7020;
+}
+.artificer-foundry .craft-btn:hover:not(:disabled) {
+    background: linear-gradient(180deg, #4a7040 0%, #30502a 100%);
+}
+
+.artificer-foundry .clear-station-btn {
+    background: linear-gradient(180deg, #6a2020 0%, #401010 100%);
+    color: #e0b0a0;
+    border: 1px solid #7a2020;
+}
+.artificer-foundry .clear-station-btn:hover:not(:disabled) {
+    background: linear-gradient(180deg, #7a3030 0%, #502020 100%);
+}
+
+.artificer-foundry button:disabled {
+    background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%) !important;
+    color: #555 !important;
+    border-color: #333 !important;
+    cursor: not-allowed;
+}
+
+.artificer-foundry .unknown-warning {
+    font-size: 0.8em;
+    color: #c08030;
+    padding: 6px 10px;
+    background: rgba(150,80,0,0.12);
+    border: 1px solid #6a4010;
+    border-radius: 3px;
+    margin: 0 4px 8px 4px;
+}
+
+/* Placeholder when no recipe selected */
+.artificer-foundry .placeholder-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #4a3010;
+    text-align: center;
+    padding: 30px;
+    gap: 15px;
+}
+
+.artificer-foundry .placeholder-area p {
+    font-size: 0.9em;
+    margin: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RIGHT PANEL — Inventory
+   ══════════════════════════════════════════════════════════════ */
+
+.artificer-foundry .inventory-panel {
+    overflow-y: auto;
+}
+
+.artificer-foundry .inventory-panel::-webkit-scrollbar { width: 6px; }
+.artificer-foundry .inventory-panel::-webkit-scrollbar-track { background: #0e0904; }
+.artificer-foundry .inventory-panel::-webkit-scrollbar-thumb { background: #5c3a10; border-radius: 3px; }
+
+.artificer-foundry .inventory-hint {
+    font-size: 0.75em;
+    color: #7a5830;
+    padding: 6px 8px 2px 8px;
+    margin: 0;
+    font-style: italic;
+}
+
+.artificer-foundry .inventory-list {
+    list-style: none;
+    margin: 0;
+    padding: 4px;
+}
+
+.artificer-foundry .inventory-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 6px;
+    margin-bottom: 3px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid #3a2000;
+    border-radius: 3px;
+    cursor: grab;
+    transition: background 0.15s;
+}
+
+.artificer-foundry .inventory-item:hover {
+    background: rgba(255,160,50,0.08);
+    border-color: #6b3f12;
+}
+
+.artificer-foundry .inventory-item:active {
+    cursor: grabbing;
+}
+
+.artificer-foundry .item-img {
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 2px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.artificer-foundry .item-name {
+    flex: 1;
+    font-size: 0.78em;
+    color: #d4b483;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+.artificer-foundry .item-qty {
+    font-size: 0.78em;
+    color: #9a7040;
+    white-space: nowrap;
+    font-weight: bold;
+}
+
+.artificer-foundry .quick-add-btn {
+    color: #70a050;
+    font-size: 0.85em;
+}
+.artificer-foundry .quick-add-btn:hover { color: #90d060; }
+
+.artificer-foundry .no-inventory {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #4a3010;
+    padding: 20px 10px;
+    gap: 10px;
+}
+
+.artificer-foundry .no-inventory p {
+    font-size: 0.78em;
+    margin: 0;
+}
+
+/* ── Inventory button injected into actor sheet ─────────────── */
+.artificer-foundry-inventory-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #5c1818 0%, #3a0c0c 100%);
+    color: white;
+    border: 1px solid #8a2020;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+    cursor: pointer;
+    box-shadow: 0 0 6px rgba(180,30,30,0.5);
+    width: 100%;
+    transition: background 0.15s, box-shadow 0.15s;
+}
+
+.artificer-foundry-inventory-btn:hover {
+    background: linear-gradient(180deg, #7a2020 0%, #501010 100%);
+    box-shadow: 0 0 10px rgba(220,50,50,0.6);
 }

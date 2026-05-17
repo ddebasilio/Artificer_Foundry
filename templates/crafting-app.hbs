@@ -1,59 +1,179 @@
-<div class="artificer-foundry crafting-app flexrow">
-    <div class="recipe-list-container">
-        <h2>Recipes</h2>
+<div class="artificer-foundry crafting-app">
+
+    {{!-- ══════════════════════════════════════════════════ --}}
+    {{!-- LEFT PANEL — Recipe List                          --}}
+    {{!-- ══════════════════════════════════════════════════ --}}
+    <div class="panel recipe-list-panel">
+        <div class="panel-header">
+            <h2><i class="fas fa-book-open"></i> Recipes</h2>
+        </div>
+
+        {{!-- Search & Filters --}}
+        <div class="recipe-filters">
+            <input class="search-input" type="text" placeholder="Search recipes…" value="{{searchQuery}}">
+            <select class="filter-learned">
+                <option value="all" {{#if (eq filterLearned "all")}}selected{{/if}}>All Recipes</option>
+                <option value="known" {{#if (eq filterLearned "known")}}selected{{/if}}>Known</option>
+                <option value="unknown" {{#if (eq filterLearned "unknown")}}selected{{/if}}>Unknown</option>
+            </select>
+            <select class="filter-rarity">
+                <option value="all" {{#if (eq filterRarity "all")}}selected{{/if}}>All Rarities</option>
+                <option value="common" {{#if (eq filterRarity "common")}}selected{{/if}}>Common</option>
+                <option value="uncommon" {{#if (eq filterRarity "uncommon")}}selected{{/if}}>Uncommon</option>
+                <option value="rare" {{#if (eq filterRarity "rare")}}selected{{/if}}>Rare</option>
+                <option value="very_rare" {{#if (eq filterRarity "very_rare")}}selected{{/if}}>Very Rare</option>
+                <option value="legendary" {{#if (eq filterRarity "legendary")}}selected{{/if}}>Legendary</option>
+            </select>
+        </div>
+
+        {{!-- Recipe items --}}
         <div class="recipe-list">
             {{#each recipes}}
-                <div class="recipe-item {{#if (eq ../selectedRecipe.id this.id)}}selected{{/if}}" data-recipe-id="{{this.id}}">
-                    <div class="flexrow">
-                        <h4>{{this.name}}</h4>
-                        {{#if this.isLearned}}
-                            <i class="fas fa-check-circle" title="Learned"></i>
-                        {{else}}
-                            <a class="learn-recipe-btn" data-recipe-id="{{this.id}}" title="Learn this recipe"><i class="fas fa-book-medical"></i></a>
-                        {{/if}}
+                <div class="recipe-item rarity-{{this.rarity}} {{#unless this.isLearned}}unknown{{/unless}} {{#if (eq ../selectedRecipe.id this.id)}}selected{{/if}}"
+                     data-recipe-id="{{this.id}}">
+                    <div class="recipe-item-header">
+                        <span class="recipe-name">
+                            {{#unless this.isLearned}}<i class="fas fa-lock" title="Unknown Recipe"></i> {{/unless}}
+                            {{this.name}}
+                        </span>
+                        <div class="recipe-actions">
+                            {{#if this.isLearned}}
+                                <i class="fas fa-check-circle known-badge" title="Known Recipe"></i>
+                                {{#if ../isGM}}
+                                    <a class="forget-recipe-btn" data-recipe-id="{{this.id}}" title="Forget this recipe"><i class="fas fa-trash-alt"></i></a>
+                                {{/if}}
+                            {{else}}
+                                {{#if ../isGM}}
+                                    <a class="learn-recipe-btn" data-recipe-id="{{this.id}}" title="Teach this recipe"><i class="fas fa-graduation-cap"></i></a>
+                                {{/if}}
+                            {{/if}}
+                        </div>
                     </div>
-                    <span class="rarity {{this.rarity}}">{{this.rarity}}</span>
-                    <span class="time"><i class="fas fa-clock"></i> {{this.time}}</span>
+                    <div class="recipe-item-meta">
+                        <span class="rarity-badge rarity-{{this.rarity}}">{{this.rarity}}</span>
+                        <span class="time-badge"><i class="fas fa-clock"></i> {{this.time}}</span>
+                    </div>
                 </div>
+            {{else}}
+                <p class="empty-list">No recipes match your filters.</p>
             {{/each}}
         </div>
     </div>
 
-    <div class="crafting-station flexcol">
-        <h2>Crafting Station</h2>
-        <div class="selected-recipe-details">
-            {{#if selectedRecipe}}
+    {{!-- ══════════════════════════════════════════════════ --}}
+    {{!-- CENTER PANEL — Crafting Station                   --}}
+    {{!-- ══════════════════════════════════════════════════ --}}
+    <div class="panel crafting-station-panel">
+        <div class="panel-header">
+            <h2><i class="fas fa-mortar-pestle"></i> Crafting Station</h2>
+        </div>
+
+        {{#if selectedRecipe}}
+            {{!-- Recipe header --}}
+            <div class="selected-recipe-header rarity-bg-{{selectedRecipe.rarity}}">
                 <h3>{{selectedRecipe.name}}</h3>
-                <p><em>{{selectedRecipe.description}}</em></p>
-                <div class="requirements">
-                    <h4>Required Ingredients:</h4>
-                    <ul>
-                        {{#each mappedIngredients}}
-                            <li class="{{#if this.fulfilled}}fulfilled{{else}}missing{{/if}}">
-                                {{this.name}}: {{this.provided}} / {{this.quantity}}
-                                {{#if this.fulfilled}}
-                                    <i class="fas fa-check"></i>
-                                {{/if}}
-                            </li>
-                        {{/each}}
-                    </ul>
+                <div class="selected-recipe-meta">
+                    <span class="rarity-badge rarity-{{selectedRecipe.rarity}}">{{selectedRecipe.rarity}}</span>
+                    <span class="time-badge"><i class="fas fa-clock"></i> {{selectedRecipe.time}}</span>
+                    {{#unless selectedRecipe.isLearned}}
+                        <span class="unknown-badge"><i class="fas fa-lock"></i> Unknown</span>
+                    {{/unless}}
                 </div>
-            {{else}}
-                <p class="placeholder-text">Select a recipe from the list to view its details and begin crafting.</p>
-            {{/if}}
-        </div>
+                <p class="recipe-description">{{selectedRecipe.description}}</p>
+            </div>
 
-        <div class="ingredient-drop-zone {{#unless selectedRecipe}}disabled{{/unless}}" id="ingredient-drop-zone">
-            {{#if selectedRecipe}}
-                <p><i class="fas fa-box-open fa-2x"></i><br/>Drag and drop required ingredients here from your inventory.</p>
-            {{else}}
-                <p>Select a recipe first.</p>
-            {{/if}}
-        </div>
+            {{!-- Required Ingredients --}}
+            <div class="requirements">
+                <h4><i class="fas fa-list-ul"></i> Required Ingredients</h4>
+                <ul class="ingredient-list">
+                    {{#each mappedIngredients}}
+                        <li class="ingredient-row {{#if this.fulfilled}}fulfilled{{else}}missing{{/if}}">
+                            <span class="ingredient-status-icon">
+                                {{#if this.fulfilled}}
+                                    <i class="fas fa-check-circle"></i>
+                                {{else}}
+                                    <i class="fas fa-times-circle"></i>
+                                {{/if}}
+                            </span>
+                            <span class="ingredient-name">{{this.name}}</span>
+                            <span class="ingredient-type-badge type-{{this.type}}">{{this.type}}</span>
+                            <span class="ingredient-count">{{this.provided}} / {{this.quantity}}</span>
+                            {{#if this.fulfilled}}
+                                <button class="remove-ingredient-btn icon-btn" data-ingredient-name="{{this.name}}" title="Remove from station">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            {{/if}}
+                        </li>
+                    {{/each}}
+                </ul>
+            </div>
 
-        <div class="flexrow station-controls">
-            <button class="clear-station-btn" {{#unless selectedRecipe}}disabled{{/unless}}><i class="fas fa-trash"></i> Clear Station</button>
-            <button class="craft-btn" {{#unless canCraft}}disabled{{/unless}}><i class="fas fa-hammer"></i> Craft Item</button>
-        </div>
+            {{!-- Drop Zone --}}
+            <div class="ingredient-drop-zone" id="ingredient-drop-zone">
+                <i class="fas fa-vial fa-2x"></i>
+                <p>Drag ingredients here from the right panel<br><small>or use the <strong>+</strong> buttons</small></p>
+            </div>
+
+            {{!-- Controls --}}
+            <div class="station-controls">
+                <button class="clear-station-btn" {{#unless mappedIngredients}}disabled{{/unless}}>
+                    <i class="fas fa-trash"></i> Clear Station
+                </button>
+                <button class="craft-btn" {{#unless canCraft}}disabled{{/unless}}>
+                    <i class="fas fa-hammer"></i>
+                    {{#if canCraft}}Craft {{selectedRecipe.output.name}}{{else}}Craft Item{{/if}}
+                </button>
+            </div>
+
+            {{#unless selectedRecipe.isLearned}}
+                <p class="unknown-warning"><i class="fas fa-exclamation-triangle"></i> You have not yet learned this recipe. A GM can teach it to you.</p>
+            {{/unless}}
+
+        {{else}}
+            <div class="placeholder-area">
+                <i class="fas fa-flask fa-4x"></i>
+                <p>Select a recipe from the list on the left to begin crafting.</p>
+            </div>
+        {{/if}}
     </div>
+
+    {{!-- ══════════════════════════════════════════════════ --}}
+    {{!-- RIGHT PANEL — Character Inventory                 --}}
+    {{!-- ══════════════════════════════════════════════════ --}}
+    <div class="panel inventory-panel">
+        <div class="panel-header">
+            <h2><i class="fas fa-backpack"></i> Inventory
+                {{#if actor}}<small>({{actor.name}})</small>{{/if}}
+            </h2>
+        </div>
+
+        {{#if selectedRecipe}}
+            {{#if inventoryItems.length}}
+                <p class="inventory-hint">Items in your pack that match this recipe:</p>
+                <ul class="inventory-list">
+                    {{#each inventoryItems}}
+                        <li class="inventory-item" data-item-id="{{this.id}}" draggable="true" title="Drag to crafting station">
+                            <img class="item-img" src="{{this.img}}" alt="{{this.name}}">
+                            <span class="item-name">{{this.name}}</span>
+                            <span class="item-qty">×{{this.quantity}}</span>
+                            <button class="quick-add-btn icon-btn" data-item-id="{{this.id}}" title="Add to station">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </li>
+                    {{/each}}
+                </ul>
+            {{else}}
+                <div class="no-inventory">
+                    <i class="fas fa-box-open fa-2x"></i>
+                    <p>No matching ingredients found in your inventory for this recipe.</p>
+                </div>
+            {{/if}}
+        {{else}}
+            <div class="no-inventory">
+                <i class="fas fa-box fa-2x"></i>
+                <p>Select a recipe to see which ingredients you have on hand.</p>
+            </div>
+        {{/if}}
+    </div>
+
 </div>
