@@ -4,13 +4,17 @@
 
 /* ── Window ──────────────────────────────────────────────────── */
 .artificer-foundry.crafting-app {
+    font-family: "Signika", serif;
+    background: #1a1209;
+}
+
+/* Three-panel row — applied to the template root, NOT the application element */
+.crafting-panels-layout {
     display: flex;
     flex-direction: row;
     gap: 0;
     height: 100%;
     overflow: hidden;
-    font-family: "Signika", serif;
-    background: #1a1209;
 }
 
 /* ── Three-panel layout ──────────────────────────────────────── */
@@ -66,21 +70,6 @@
     margin-left: 5px;
 }
 
-.artificer-foundry .close-station-btn {
-    background: none;
-    border: none;
-    color: #a06040;
-    cursor: pointer;
-    font-size: 1em;
-    padding: 2px 6px;
-    border-radius: 3px;
-    line-height: 1;
-    flex-shrink: 0;
-}
-.artificer-foundry .close-station-btn:hover {
-    color: #e06030;
-    background: rgba(200, 60, 20, 0.15);
-}
 
 /* ══════════════════════════════════════════════════════════════
    LEFT PANEL — Filters + Recipe List
@@ -707,6 +696,7 @@
     border-radius: 3px;
     padding: 4px 6px;
     font-size: 0.8em;
+    width: auto;
 }
 
 .gatherer-search {

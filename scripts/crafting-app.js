@@ -152,10 +152,9 @@ export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
             btn.addEventListener('click', this._onRemoveIngredient.bind(this));
         });
 
-        // Craft / Clear / Close
+        // Craft / Clear
         el.querySelector('.craft-btn')?.addEventListener('click', this._onCraftItem.bind(this));
         el.querySelector('.clear-station-btn')?.addEventListener('click', this._onClearStation.bind(this));
-        el.querySelector('.close-station-btn')?.addEventListener('click', () => this.close());
     }
 
     // ── Recipe selection ──────────────────────────────────────────────────────
