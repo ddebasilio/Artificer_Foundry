@@ -53,17 +53,27 @@ Hooks.on('getActorSheetHeaderButtons', (app, buttons) => {
 // Inject a large red flask button into the inventory tab
 Hooks.on('renderActorSheet', (app, html, data) => {
     if (app.actor) {
-        // Look for the inventory filter or inventory list container
-        // This targets the dnd5e inventory tab header specifically, but falls back to generic locations
-        let targetArea = html.find('.tab.inventory .inventory-filters');
-        if (targetArea.length === 0) {
-            targetArea = html.find('.tab.inventory .items-list').first();
+        // Foundry V12+ standardizes on HTML elements over jQuery for new V2 Application apps, 
+        // but old apps still use jQuery. It's safer to handle both.
+        const htmlElement = html instanceof HTMLElement ? html : html[0];
+        
+        // Find inventory section using standard selectors
+        // Targets standard dnd5e V2 sheet layout, V1 layout, and generic layouts
+        let targetArea = htmlElement.querySelector('.tab[data-tab="inventory"] .inventory-filters, .tab[data-group="primary"][data-tab="inventory"] .inventory-filters, section.inventory, .inventory-list');
+        
+        if (!targetArea) {
+            targetArea = htmlElement.querySelector('.tab[data-tab="inventory"]'); // Fallback to inventory tab
         }
-        if (targetArea.length === 0) {
-            targetArea = html.find('.tab.inventory'); // Generic fallback
+        
+        if (!targetArea) {
+             // Ultimate fallback: Just append it to the sheet body
+             targetArea = htmlElement.querySelector('form') || htmlElement;
         }
 
-        if (targetArea.length > 0) {
+        if (targetArea) {
+            // Prevent adding multiple buttons if rendered multiple times
+            if (htmlElement.querySelector('.artificer-foundry-inventory-btn')) return;
+
             const buttonHtml = `
                 <div class="artificer-foundry-inventory-btn" style="
                     display: flex; 
@@ -77,25 +87,31 @@ Hooks.on('renderActorSheet', (app, html, data) => {
                     margin: 10px 0; 
                     cursor: pointer;
                     box-shadow: 0 0 5px red;
+                    width: 100%;
                 " title="Open Alchemy & Crafting">
                     <img src="icons/consumables/potions/potion-flask-corked-red.webp" style="width: 40px; height: 40px; margin-right: 15px; border: none; background: transparent;" alt="Red Flask">
                     <span style="font-size: 1.5em; font-weight: bold; text-shadow: 1px 1px 2px black;">Open Crafting Station</span>
                 </div>
             `;
             
-            // Insert it at the top of the target area
-            const buttonElement = $(buttonHtml);
+            // Create element
+            const template = document.createElement('template');
+            template.innerHTML = buttonHtml.trim();
+            const buttonElement = template.content.firstChild;
             
             // Open the app when clicked
-            buttonElement.click(ev => {
+            buttonElement.addEventListener('click', (ev) => {
                 ev.preventDefault();
                 new CraftingApp(app.actor).render(true);
             });
 
-            if (targetArea.hasClass('inventory-filters')) {
-                targetArea.after(buttonElement);
+            // Insert it
+            if (targetArea.classList && targetArea.classList.contains('inventory-filters')) {
+                targetArea.parentNode.insertBefore(buttonElement, targetArea.nextSibling);
+            } else if (targetArea.firstChild) {
+                targetArea.insertBefore(buttonElement, targetArea.firstChild);
             } else {
-                targetArea.prepend(buttonElement);
+                targetArea.appendChild(buttonElement);
             }
         }
     }
