@@ -58,7 +58,8 @@ Hooks.once('ready', function () {
         }
     });
 
-    observer.observe(interfaceEl, { childList: true });
+    // subtree: true catches windows nested inside sub-containers (e.g. Foundry v14 .windows-app)
+    observer.observe(interfaceEl, { childList: true, subtree: true });
     console.log(`${MODULE} | MutationObserver active on #${interfaceEl.id || interfaceEl.tagName}`);
 });
 
@@ -108,55 +109,42 @@ function _handleNewSheet(node) {
     if (!actor || actor.documentName !== 'Actor') return;
 
     console.log(`${MODULE} | Detected actor sheet for: ${actor.name}`);
-    injectCraftingButton(app, node, actor);
+
+    // Try immediately; if the inventory tab isn't rendered yet, retry with backoff.
+    if (!injectCraftingButton(app, node, actor)) {
+        _retryInjection(app, node, actor, 0);
+    }
+}
+
+// Retry injection up to ~4 s to handle lazy-rendered tab content.
+function _retryInjection(app, node, actor, attempt) {
+    if (attempt >= 20) return;
+    setTimeout(() => {
+        if (!node.isConnected) return; // sheet was closed
+        if (!injectCraftingButton(app, node, actor)) {
+            _retryInjection(app, node, actor, attempt + 1);
+        }
+    }, 200);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // BUTTON INJECTION
 // ─────────────────────────────────────────────────────────────────────────────
 
+// Returns true when the button was successfully injected (or already present),
+// false when no injection point was found (caller may retry).
 function injectCraftingButton(app, root, actor) {
     try {
-        if (!game.settings.get(MODULE_ID, "showCraftingButton")) return;
+        if (!game.settings.get(MODULE_ID, "showCraftingButton")) return true; // intentionally disabled
         if (!actor) {
             actor = app.document ?? app.object ?? app.actor;
-            if (!actor || actor.documentName !== 'Actor') return;
+            if (!actor || actor.documentName !== 'Actor') return true; // not an actor sheet
         }
 
         // Guard: only once per render
-        if (root.querySelector('.af-inventory-btn')) return;
+        if (root.querySelector('.af-inventory-btn')) return true;
 
-        // ── Find the inventory content section ────────────────────────────────
-        // We need the content panel, NOT the <a> nav item.
-        // Try selectors from most to least specific, skipping inline/nav elements.
-        const SELECTORS = [
-            'section.tab.inventory',
-            '.tab.inventory',
-            'section[data-tab="inventory"]',
-            'div[data-tab="inventory"]',
-            '.inventory-element',
-            '.items-list',
-            '.inventory-list',
-        ];
-
-        let target = null;
-        for (const sel of SELECTORS) {
-            const el = root.querySelector(sel);
-            // Skip if this is a nav link or other inline element
-            if (el && !['A', 'BUTTON', 'LI', 'SPAN'].includes(el.tagName)) {
-                target = el;
-                console.log(`${MODULE} | Inventory target found: "${sel}" (${el.tagName})`);
-                break;
-            }
-        }
-
-        if (!target) {
-            console.warn(`${MODULE} | Could not find inventory section for ${actor.name}`);
-            console.warn(`${MODULE} | Sheet HTML preview:`, root.outerHTML?.slice(0, 1200));
-            return;
-        }
-
-        // Build the button
+        // Build the button element
         const btn = document.createElement('div');
         btn.className = 'af-inventory-btn';
         btn.title = 'Open Alchemy & Crafting Station';
@@ -166,11 +154,44 @@ function injectCraftingButton(app, root, actor) {
         `;
         btn.addEventListener('click', () => new CraftingApp(actor).render());
 
-        target.insertBefore(btn, target.firstChild);
-        console.log(`${MODULE} | ✓ Button injected for ${actor.name}`);
+        // ── Find insertion point ──────────────────────────────────────────────
+        // dnd5e 4.x inventory layout:
+        //   div.top > div.encumbrance.card + ul.containers
+        // We want to insert between those two elements.
+
+        // Option A: after the encumbrance card (most precise)
+        const encumbrance = root.querySelector('.encumbrance.card') ?? root.querySelector('.encumbrance');
+        if (encumbrance) {
+            encumbrance.parentElement.insertBefore(btn, encumbrance.nextElementSibling);
+            console.log(`${MODULE} | ✓ Button injected after .encumbrance for ${actor.name}`);
+            return true;
+        }
+
+        // Option B: before the containers list
+        const containers = root.querySelector('ul.containers');
+        if (containers) {
+            containers.parentElement.insertBefore(btn, containers);
+            console.log(`${MODULE} | ✓ Button injected before ul.containers for ${actor.name}`);
+            return true;
+        }
+
+        // Option C: top of the inventory tab section (broad fallbacks)
+        const invSection =
+            root.querySelector('section.tab.inventory') ??
+            root.querySelector('section[data-tab="inventory"]') ??
+            root.querySelector('.tab[data-tab="inventory"]:not(a)');
+        if (invSection) {
+            invSection.insertBefore(btn, invSection.firstChild);
+            console.log(`${MODULE} | ✓ Button injected into inventory section for ${actor.name}`);
+            return true;
+        }
+
+        // No injection point found yet — caller should retry
+        return false;
 
     } catch (err) {
         console.error(`${MODULE} | injectCraftingButton error:`, err);
+        return false;
     }
 }
 
@@ -186,7 +207,11 @@ function injectCraftingButton(app, root, actor) {
 ].forEach(hookName => {
     Hooks.on(hookName, (app, html) => {
         const root = html instanceof HTMLElement ? html : html?.[0];
-        if (root) injectCraftingButton(app, root);
+        if (!root) return;
+        const actor = app.document ?? app.object ?? app.actor;
+        if (!injectCraftingButton(app, root, actor)) {
+            _retryInjection(app, root, actor, 0);
+        }
     });
 });
 
