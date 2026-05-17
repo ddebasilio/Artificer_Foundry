@@ -164,7 +164,17 @@ function injectCraftingTab(app, htmlArg) {
         navItem.addEventListener('click', e => {
             e.preventDefault();
             e.stopPropagation();
-            new CraftingApp(actor).render();
+            console.log(`${MODULE} | Crafting tab clicked — actor:`, actor?.name ?? 'null');
+            if (!actor) { ui.notifications.warn("No actor associated with this sheet."); return; }
+            try {
+                const craftApp = new CraftingApp(actor);
+                const p = craftApp.render();
+                if (p && typeof p.catch === 'function') {
+                    p.catch(err => console.error(`${MODULE} | CraftingApp render error:`, err));
+                }
+            } catch (err) {
+                console.error(`${MODULE} | Failed to open CraftingApp:`, err);
+            }
         });
 
         tabsNav.appendChild(navItem);
