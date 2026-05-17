@@ -38,7 +38,9 @@ Hooks.once('ready', async function() {
 
 // Add a button to the actor sheet to open the crafting app
 Hooks.on('getActorSheetHeaderButtons', (app, buttons) => {
+    console.log('Artificer Foundry | getActorSheetHeaderButtons hook fired for:', app.title);
     if (app.actor) {
+        console.log('Artificer Foundry | Actor found, adding header button.');
         buttons.unshift({
             class: 'artificer-foundry-btn',
             icon: 'fas fa-flask',
@@ -52,28 +54,31 @@ Hooks.on('getActorSheetHeaderButtons', (app, buttons) => {
 
 // Inject a large red flask button into the inventory tab
 Hooks.on('renderActorSheet', (app, html, data) => {
+    console.log('Artificer Foundry | renderActorSheet hook fired for:', app.title, 'Actor Type:', app.actor?.type);
     if (app.actor) {
-        // Foundry V12+ standardizes on HTML elements over jQuery for new V2 Application apps, 
-        // but old apps still use jQuery. It's safer to handle both.
         const htmlElement = html instanceof HTMLElement ? html : html[0];
         
-        // Find inventory section using standard selectors
-        // Targets standard dnd5e V2 sheet layout, V1 layout, and generic layouts
+        console.log('Artificer Foundry | Searching for target area in sheet...');
         let targetArea = htmlElement.querySelector('.tab[data-tab="inventory"] .inventory-filters, .tab[data-group="primary"][data-tab="inventory"] .inventory-filters, section.inventory, .inventory-list');
         
         if (!targetArea) {
-            targetArea = htmlElement.querySelector('.tab[data-tab="inventory"]'); // Fallback to inventory tab
+            console.log('Artificer Foundry | Primary target not found. Trying fallback 1...');
+            targetArea = htmlElement.querySelector('.tab[data-tab="inventory"]');
         }
         
         if (!targetArea) {
-             // Ultimate fallback: Just append it to the sheet body
+             console.log('Artificer Foundry | Fallback 1 not found. Trying ultimate fallback...');
              targetArea = htmlElement.querySelector('form') || htmlElement;
         }
 
         if (targetArea) {
-            // Prevent adding multiple buttons if rendered multiple times
-            if (htmlElement.querySelector('.artificer-foundry-inventory-btn')) return;
+            console.log('Artificer Foundry | Target area found!', targetArea);
+            if (htmlElement.querySelector('.artificer-foundry-inventory-btn')) {
+                console.log('Artificer Foundry | Button already exists. Aborting.');
+                return;
+            }
 
+            console.log('Artificer Foundry | Creating and injecting button...');
             const buttonHtml = `
                 <div class="artificer-foundry-inventory-btn" style="
                     display: flex; 
@@ -94,18 +99,15 @@ Hooks.on('renderActorSheet', (app, html, data) => {
                 </div>
             `;
             
-            // Create element
             const template = document.createElement('template');
             template.innerHTML = buttonHtml.trim();
             const buttonElement = template.content.firstChild;
             
-            // Open the app when clicked
             buttonElement.addEventListener('click', (ev) => {
                 ev.preventDefault();
                 new CraftingApp(app.actor).render(true);
             });
 
-            // Insert it
             if (targetArea.classList && targetArea.classList.contains('inventory-filters')) {
                 targetArea.parentNode.insertBefore(buttonElement, targetArea.nextSibling);
             } else if (targetArea.firstChild) {
@@ -113,6 +115,9 @@ Hooks.on('renderActorSheet', (app, html, data) => {
             } else {
                 targetArea.appendChild(buttonElement);
             }
+            console.log('Artificer Foundry | Button injected successfully.');
+        } else {
+            console.error('Artificer Foundry | Could not find any target area to inject the button into.');
         }
     }
 });

@@ -2,7 +2,7 @@
   "id": "artificer-foundry",
   "title": "Artificer Foundry - Alchemy & Crafting",
   "description": "A comprehensive alchemy and crafting tool for Foundry VTT. Features a recipe book for potions and items, ingredient management (from common herbs to rare monster parts), crafting time tracking, and a drag-and-drop crafting UI.",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "compatibility": {
     "minimum": "10",
     "verified": "14"
