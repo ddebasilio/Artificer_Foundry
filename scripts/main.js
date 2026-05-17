@@ -103,21 +103,38 @@ function injectButton(app, html) {
     }
 }
 
-// Add header button for both Application V1 and V2
-const headerHooks = ['getActorSheetHeaderButtons', 'getApplicationHeaderButtons'];
-headerHooks.forEach(hookName => {
+// Add header button for Application V1
+Hooks.on('getActorSheetHeaderButtons', (app, buttons) => {
+    let actor = app.document || app.actor;
+    if (actor && actor.documentName === 'Actor') {
+        buttons.unshift({
+            class: 'artificer-foundry-btn',
+            icon: 'fas fa-flask',
+            label: 'Crafting',
+            onclick: () => new CraftingApp(actor).render(true)
+        });
+    }
+});
+
+// Add header button for Application V2 (Foundry v13+, dnd5e 4.x/5.x)
+// AppV2 fires a hook named get{ClassName}HeaderButtons and requires onClick (camelCase)
+const v2HeaderHooks = [
+    'getActorSheet5eCharacter2HeaderButtons',
+    'getActorSheet5eNPC2HeaderButtons',
+    'getActorSheet5eVehicle2HeaderButtons',
+    'getActorSheet5eGroupHeaderButtons'
+];
+v2HeaderHooks.forEach(hookName => {
     Hooks.on(hookName, (app, buttons) => {
         let actor = app.document || app.actor;
-        if (actor && actor.documentName === 'Actor') {
-            buttons.unshift({
-                class: 'artificer-foundry-btn',
-                icon: 'fas fa-flask',
-                label: 'Crafting',
-                onclick: () => {
-                    new CraftingApp(actor).render(true);
-                }
-            });
-        }
+        if (!actor || actor.documentName !== 'Actor') return;
+        if (buttons.some(b => b.action === 'artificer-foundry')) return;
+        buttons.unshift({
+            action: 'artificer-foundry',
+            icon: 'fas fa-flask',
+            label: 'Crafting',
+            onClick: () => new CraftingApp(actor).render(true)
+        });
     });
 });
 
