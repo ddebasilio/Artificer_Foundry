@@ -1,4 +1,5 @@
 import { CraftingApp } from "./crafting-app.js";
+import { GathererApp } from "./gatherer-app.js";
 import { RecipeManager } from "./recipe-manager.js";
 
 const MODULE    = "Artificer Foundry";
@@ -44,11 +45,11 @@ Hooks.once('ready', function () {
         showCraftingApp: (actor) => new CraftingApp(actor ?? null).render(true)
     };
 
-    // Document-level capture handler for the injected crafting nav button.
+    // Document-level capture handler for the injected crafting/gatherer nav buttons.
     // Using capture phase (third arg = true) ensures this fires before dnd5e's
     // own tab-nav click delegation, which can otherwise swallow the event.
     document.addEventListener('click', (e) => {
-        const navItem = e.target.closest?.('.af-crafting-nav-item');
+        const navItem = e.target.closest?.('.af-crafting-nav-item, .af-gatherer-nav-item');
         if (!navItem) return;
         e.stopImmediatePropagation();
         e.stopPropagation();
@@ -58,11 +59,14 @@ Hooks.once('ready', function () {
             ui.notifications.warn("No actor associated with this sheet.");
             return;
         }
-        console.log(`${MODULE} | Crafting tab clicked — actor:`, actor.name);
-        try {
-            new CraftingApp(actor).render(true);
-        } catch (err) {
-            console.error(`${MODULE} | Failed to open CraftingApp:`, err);
+        if (navItem.classList.contains('af-crafting-nav-item')) {
+            console.log(`${MODULE} | Crafting tab clicked — actor:`, actor.name);
+            try { new CraftingApp(actor).render(true); }
+            catch (err) { console.error(`${MODULE} | Failed to open CraftingApp:`, err); }
+        } else {
+            console.log(`${MODULE} | Gatherer tab clicked — actor:`, actor.name);
+            try { new GathererApp(actor).render(true); }
+            catch (err) { console.error(`${MODULE} | Failed to open GathererApp:`, err); }
         }
     }, true);
 
@@ -185,9 +189,17 @@ function injectCraftingTab(app, htmlArg) {
 
         // Store actor reference for the document-level capture click handler
         navItem._af_actor = actor;
-
         tabsNav.appendChild(navItem);
-        console.log(`${MODULE} | ✓ Crafting tab injected for ${actor.name}`);
+
+        // Gatherer tab (leaf icon)
+        const gathererItem = document.createElement('a');
+        gathererItem.className = 'item af-gatherer-nav-item';
+        gathererItem.title = 'Ingredient Gatherer';
+        gathererItem.innerHTML = `<i class="fas fa-leaf"></i>`;
+        gathererItem._af_actor = actor;
+        tabsNav.appendChild(gathererItem);
+
+        console.log(`${MODULE} | ✓ Crafting tabs injected for ${actor.name}`);
 
     } catch (err) {
         console.error(`${MODULE} | injectCraftingTab error:`, err);

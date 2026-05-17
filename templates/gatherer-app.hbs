@@ -1,0 +1,90 @@
+<div class="gatherer-layout">
+
+    {{!-- ══════════════════════════════════════════════════ --}}
+    {{!-- LEFT PANEL — Ingredient Catalog                   --}}
+    {{!-- ══════════════════════════════════════════════════ --}}
+    <div class="panel gatherer-catalog-panel">
+        <div class="panel-header">
+            <h2><i class="fas fa-seedling"></i> Ingredient Catalog</h2>
+        </div>
+
+        <div class="gatherer-filters">
+            <input class="gatherer-search" type="text" placeholder="Search ingredients…" value="{{searchQuery}}">
+            <select class="gatherer-filter-type">
+                <option value="all" {{#if (eq filterType "all")}}selected{{/if}}>All Types</option>
+                {{#each allTypes}}
+                    <option value="{{this}}" {{#if (eq ../filterType this)}}selected{{/if}}>{{this}}</option>
+                {{/each}}
+            </select>
+        </div>
+
+        <div class="gatherer-catalog-list">
+            {{#each ingredients}}
+                <div class="ingredient-catalog-item"
+                     data-name="{{this.name}}"
+                     data-ing-type="{{this.type}}"
+                     draggable="true"
+                     title="Drag to backpack or click + to add">
+                    <div class="catalog-item-info">
+                        <span class="catalog-name">{{this.name}}</span>
+                        <span class="ingredient-type-badge type-{{this.type}}">{{this.type}}</span>
+                    </div>
+                    <div class="catalog-add-controls">
+                        <input class="catalog-qty" type="number" min="1" max="99" value="1" title="Quantity to add">
+                        <button class="add-ingredient-btn icon-btn"
+                                data-name="{{this.name}}"
+                                data-ing-type="{{this.type}}"
+                                title="Add to backpack">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            {{else}}
+                <p class="empty-list">No ingredients match your search.</p>
+            {{/each}}
+        </div>
+    </div>
+
+    {{!-- ══════════════════════════════════════════════════ --}}
+    {{!-- RIGHT PANEL — Backpack                            --}}
+    {{!-- ══════════════════════════════════════════════════ --}}
+    <div class="panel gatherer-inventory-panel">
+        <div class="panel-header">
+            <h2><i class="fas fa-backpack"></i>
+                {{#if actor}}{{actor.name}}'s Reagents{{else}}Reagent Pouch{{/if}}
+            </h2>
+        </div>
+
+        <div class="gatherer-inventory">
+            <div class="gatherer-drop-hint">
+                <i class="fas fa-hand-point-left"></i> Drag ingredients here to add them
+            </div>
+
+            {{#if inventory.length}}
+                <ul class="gatherer-inventory-list">
+                    {{#each inventory}}
+                        <li class="gatherer-inv-item">
+                            <img class="item-img" src="{{this.img}}" alt="{{this.name}}">
+                            <span class="item-name">{{this.name}}</span>
+                            <div class="inv-qty-controls">
+                                <button class="inv-qty-btn icon-btn" data-item-id="{{this.id}}" data-delta="-1" title="Remove one">−</button>
+                                <span class="item-qty">{{this.quantity}}</span>
+                                <button class="inv-qty-btn icon-btn" data-item-id="{{this.id}}" data-delta="1" title="Add one">+</button>
+                            </div>
+                            <button class="inv-remove-btn icon-btn" data-item-id="{{this.id}}" title="Remove from inventory">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </li>
+                    {{/each}}
+                </ul>
+            {{else}}
+                <div class="gatherer-empty">
+                    <i class="fas fa-box-open fa-2x"></i>
+                    <p>No reagents in inventory yet.</p>
+                    <p>Drag ingredients from the catalog or use the <strong>+</strong> buttons.</p>
+                </div>
+            {{/if}}
+        </div>
+    </div>
+
+</div>
