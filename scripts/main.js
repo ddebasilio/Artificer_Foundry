@@ -20,7 +20,7 @@ Hooks.once('init', async function() {
     });
 
     // Register Template
-    loadTemplates([
+    foundry.applications.handlebars.loadTemplates([
         "modules/artificer-foundry/templates/crafting-app.hbs"
     ]);
 });
