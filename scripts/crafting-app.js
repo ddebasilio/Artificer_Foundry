@@ -153,9 +153,10 @@ export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
             btn.addEventListener('click', this._onRemoveIngredient.bind(this));
         });
 
-        // Craft / Clear
+        // Craft / Clear / Close
         el.querySelector('.craft-btn')?.addEventListener('click', this._onCraftItem.bind(this));
         el.querySelector('.clear-station-btn')?.addEventListener('click', this._onClearStation.bind(this));
+        el.querySelector('.close-station-btn')?.addEventListener('click', () => this.close());
     }
 
     // ── Recipe selection ──────────────────────────────────────────────────────
@@ -248,10 +249,25 @@ export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
         );
         if (!required) { ui.notifications.warn(`"${item.name}" is not needed for this recipe.`); return; }
 
-        const already = this.providedIngredients[required.name] || 0;
-        if (already >= required.quantity) { ui.notifications.info(`Already have enough ${required.name}.`); return; }
+        // Total inventory quantity across all stacks of this ingredient
+        const totalInInventory = (this.actor?.items?.contents ?? [])
+            .filter(i => i.name.toLowerCase() === required.name.toLowerCase())
+            .reduce((sum, i) => sum + (i.system?.quantity ?? 1), 0);
 
-        const toAdd = Math.min(required.quantity - already, item.system?.quantity ?? 1);
+        const already = this.providedIngredients[required.name] || 0;
+
+        // Cap: cannot commit more than is actually in inventory, and no more than recipe needs
+        const maxCanCommit = Math.min(required.quantity, totalInInventory);
+        if (already >= maxCanCommit) {
+            if (totalInInventory < required.quantity) {
+                ui.notifications.warn(`Not enough ${required.name} in inventory (have ${totalInInventory}, need ${required.quantity}).`);
+            } else {
+                ui.notifications.info(`Already have enough ${required.name} staged.`);
+            }
+            return;
+        }
+
+        const toAdd = maxCanCommit - already;
         this.providedIngredients[required.name] = already + toAdd;
         ui.notifications.info(`Added ${toAdd}× ${item.name} to the crafting station.`);
         this.render();
