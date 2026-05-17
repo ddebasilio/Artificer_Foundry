@@ -131,8 +131,8 @@ function _retryInjection(app, node, actor, attempt) {
 // BUTTON INJECTION
 // ─────────────────────────────────────────────────────────────────────────────
 
-// Returns true when the button was successfully injected (or already present),
-// false when no injection point was found (caller may retry).
+// Returns true when the tab button was successfully injected (or already present),
+// false when the nav bar hasn't rendered yet (caller may retry).
 function injectCraftingButton(app, root, actor) {
     try {
         if (!game.settings.get(MODULE_ID, "showCraftingButton")) return true; // intentionally disabled
@@ -142,51 +142,33 @@ function injectCraftingButton(app, root, actor) {
         }
 
         // Guard: only once per render
-        if (root.querySelector('.af-inventory-btn')) return true;
+        if (root.querySelector('.af-crafting-tab-btn')) return true;
 
-        // Build the button element
-        const btn = document.createElement('div');
-        btn.className = 'af-inventory-btn';
-        btn.title = 'Open Alchemy & Crafting Station';
-        btn.innerHTML = `
-            <img src="icons/commodities/materials/bowl-powder-gold.webp" alt="Crafting Station">
-            <span>Open Crafting Station</span>
-        `;
-        btn.addEventListener('click', () => new CraftingApp(actor).render());
+        // Build the tab nav item — no data-tab so dnd5e's tab system ignores it
+        const btn = document.createElement('a');
+        btn.className = 'item control af-crafting-tab-btn';
+        btn.title = 'Alchemy & Crafting Station';
+        btn.innerHTML = `<i class="fas fa-flask"></i> Crafting`;
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            new CraftingApp(actor).render();
+        });
 
-        // ── Find insertion point ──────────────────────────────────────────────
-        // dnd5e 4.x inventory layout:
-        //   div.top > div.encumbrance.card + ul.containers
-        // We want to insert between those two elements.
+        // Find the primary tab nav bar
+        const nav =
+            root.querySelector('nav.tabs[data-group="primary"]') ??
+            root.querySelector('nav.sheet-navigation.tabs') ??
+            root.querySelector('nav.tabs') ??
+            root.querySelector('.sheet-tabs');
 
-        // Option A: after the encumbrance card (most precise)
-        const encumbrance = root.querySelector('.encumbrance.card') ?? root.querySelector('.encumbrance');
-        if (encumbrance) {
-            encumbrance.parentElement.insertBefore(btn, encumbrance.nextElementSibling);
-            console.log(`${MODULE} | ✓ Button injected after .encumbrance for ${actor.name}`);
+        if (nav) {
+            nav.appendChild(btn);
+            console.log(`${MODULE} | ✓ Crafting tab injected for ${actor.name}`);
             return true;
         }
 
-        // Option B: before the containers list
-        const containers = root.querySelector('ul.containers');
-        if (containers) {
-            containers.parentElement.insertBefore(btn, containers);
-            console.log(`${MODULE} | ✓ Button injected before ul.containers for ${actor.name}`);
-            return true;
-        }
-
-        // Option C: top of the inventory tab section (broad fallbacks)
-        const invSection =
-            root.querySelector('section.tab.inventory') ??
-            root.querySelector('section[data-tab="inventory"]') ??
-            root.querySelector('.tab[data-tab="inventory"]:not(a)');
-        if (invSection) {
-            invSection.insertBefore(btn, invSection.firstChild);
-            console.log(`${MODULE} | ✓ Button injected into inventory section for ${actor.name}`);
-            return true;
-        }
-
-        // No injection point found yet — caller should retry
+        // Nav bar not found yet — caller should retry
         return false;
 
     } catch (err) {

@@ -583,127 +583,19 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   CHARACTER SHEET — Injected Crafting Tab
+   CHARACTER SHEET — Crafting Tab Button (nav bar injection)
    ═══════════════════════════════════════════════════════════════ */
 
-/* Nav item — matches the dnd5e tab bar style */
-.af-crafting-nav-item {
-    display: flex;
-    align-items: center;
-    gap: 4px;
+/* Sits in the dnd5e tab nav alongside Details / Inventory / Effects.
+   No data-tab attribute → dnd5e's tab system leaves it alone.
+   Clicking it opens the CraftingApp floating window. */
+.af-crafting-tab-btn {
     cursor: pointer;
     white-space: nowrap;
 }
 
-.af-crafting-nav-item i {
-    /* colour overridden to match the flask theme */
-    color: inherit;
-}
-
-/* Tab pane container (lives inside the sheet's .tab-body) */
-.af-crafting-tab-pane {
-    overflow-y: auto;
-    padding: 10px;
-    height: 100%;
-    box-sizing: border-box;
-}
-
-.af-tab-pane-inner {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
-
-/* Header row */
-.af-tab-pane-header {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-}
-
-.af-open-station-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 9px 18px;
-    font-size: 0.95em;
-    font-weight: bold;
-    background: linear-gradient(180deg, #5c1818 0%, #3a0c0c 100%);
-    color: #f0c0a0;
-    border: 1px solid #8a3020;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background 0.15s, box-shadow 0.15s;
-    box-shadow: 0 2px 6px rgba(140,30,10,0.4);
-}
-
-.af-open-station-btn:hover {
-    background: linear-gradient(180deg, #7a2020 0%, #501010 100%);
-    box-shadow: 0 2px 10px rgba(200,50,20,0.5);
-}
-
-.af-tab-pane-summary {
-    font-size: 0.8em;
-    color: #888;
-    margin: 0;
-}
-
-/* Recipe sections */
-.af-recipe-section h4 {
-    font-size: 0.82em;
-    font-weight: bold;
-    margin: 0 0 6px 0;
-    padding-bottom: 4px;
-    border-bottom: 1px solid rgba(0,0,0,0.15);
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.af-recipe-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-}
-
-.af-recipe-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 7px;
-    border-radius: 3px;
-    border-left: 3px solid #888;
-    background: rgba(0,0,0,0.04);
-    font-size: 0.82em;
-}
-
-/* Rarity left-border accents (reuse same colours as the main app) */
-.af-recipe-row.rarity-common    { border-left-color: #6a8a50; }
-.af-recipe-row.rarity-uncommon  { border-left-color: #2e8a4a; }
-.af-recipe-row.rarity-rare      { border-left-color: #3060c0; }
-.af-recipe-row.rarity-very_rare { border-left-color: #9030c0; }
-.af-recipe-row.rarity-legendary { border-left-color: #c09000; }
-
-.af-recipe-row-name {
-    flex: 1;
-    font-weight: bold;
-}
-
-/* rarity-badge and time-badge are already defined above and work here too */
-
-.af-unknown .af-recipe-row {
-    opacity: 0.55;
-}
-
-.af-empty {
-    font-size: 0.8em;
-    color: #999;
-    font-style: italic;
-    padding: 4px 6px;
+.af-crafting-tab-btn i {
+    color: #c09040;
 }
 
 /* ═══════════════════════════════════════════════════════════════
