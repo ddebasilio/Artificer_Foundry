@@ -27,7 +27,7 @@
       "path": "languages/en.json"
     }
   ],
-  "url": "",
-  "manifest": "",
-  "download": ""
+  "url": "https://github.com/ddebasilio/Artificer_Foundry",
+  "manifest": "https://raw.githubusercontent.com/ddebasilio/Artificer_Foundry/refs/heads/main/module.json",
+  "download": "https://github.com/ddebasilio/Artificer_Foundry/archive/refs/heads/main.zip"
 }
