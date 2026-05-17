@@ -41,8 +41,30 @@ Hooks.once('ready', function () {
 
     window.ArtificerFoundry = {
         recipeManager: new RecipeManager(),
-        showCraftingApp: (actor) => new CraftingApp(actor ?? null).render()
+        showCraftingApp: (actor) => new CraftingApp(actor ?? null).render(true)
     };
+
+    // Document-level capture handler for the injected crafting nav button.
+    // Using capture phase (third arg = true) ensures this fires before dnd5e's
+    // own tab-nav click delegation, which can otherwise swallow the event.
+    document.addEventListener('click', (e) => {
+        const navItem = e.target.closest?.('.af-crafting-nav-item');
+        if (!navItem) return;
+        e.stopImmediatePropagation();
+        e.stopPropagation();
+        e.preventDefault();
+        const actor = navItem._af_actor;
+        if (!actor || actor.documentName !== 'Actor') {
+            ui.notifications.warn("No actor associated with this sheet.");
+            return;
+        }
+        console.log(`${MODULE} | Crafting tab clicked — actor:`, actor.name);
+        try {
+            new CraftingApp(actor).render(true);
+        } catch (err) {
+            console.error(`${MODULE} | Failed to open CraftingApp:`, err);
+        }
+    }, true);
 
     // MutationObserver — catches sheets opened before hooks fire
     const interfaceEl = document.querySelector('#interface') ?? document.body;
@@ -161,21 +183,8 @@ function injectCraftingTab(app, htmlArg) {
         navItem.title = 'Alchemy & Crafting Station';
         navItem.innerHTML = `<i class="fas fa-flask"></i>`;
 
-        navItem.addEventListener('click', e => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log(`${MODULE} | Crafting tab clicked — actor:`, actor?.name ?? 'null');
-            if (!actor) { ui.notifications.warn("No actor associated with this sheet."); return; }
-            try {
-                const craftApp = new CraftingApp(actor);
-                const p = craftApp.render();
-                if (p && typeof p.catch === 'function') {
-                    p.catch(err => console.error(`${MODULE} | CraftingApp render error:`, err));
-                }
-            } catch (err) {
-                console.error(`${MODULE} | Failed to open CraftingApp:`, err);
-            }
-        });
+        // Store actor reference for the document-level capture click handler
+        navItem._af_actor = actor;
 
         tabsNav.appendChild(navItem);
         console.log(`${MODULE} | ✓ Crafting tab injected for ${actor.name}`);
