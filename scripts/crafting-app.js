@@ -1,42 +1,54 @@
-export class CraftingApp extends Application {
+const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+
+export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
+
     constructor(actor = null, options = {}) {
         super(options);
         this.actor = actor;
         this.selectedRecipeId = null;
-        this.providedIngredients = {}; // { ingredientName: quantityProvided }
+        this.providedIngredients = {};
         this.filterRarity = "all";
-        this.filterLearned = "all"; // "all" | "known" | "unknown"
+        this.filterLearned = "all";
         this.searchQuery = "";
     }
 
-    static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
-            id: "artificer-foundry-app",
+    // ── Application V2 config ─────────────────────────────────────────────────
+
+    static DEFAULT_OPTIONS = {
+        id: "artificer-foundry-app",
+        window: {
             title: "Alchemy & Crafting Station",
-            template: "modules/artificer-foundry/templates/crafting-app.hbs",
+            icon: "fas fa-flask",
+            resizable: true,
+        },
+        classes: ["artificer-foundry", "crafting-app"],
+        position: {
             width: 960,
             height: 680,
-            resizable: true,
-            classes: ["artificer-foundry", "crafting-app"]
-        });
-    }
+        }
+    };
 
-    getData() {
+    static PARTS = {
+        crafting: {
+            template: "modules/artificer-foundry/templates/crafting-app.hbs"
+        }
+    };
+
+    // ── Data for the template ─────────────────────────────────────────────────
+
+    async _prepareContext(options) {
         const allRecipes = window.ArtificerFoundry.recipeManager.getRecipesForActor(this.actor);
 
-        // Apply filters
         const recipes = allRecipes.filter(r => {
             if (this.filterRarity !== "all" && r.rarity !== this.filterRarity) return false;
-            if (this.filterLearned === "known" && !r.isLearned) return false;
-            if (this.filterLearned === "unknown" && r.isLearned) return false;
+            if (this.filterLearned === "known"   && !r.isLearned) return false;
+            if (this.filterLearned === "unknown" &&  r.isLearned) return false;
             if (this.searchQuery) {
-                const q = this.searchQuery.toLowerCase();
-                if (!r.name.toLowerCase().includes(q)) return false;
+                if (!r.name.toLowerCase().includes(this.searchQuery.toLowerCase())) return false;
             }
             return true;
         });
 
-        // Find selected recipe
         let selectedRecipe = null;
         let mappedIngredients = [];
 
@@ -45,11 +57,7 @@ export class CraftingApp extends Application {
             if (selectedRecipe) {
                 mappedIngredients = selectedRecipe.ingredients.map(ing => {
                     const provided = this.providedIngredients[ing.name] || 0;
-                    return {
-                        ...ing,
-                        provided,
-                        fulfilled: provided >= ing.quantity
-                    };
+                    return { ...ing, provided, fulfilled: provided >= ing.quantity };
                 });
             }
         }
@@ -58,17 +66,11 @@ export class CraftingApp extends Application {
             mappedIngredients.length > 0 &&
             mappedIngredients.every(i => i.fulfilled);
 
-        // Build actor inventory items relevant to the selected recipe
         let inventoryItems = [];
         if (this.actor && selectedRecipe) {
-            const requiredNames = new Set(
-                selectedRecipe.ingredients.map(i => i.name.toLowerCase())
-            );
-            inventoryItems = (this.actor.items?.contents || [])
-                .filter(item => {
-                    const qty = item.system?.quantity ?? 1;
-                    return qty > 0 && requiredNames.has(item.name.toLowerCase());
-                })
+            const required = new Set(selectedRecipe.ingredients.map(i => i.name.toLowerCase()));
+            inventoryItems = (this.actor.items?.contents ?? [])
+                .filter(item => (item.system?.quantity ?? 1) > 0 && required.has(item.name.toLowerCase()))
                 .map(item => ({
                     id: item.id,
                     name: item.name,
@@ -88,83 +90,91 @@ export class CraftingApp extends Application {
             filterRarity: this.filterRarity,
             filterLearned: this.filterLearned,
             searchQuery: this.searchQuery,
-            rarities: ["common", "uncommon", "rare", "very_rare", "legendary"]
         };
     }
 
-    activateListeners(html) {
-        super.activateListeners(html);
+    // ── Event wiring (V2 equivalent of activateListeners) ─────────────────────
+
+    _onRender(context, options) {
+        const el = this.element;
 
         // Recipe selection
-        html.find('.recipe-item').click(this._onSelectRecipe.bind(this));
+        el.querySelectorAll('.recipe-item').forEach(item => {
+            item.addEventListener('click', this._onSelectRecipe.bind(this));
+        });
 
-        // Learn / Forget recipe
-        html.find('.learn-recipe-btn').click(this._onLearnRecipe.bind(this));
-        html.find('.forget-recipe-btn').click(this._onForgetRecipe.bind(this));
+        // Learn / Forget
+        el.querySelectorAll('.learn-recipe-btn').forEach(btn => {
+            btn.addEventListener('click', this._onLearnRecipe.bind(this));
+        });
+        el.querySelectorAll('.forget-recipe-btn').forEach(btn => {
+            btn.addEventListener('click', this._onForgetRecipe.bind(this));
+        });
 
         // Filters
-        html.find('.filter-rarity').change(this._onFilterChange.bind(this));
-        html.find('.filter-learned').change(this._onFilterChange.bind(this));
-        html.find('.search-input').on('input', this._onSearchChange.bind(this));
+        el.querySelectorAll('.filter-rarity').forEach(sel => {
+            sel.addEventListener('change', this._onFilterChange.bind(this));
+        });
+        el.querySelectorAll('.filter-learned').forEach(sel => {
+            sel.addEventListener('change', this._onFilterChange.bind(this));
+        });
+        el.querySelectorAll('.search-input').forEach(inp => {
+            inp.addEventListener('input', this._onSearchChange.bind(this));
+        });
 
         // Drop zone
-        const dropZone = html.find('.ingredient-drop-zone')[0];
+        const dropZone = el.querySelector('.ingredient-drop-zone');
         if (dropZone) {
             dropZone.addEventListener('dragover', e => {
                 e.preventDefault();
                 dropZone.classList.add('drag-over');
             });
-            dropZone.addEventListener('dragleave', () => {
-                dropZone.classList.remove('drag-over');
-            });
+            dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
             dropZone.addEventListener('drop', this._onDropIngredient.bind(this));
         }
 
-        // Inventory item drag source — so players can drag from the right panel
-        html.find('.inventory-item').each((i, el) => {
-            el.setAttribute('draggable', true);
-            el.addEventListener('dragstart', ev => {
-                const itemId = el.dataset.itemId;
-                const item = this.actor?.items?.get(itemId);
+        // Inventory panel drag sources
+        el.querySelectorAll('.inventory-item').forEach(row => {
+            row.setAttribute('draggable', 'true');
+            row.addEventListener('dragstart', ev => {
+                const item = this.actor?.items?.get(row.dataset.itemId);
                 if (!item) return;
-                ev.dataTransfer.setData('text/plain', JSON.stringify({
-                    type: 'Item',
-                    uuid: item.uuid
-                }));
+                ev.dataTransfer.setData('text/plain', JSON.stringify({ type: 'Item', uuid: item.uuid }));
             });
         });
 
-        // Quick-add button on inventory items
-        html.find('.quick-add-btn').click(this._onQuickAdd.bind(this));
+        // Quick-add buttons
+        el.querySelectorAll('.quick-add-btn').forEach(btn => {
+            btn.addEventListener('click', this._onQuickAdd.bind(this));
+        });
+
+        // Remove ingredient from station
+        el.querySelectorAll('.remove-ingredient-btn').forEach(btn => {
+            btn.addEventListener('click', this._onRemoveIngredient.bind(this));
+        });
 
         // Craft / Clear
-        html.find('.craft-btn').click(this._onCraftItem.bind(this));
-        html.find('.clear-station-btn').click(this._onClearStation.bind(this));
-
-        // Remove individual ingredient from station
-        html.find('.remove-ingredient-btn').click(this._onRemoveIngredient.bind(this));
+        el.querySelector('.craft-btn')?.addEventListener('click', this._onCraftItem.bind(this));
+        el.querySelector('.clear-station-btn')?.addEventListener('click', this._onClearStation.bind(this));
     }
 
-    // ─────────────────────────── RECIPE SELECTION ──────────────────────────
+    // ── Recipe selection ──────────────────────────────────────────────────────
 
     _onSelectRecipe(event) {
         event.preventDefault();
         const id = event.currentTarget.dataset.recipeId;
-        if (this.selectedRecipeId === id) return; // already selected
+        if (this.selectedRecipeId === id) return;
         this.selectedRecipeId = id;
         this.providedIngredients = {};
         this.render();
     }
 
-    // ──────────────────────────── LEARN / FORGET ────────────────────────────
+    // ── Learn / Forget ────────────────────────────────────────────────────────
 
     async _onLearnRecipe(event) {
         event.preventDefault();
         event.stopPropagation();
-        if (!this.actor) {
-            ui.notifications.warn("No actor associated with this crafting station.");
-            return;
-        }
+        if (!this.actor) { ui.notifications.warn("No actor associated with this crafting station."); return; }
         const recipeId = event.currentTarget.dataset.recipeId;
         await window.ArtificerFoundry.recipeManager.learnRecipe(this.actor.id, recipeId);
         ui.notifications.info(`${this.actor.name} has learned a new recipe!`);
@@ -181,11 +191,11 @@ export class CraftingApp extends Application {
         this.render();
     }
 
-    // ─────────────────────────────── FILTERS ────────────────────────────────
+    // ── Filters ───────────────────────────────────────────────────────────────
 
     _onFilterChange(event) {
         const el = event.currentTarget;
-        if (el.classList.contains('filter-rarity')) this.filterRarity = el.value;
+        if (el.classList.contains('filter-rarity'))  this.filterRarity  = el.value;
         if (el.classList.contains('filter-learned')) this.filterLearned = el.value;
         this.render();
     }
@@ -195,16 +205,13 @@ export class CraftingApp extends Application {
         this.render();
     }
 
-    // ───────────────────────── DRAG & DROP ──────────────────────────────────
+    // ── Drag & Drop ───────────────────────────────────────────────────────────
 
     async _onDropIngredient(event) {
         event.preventDefault();
         event.currentTarget.classList?.remove('drag-over');
 
-        if (!this.selectedRecipeId) {
-            ui.notifications.warn("Please select a recipe first.");
-            return;
-        }
+        if (!this.selectedRecipeId) { ui.notifications.warn("Select a recipe first."); return; }
 
         try {
             const raw = event.dataTransfer?.getData('text/plain');
@@ -215,12 +222,10 @@ export class CraftingApp extends Application {
             const item = await fromUuid(data.uuid);
             if (!item) return;
 
-            // Must belong to this actor
             if (item.parent?.id !== this.actor?.id) {
                 ui.notifications.warn("You can only use items from your own inventory.");
                 return;
             }
-
             this._addIngredientFromItem(item);
         } catch (err) {
             console.error("Artificer Foundry | Drop error:", err);
@@ -229,10 +234,8 @@ export class CraftingApp extends Application {
 
     async _onQuickAdd(event) {
         event.preventDefault();
-        const itemId = event.currentTarget.dataset.itemId;
-        const item = this.actor?.items?.get(itemId);
-        if (!item) return;
-        this._addIngredientFromItem(item);
+        const item = this.actor?.items?.get(event.currentTarget.dataset.itemId);
+        if (item) this._addIngredientFromItem(item);
     }
 
     _addIngredientFromItem(item) {
@@ -243,23 +246,13 @@ export class CraftingApp extends Application {
         const required = recipe.ingredients.find(
             i => i.name.toLowerCase() === item.name.toLowerCase()
         );
+        if (!required) { ui.notifications.warn(`"${item.name}" is not needed for this recipe.`); return; }
 
-        if (!required) {
-            ui.notifications.warn(`"${item.name}" is not needed for this recipe.`);
-            return;
-        }
+        const already = this.providedIngredients[required.name] || 0;
+        if (already >= required.quantity) { ui.notifications.info(`Already have enough ${required.name}.`); return; }
 
-        const alreadyProvided = this.providedIngredients[required.name] || 0;
-        if (alreadyProvided >= required.quantity) {
-            ui.notifications.info(`You already have enough ${required.name}.`);
-            return;
-        }
-
-        const inventoryQty = item.system?.quantity ?? 1;
-        const stillNeeded = required.quantity - alreadyProvided;
-        const toAdd = Math.min(stillNeeded, inventoryQty);
-
-        this.providedIngredients[required.name] = alreadyProvided + toAdd;
+        const toAdd = Math.min(required.quantity - already, item.system?.quantity ?? 1);
+        this.providedIngredients[required.name] = already + toAdd;
         ui.notifications.info(`Added ${toAdd}× ${item.name} to the crafting station.`);
         this.render();
     }
@@ -267,13 +260,10 @@ export class CraftingApp extends Application {
     _onRemoveIngredient(event) {
         event.preventDefault();
         const name = event.currentTarget.dataset.ingredientName;
-        if (name && this.providedIngredients[name]) {
-            delete this.providedIngredients[name];
-            this.render();
-        }
+        if (name) { delete this.providedIngredients[name]; this.render(); }
     }
 
-    // ──────────────────────────── CRAFTING ──────────────────────────────────
+    // ── Crafting ──────────────────────────────────────────────────────────────
 
     async _onCraftItem(event) {
         event.preventDefault();
@@ -283,7 +273,6 @@ export class CraftingApp extends Application {
         const recipe = allRecipes.find(r => r.id === this.selectedRecipeId);
         if (!recipe) return;
 
-        // Final validation
         for (const ing of recipe.ingredients) {
             const provided = this.providedIngredients[ing.name] || 0;
             if (provided < ing.quantity) {
@@ -292,40 +281,51 @@ export class CraftingApp extends Application {
             }
         }
 
-        // Deduct ingredients from inventory
+        // Deduct ingredients
         for (const ing of recipe.ingredients) {
             let remaining = ing.quantity;
-            const actorItems = this.actor.items.filter(
-                i => i.name.toLowerCase() === ing.name.toLowerCase()
-            );
-            for (const actorItem of actorItems) {
+            for (const actorItem of this.actor.items.filter(i => i.name.toLowerCase() === ing.name.toLowerCase())) {
                 if (remaining <= 0) break;
-                const currentQty = actorItem.system?.quantity ?? 1;
-                if (currentQty <= remaining) {
-                    remaining -= currentQty;
-                    await actorItem.delete();
-                } else {
-                    await actorItem.update({ "system.quantity": currentQty - remaining });
-                    remaining = 0;
-                }
+                const qty = actorItem.system?.quantity ?? 1;
+                if (qty <= remaining) { remaining -= qty; await actorItem.delete(); }
+                else { await actorItem.update({ "system.quantity": qty - remaining }); remaining = 0; }
             }
         }
 
-        // Add crafted item to inventory
+        // Add crafted item — prefer compendium match, fall back to loot
         const output = recipe.output;
-        const newItemData = {
-            name: output.name,
-            type: output.type || "consumable",
-            img: output.img || "icons/consumables/potions/potion-flask-corked-red.webp",
-            system: { quantity: output.quantity || 1 }
-        };
-        await this.actor.createEmbeddedDocuments("Item", [newItemData]);
+        const compendiumItem = await this._findInCompendiums(output.name);
+        if (compendiumItem) {
+            const itemData = compendiumItem.toObject();
+            itemData.system.quantity = output.quantity ?? 1;
+            await this.actor.createEmbeddedDocuments("Item", [itemData]);
+            console.log(`Artificer Foundry | Created "${output.name}" from compendium`);
+        } else {
+            await this.actor.createEmbeddedDocuments("Item", [{
+                name: output.name,
+                type: "loot",
+                img: output.img ?? "icons/consumables/potions/potion-flask-corked-red.webp",
+                system: { quantity: output.quantity ?? 1 }
+            }]);
+            console.log(`Artificer Foundry | Created "${output.name}" as loot item`);
+        }
 
         ui.notifications.info(`✓ ${this.actor.name} crafted ${output.name}!`);
-
-        // Reset station
         this.providedIngredients = {};
         this.render();
+    }
+
+    async _findInCompendiums(name) {
+        const target = name.toLowerCase();
+        for (const pack of game.packs) {
+            if (pack.documentName !== "Item") continue;
+            try {
+                const index = await pack.getIndex();
+                const entry = index.find(e => e.name.toLowerCase() === target);
+                if (entry) return await pack.getDocument(entry._id);
+            } catch { /* pack unavailable */ }
+        }
+        return null;
     }
 
     _onClearStation(event) {
