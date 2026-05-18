@@ -17,12 +17,12 @@
 
 /* ── Panel Headers ─────────────────────────────────────────── */
 .artificer-foundry .panel-header { padding: 8px 10px; background: linear-gradient(180deg, #2a1f4e 0%, #1a1535 100%); border-bottom: 2px solid #5a3fa0; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; }
-.artificer-foundry .panel-header h2 { margin: 0; font-size: 1em; color: #c8a0ff; text-shadow: 1px 1px 3px #000; font-weight: bold; letter-spacing: 0.05em; flex: 1; }
-.artificer-foundry .panel-header h2 small { font-size: 0.75em; color: #9a7acc; margin-left: 5px; }
+.artificer-foundry .panel-header h2 { margin: 0; font-size: 1.15em; color: #c8a0ff; text-shadow: 1px 1px 3px #000; font-weight: bold; letter-spacing: 0.05em; flex: 1; }
+.artificer-foundry .panel-header h2 small { font-size: 0.9em; color: #9a7acc; margin-left: 5px; }
 
 /* ── Filters ───────────────────────────────────────────────── */
 .artificer-foundry .recipe-filters { display: flex; flex-direction: column; gap: 4px; padding: 6px 8px; background: #12101e; border-bottom: 1px solid #3a2870; flex-shrink: 0; }
-.artificer-foundry .search-input, .artificer-foundry .filter-rarity, .artificer-foundry .filter-learned { width: 100%; background: #0a0814; color: #c0a8e0; border: 1px solid #4a3080; border-radius: 4px; padding: 4px 6px; font-size: 0.8em; }
+.artificer-foundry .search-input, .artificer-foundry .filter-rarity, .artificer-foundry .filter-learned { width: 100%; background: #0a0814; color: #c0a8e0; border: 1px solid #4a3080; border-radius: 4px; padding: 4px 6px; font-size: 0.9em; }
 .artificer-foundry .search-input::placeholder { color: #5a4080; }
 
 /* ── Recipe List ───────────────────────────────────────────── */
@@ -36,21 +36,21 @@
 .artificer-foundry .recipe-item.unknown { opacity: 0.6; }
 
 .artificer-foundry .recipe-item-header { display: flex; align-items: center; justify-content: space-between; gap: 4px; }
-.artificer-foundry .recipe-name { font-size: 0.82em; color: #d8c0f0; font-weight: bold; flex: 1; line-height: 1.3; }
+.artificer-foundry .recipe-name { font-size: 0.9em; color: #d8c0f0; font-weight: bold; flex: 1; line-height: 1.3; }
 .artificer-foundry .recipe-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
 .artificer-foundry .known-badge { color: #5cb85c; font-size: 0.9em; }
-.artificer-foundry .learn-recipe-btn, .artificer-foundry .forget-recipe-btn { color: #9a7acc; cursor: pointer; font-size: 0.85em; padding: 2px; }
+.artificer-foundry .learn-recipe-btn, .artificer-foundry .forget-recipe-btn { color: #9a7acc; cursor: pointer; font-size: 0.9em; padding: 2px; }
 .artificer-foundry .learn-recipe-btn:hover { color: #c8a0ff; }
 .artificer-foundry .forget-recipe-btn:hover { color: #e05050; }
 
 .artificer-foundry .recipe-item-meta { display: flex; gap: 5px; margin-top: 4px; align-items: center; flex-wrap: wrap; }
 
 /* ── Badges ────────────────────────────────────────────────── */
-.artificer-foundry .rarity-badge, .artificer-foundry .time-badge, .artificer-foundry .cost-badge, .artificer-foundry .unknown-badge, .artificer-foundry .ingredient-type-badge { display: inline-block; font-size: 0.66em; padding: 1px 6px; border-radius: 10px; font-weight: bold; white-space: nowrap; }
+.artificer-foundry .rarity-badge, .artificer-foundry .time-badge, .artificer-foundry .cost-badge, .artificer-foundry .unknown-badge, .artificer-foundry .ingredient-type-badge { display: inline-block; font-size: 0.8em; padding: 1px 6px; border-radius: 10px; font-weight: bold; white-space: nowrap; }
 .artificer-foundry .time-badge { background: rgba(100,100,140,0.3); color: #aab; border: 1px solid #555; }
 .artificer-foundry .cost-badge { background: rgba(180,150,50,0.2); color: #d4b030; border: 1px solid #7a6020; }
 .artificer-foundry .unknown-badge { background: rgba(150,80,30,0.3); color: #c08040; border: 1px solid #7a4010; }
-.artificer-foundry .alchemist-badge { font-size: 0.7em; color: #60d090; margin-left: 8px; }
+.artificer-foundry .alchemist-badge { font-size: 0.8em; color: #60d090; margin-left: 8px; }
 
 /* Rarity colors */
 .artificer-foundry .rarity-badge.rarity-common { background: rgba(130,160,110,0.25); color: #a0d080; border: 1px solid #5a7040; }
@@ -66,7 +66,7 @@
 .artificer-foundry .recipe-item.rarity-legendary { border-left-color: #d0a000; }
 
 /* Type badges */
-.artificer-foundry .ingredient-type-badge { font-size: 0.63em; opacity: 0.85; text-transform: none; }
+.artificer-foundry .ingredient-type-badge { font-size: 0.8em; opacity: 0.85; text-transform: none; }
 .artificer-foundry .type-common_herb { background: rgba(80,140,60,0.25); color: #80c060; border: 1px solid #406030; }
 .artificer-foundry .type-uncommon_herb { background: rgba(30,140,80,0.25); color: #40c080; border: 1px solid #207040; }
 .artificer-foundry .type-liquid { background: rgba(40,100,200,0.25); color: #60a0e0; border: 1px solid #205090; }
@@ -84,7 +84,7 @@
 .artificer-foundry .selected-recipe-header { padding: 8px 10px; border-bottom: 1px solid #3a2870; margin-bottom: 6px; border-radius: 4px; }
 .artificer-foundry .selected-recipe-header h3 { margin: 0 0 4px; color: #d8c0f0; font-size: 1.05em; }
 .artificer-foundry .selected-recipe-meta { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 4px; }
-.artificer-foundry .recipe-description { margin: 4px 0 0; font-size: 0.8em; color: #8a70a0; font-style: italic; }
+.artificer-foundry .recipe-description { margin: 4px 0 0; font-size: 0.9em; color: #8a70a0; font-style: italic; }
 
 .artificer-foundry .rarity-bg-common { background: rgba(80,120,60,0.06); }
 .artificer-foundry .rarity-bg-uncommon { background: rgba(30,120,70,0.06); }
@@ -118,8 +118,8 @@
 .rune-slot.filled { border-color: #70e060; background: rgba(60,180,40,0.15); animation: slotFill 0.4s ease-out; }
 @keyframes slotFill { 0% { transform: scale(0.5); opacity:0; } 50% { transform: scale(1.2); } 100% { transform: scale(1); opacity:1; } }
 .rune-slot .slot-icon { width: 24px; height: 24px; border-radius: 50%; object-fit: contain; }
-.rune-slot .slot-empty { color: #5a4080; font-size: 0.8em; font-weight: bold; }
-.rune-slot .slot-remove { display: none; position: absolute; top: -6px; right: -6px; width: 16px; height: 16px; border-radius: 50%; background: #c03030; color: #fff; font-size: 0.55em; border: none; cursor: pointer; align-items: center; justify-content: center; }
+.rune-slot .slot-empty { color: #5a4080; font-size: 0.9em; font-weight: bold; }
+.rune-slot .slot-remove { display: none; position: absolute; top: -6px; right: -6px; width: 16px; height: 16px; border-radius: 50%; background: #c03030; color: #fff; font-size: 0.8em; border: none; cursor: pointer; align-items: center; justify-content: center; }
 .rune-slot:hover .slot-remove { display: flex; }
 
 /* Slot positions (up to 8 slots, arranged in circle) */
@@ -142,15 +142,15 @@
 
 /* ── Requirements list ─────────────────────────────────────── */
 .artificer-foundry .requirements { padding: 0 4px; }
-.artificer-foundry .requirements h4 { color: #b890e0; margin: 0 0 5px; font-size: 0.82em; border-bottom: 1px solid #3a2870; padding-bottom: 4px; }
+.artificer-foundry .requirements h4 { color: #b890e0; margin: 0 0 5px; font-size: 0.9em; border-bottom: 1px solid #3a2870; padding-bottom: 4px; }
 .artificer-foundry .ingredient-list { list-style: none; margin: 0; padding: 0; }
-.artificer-foundry .ingredient-row { display: flex; align-items: center; gap: 5px; padding: 3px 6px; margin-bottom: 2px; border-radius: 3px; font-size: 0.8em; }
+.artificer-foundry .ingredient-row { display: flex; align-items: center; gap: 5px; padding: 3px 6px; margin-bottom: 2px; border-radius: 3px; font-size: 0.9em; }
 .artificer-foundry .ingredient-row.fulfilled { background: rgba(60,140,50,0.12); border-left: 3px solid #4a9a3a; }
 .artificer-foundry .ingredient-row.missing { background: rgba(140,40,30,0.12); border-left: 3px solid #8a3020; }
 .artificer-foundry .ingredient-icon { width: 20px; height: 20px; border-radius: 3px; object-fit: contain; flex-shrink: 0; }
 .artificer-foundry .ingredient-name { flex: 1; color: #d0b8e8; font-weight: bold; }
 .artificer-foundry .ingredient-count { color: #9080a0; font-weight: bold; white-space: nowrap; }
-.artificer-foundry .substitute-hint { color: #70a0d0; font-size: 0.85em; cursor: help; }
+.artificer-foundry .substitute-hint { color: #70a0d0; font-size: 0.9em; cursor: help; }
 
 /* ── Station controls ──────────────────────────────────────── */
 .artificer-foundry .station-controls { display: flex; gap: 10px; margin-top: 8px; padding: 0 4px 10px; }
@@ -160,24 +160,24 @@
 .artificer-foundry .clear-station-btn { background: linear-gradient(180deg, #5a2020 0%, #3a1010 100%); color: #e0a090; border: 1px solid #7a2020; }
 .artificer-foundry .clear-station-btn:hover:not(:disabled) { background: linear-gradient(180deg, #6a3030 0%, #4a2020 100%); }
 .artificer-foundry button:disabled { background: #1a1a2a !important; color: #444 !important; border-color: #2a2a3a !important; cursor: not-allowed; }
-.artificer-foundry .unknown-warning { font-size: 0.78em; color: #c08030; padding: 5px 8px; background: rgba(150,80,0,0.1); border: 1px solid #6a4010; border-radius: 3px; margin: 0 4px 8px; }
+.artificer-foundry .unknown-warning { font-size: 0.88em; color: #c08030; padding: 5px 8px; background: rgba(150,80,0,0.1); border: 1px solid #6a4010; border-radius: 3px; margin: 0 4px 8px; }
 .artificer-foundry .placeholder-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #3a2870; text-align: center; padding: 20px; gap: 10px; }
-.artificer-foundry .placeholder-area p { font-size: 0.85em; margin: 0; }
+.artificer-foundry .placeholder-area p { font-size: 0.9em; margin: 0; }
 
 /* ── Inventory panel ───────────────────────────────────────── */
-.artificer-foundry .inventory-hint { font-size: 0.72em; color: #6a5090; padding: 5px 8px 2px; margin: 0; font-style: italic; }
+.artificer-foundry .inventory-hint { font-size: 0.82em; color: #6a5090; padding: 5px 8px 2px; margin: 0; font-style: italic; }
 .artificer-foundry .inventory-list { list-style: none; margin: 0; padding: 4px; }
 .artificer-foundry .inventory-item { display: flex; align-items: center; gap: 5px; padding: 4px 6px; margin-bottom: 3px; background: rgba(255,255,255,0.03); border: 1px solid #2a1f4e; border-radius: 3px; cursor: grab; transition: background 0.15s; }
 .artificer-foundry .inventory-item:hover { background: rgba(140,80,255,0.06); border-color: #4a3080; }
 .artificer-foundry .item-img { width: 26px; height: 26px; border: none; border-radius: 3px; object-fit: contain; flex-shrink: 0; }
-.artificer-foundry .item-name { flex: 1; font-size: 0.76em; color: #c0a8e0; font-weight: bold; }
-.artificer-foundry .item-qty { font-size: 0.76em; color: #8070a0; white-space: nowrap; font-weight: bold; }
-.artificer-foundry .icon-btn { background: none; border: none; cursor: pointer; padding: 2px 4px; border-radius: 3px; font-size: 0.8em; color: #8060b0; transition: color 0.15s; line-height: 1; }
+.artificer-foundry .item-name { flex: 1; font-size: 0.86em; color: #c0a8e0; font-weight: bold; }
+.artificer-foundry .item-qty { font-size: 0.86em; color: #8070a0; white-space: nowrap; font-weight: bold; }
+.artificer-foundry .icon-btn { background: none; border: none; cursor: pointer; padding: 2px 4px; border-radius: 3px; font-size: 0.9em; color: #8060b0; transition: color 0.15s; line-height: 1; }
 .artificer-foundry .quick-add-btn { color: #60a060; }
 .artificer-foundry .quick-add-btn:hover { color: #80e080; }
 .artificer-foundry .no-inventory { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #3a2870; padding: 20px 10px; gap: 8px; }
-.artificer-foundry .no-inventory p { font-size: 0.76em; margin: 0; }
-.artificer-foundry .empty-list { color: #4a3870; font-size: 0.8em; text-align: center; padding: 15px 5px; }
+.artificer-foundry .no-inventory p { font-size: 0.86em; margin: 0; }
+.artificer-foundry .empty-list { color: #4a3870; font-size: 0.9em; text-align: center; padding: 15px 5px; }
 
 /* ═══════════════════════════════════════════════════════════════
    GATHERER APP
@@ -190,7 +190,7 @@
 
 /* Filters */
 .gatherer-filters { display: flex; gap: 4px; padding: 6px 8px; background: #081004; border-bottom: 1px solid #2e4a10; flex-shrink: 0; flex-wrap: wrap; }
-.gatherer-search, .gatherer-filter-type, .gatherer-sort { background: #060a02; color: #a0c870; border: 1px solid #3a5a18; border-radius: 3px; padding: 4px 6px; font-size: 0.78em; }
+.gatherer-search, .gatherer-filter-type, .gatherer-sort { background: #060a02; color: #a0c870; border: 1px solid #3a5a18; border-radius: 3px; padding: 4px 6px; font-size: 0.88em; }
 .gatherer-search { flex: 1; min-width: 100px; }
 .gatherer-search::placeholder { color: #3a5a18; }
 
@@ -204,19 +204,19 @@
 .ingredient-catalog-item.dragging { opacity: 0.5; }
 .catalog-icon { width: 22px; height: 22px; border-radius: 3px; object-fit: contain; flex-shrink: 0; }
 .catalog-item-info { flex: 1; display: flex; flex-direction: column; gap: 1px; min-width: 0; }
-.catalog-name { font-size: 0.8em; color: #c0d880; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.catalog-cost { font-size: 0.7em; color: #8a9a50; white-space: nowrap; }
+.catalog-name { font-size: 0.9em; color: #c0d880; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.catalog-cost { font-size: 0.8em; color: #8a9a50; white-space: nowrap; }
 .catalog-add-controls { display: flex; align-items: center; gap: 3px; flex-shrink: 0; }
-.catalog-qty { width: 32px; background: #060a02; color: #a0c870; border: 1px solid #3a5a18; border-radius: 3px; padding: 2px 3px; font-size: 0.75em; text-align: center; }
+.catalog-qty { width: 32px; background: #060a02; color: #a0c870; border: 1px solid #3a5a18; border-radius: 3px; padding: 2px 3px; font-size: 0.9em; text-align: center; }
 
 /* Foraging Section */
 .foraging-section { padding: 8px 10px; background: linear-gradient(180deg, #142008 0%, #0e1a06 100%); border-bottom: 2px solid #3a6015; flex-shrink: 0; }
 .foraging-section h3 { margin: 0 0 6px; font-size: 0.9em; color: #a0d060; }
 .forage-form { display: flex; flex-direction: column; gap: 5px; }
 .forage-row { display: flex; align-items: center; gap: 6px; width: auto }
-.forage-row label { font-size: 0.75em; color: #7a9a40; min-width: 70px; }
-.forage-row select { flex: 1; background: #060a02; color: #a0c870; border: 1px solid #3a5a18; border-radius: 3px; padding: 3px 5px; font-size: 0.78em; }
-.forage-roll-btn { margin-top: 4px; padding: 8px 12px; background: linear-gradient(180deg, #2a4a10 0%, #1a3008 100%); color: #c0e080; border: 1px solid #4a7020; border-radius: 4px; font-weight: bold; font-size: 0.85em; cursor: pointer; transition: all 0.15s; }
+.forage-row label { font-size: 0.9em; color: #7a9a40; min-width: 70px; }
+.forage-row select { flex: 1; background: #060a02; color: #a0c870; border: 1px solid #3a5a18; border-radius: 3px; padding: 3px 5px; font-size: 0.88em; }
+.forage-roll-btn { margin-top: 4px; padding: 8px 12px; background: linear-gradient(180deg, #2a4a10 0%, #1a3008 100%); color: #c0e080; border: 1px solid #4a7020; border-radius: 4px; font-weight: bold; font-size: 0.9em; cursor: pointer; transition: all 0.15s; }
 .forage-roll-btn:hover { background: linear-gradient(180deg, #3a5a18 0%, #2a4010 100%); box-shadow: 0 0 8px rgba(80,160,30,0.4); }
 .forage-time-amount { width: 3rem }
 
@@ -225,20 +225,20 @@
 .gatherer-inventory::-webkit-scrollbar { width: 6px; }
 .gatherer-inventory::-webkit-scrollbar-thumb { background: #3a5a18; border-radius: 3px; }
 .gatherer-inventory.drag-over { background: rgba(80,160,30,0.06); outline: 2px dashed #70a030; outline-offset: -4px; }
-.gatherer-drop-hint { font-size: 0.72em; color: #3a5a18; padding: 3px 2px 6px; font-style: italic; }
+.gatherer-drop-hint { font-size: 0.82em; color: #3a5a18; padding: 3px 2px 6px; font-style: italic; }
 .gatherer-inventory-list { list-style: none; margin: 0; padding: 0; }
 .gatherer-inv-item { display: flex; align-items: center; gap: 5px; padding: 4px 6px; margin-bottom: 2px; background: rgba(255,255,255,0.03); border: 1px solid #2e4a10; border-radius: 3px; }
 .gatherer-inv-item:hover { background: rgba(100,180,40,0.06); }
 .gatherer-inv-item .item-img { width: 24px; height: 24px; border: none; border-radius: 2px; object-fit: contain; }
-.gatherer-inv-item .item-name { flex: 1; font-size: 0.78em; color: #b0d070; font-weight: bold; }
+.gatherer-inv-item .item-name { flex: 1; font-size: 0.88em; color: #b0d070; font-weight: bold; }
 .inv-qty-controls { display: flex; align-items: center; gap: 3px; flex-shrink: 0; }
-.gatherer-inv-item .item-qty { font-size: 0.8em; color: #80a040; font-weight: bold; min-width: 18px; text-align: center; }
-.inv-qty-btn { color: #60a030; font-size: 0.85em; font-weight: bold; padding: 1px 3px; }
+.gatherer-inv-item .item-qty { font-size: 0.9em; color: #80a040; font-weight: bold; min-width: 18px; text-align: center; }
+.inv-qty-btn { color: #60a030; font-size: 0.9em; font-weight: bold; padding: 1px 3px; }
 .inv-qty-btn:hover { color: #90d060; }
-.inv-remove-btn { color: #5a3020; font-size: 0.75em; }
+.inv-remove-btn { color: #5a3020; font-size: 0.9em; }
 .inv-remove-btn:hover { color: #c05030; }
 .gatherer-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #2e4a10; padding: 25px 10px; gap: 6px; }
-.gatherer-empty p { font-size: 0.78em; margin: 0; color: #3a5a18; }
+.gatherer-empty p { font-size: 0.88em; margin: 0; color: #3a5a18; }
 
 /* ═══════════════════════════════════════════════════════════════
    CHARACTER SHEET — Nav injection
