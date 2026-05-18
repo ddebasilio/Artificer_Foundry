@@ -1,14 +1,11 @@
 <div class="crafting-panels-layout">
 
-    {{!-- ══════════════════════════════════════════════════ --}}
-    {{!-- LEFT PANEL — Recipe List                          --}}
-    {{!-- ══════════════════════════════════════════════════ --}}
+    {{!-- LEFT PANEL — Recipe List --}}
     <div class="panel recipe-list-panel">
         <div class="panel-header">
             <h2><i class="fas fa-book-open"></i> Recipes</h2>
         </div>
 
-        {{!-- Search & Filters --}}
         <div class="recipe-filters">
             <input class="search-input" type="text" placeholder="Search recipes…" value="{{searchQuery}}">
             <select class="filter-learned">
@@ -26,32 +23,28 @@
             </select>
         </div>
 
-        {{!-- Recipe items --}}
         <div class="recipe-list">
             {{#each recipes}}
                 <div class="recipe-item rarity-{{this.rarity}} {{#unless this.isLearned}}unknown{{/unless}} {{#if (eq ../selectedRecipe.id this.id)}}selected{{/if}}"
                      data-recipe-id="{{this.id}}">
                     <div class="recipe-item-header">
                         <span class="recipe-name">
-                            {{#unless this.isLearned}}<i class="fas fa-lock" title="Unknown Recipe"></i> {{/unless}}
+                            {{#unless this.isLearned}}<i class="fas fa-lock" title="Unknown"></i> {{/unless}}
                             {{this.name}}
                         </span>
                         <div class="recipe-actions">
                             {{#if this.isLearned}}
-                                <i class="fas fa-check-circle known-badge" title="Known Recipe"></i>
-                                {{#if ../isGM}}
-                                    <a class="forget-recipe-btn" data-recipe-id="{{this.id}}" title="Forget this recipe"><i class="fas fa-trash-alt"></i></a>
-                                {{/if}}
+                                <i class="fas fa-check-circle known-badge" title="Known"></i>
+                                {{#if ../isGM}}<a class="forget-recipe-btn" data-recipe-id="{{this.id}}" title="Forget"><i class="fas fa-trash-alt"></i></a>{{/if}}
                             {{else}}
-                                {{#if ../isGM}}
-                                    <a class="learn-recipe-btn" data-recipe-id="{{this.id}}" title="Teach this recipe"><i class="fas fa-graduation-cap"></i></a>
-                                {{/if}}
+                                {{#if ../isGM}}<a class="learn-recipe-btn" data-recipe-id="{{this.id}}" title="Teach"><i class="fas fa-graduation-cap"></i></a>{{/if}}
                             {{/if}}
                         </div>
                     </div>
                     <div class="recipe-item-meta">
-                        <span class="rarity-badge rarity-{{this.rarity}}">{{this.rarity}}</span>
-                        <span class="time-badge"><i class="fas fa-clock"></i> {{this.time}}</span>
+                        <span class="rarity-badge rarity-{{this.rarity}}">{{rarityLabel this.rarity}}</span>
+                        <span class="time-badge"><i class="fas fa-clock"></i> {{this.craftingTimeLabel}}</span>
+                        <span class="cost-badge"><i class="fas fa-coins"></i> {{this.craftingCost}} gp</span>
                     </div>
                 </div>
             {{else}}
@@ -60,64 +53,79 @@
         </div>
     </div>
 
-    {{!-- ══════════════════════════════════════════════════ --}}
-    {{!-- CENTER PANEL — Crafting Station                   --}}
-    {{!-- ══════════════════════════════════════════════════ --}}
+    {{!-- CENTER PANEL — Crafting Station with Rune Circle --}}
     <div class="panel crafting-station-panel">
         <div class="panel-header">
-            <h2><i class="fas fa-mortar-pestle"></i> Crafting Station</h2>
+            <h2><i class="fas fa-mortar-pestle"></i> Crafting Station
+                {{#if isAlchemist}}<span class="alchemist-badge"><i class="fas fa-flask"></i> Alchemist</span>{{/if}}
+            </h2>
         </div>
 
         {{#if selectedRecipe}}
-            {{!-- Recipe header --}}
             <div class="selected-recipe-header rarity-bg-{{selectedRecipe.rarity}}">
                 <h3>{{selectedRecipe.name}}</h3>
                 <div class="selected-recipe-meta">
-                    <span class="rarity-badge rarity-{{selectedRecipe.rarity}}">{{selectedRecipe.rarity}}</span>
-                    <span class="time-badge"><i class="fas fa-clock"></i> {{selectedRecipe.time}}</span>
-                    {{#unless selectedRecipe.isLearned}}
-                        <span class="unknown-badge"><i class="fas fa-lock"></i> Unknown</span>
-                    {{/unless}}
+                    <span class="rarity-badge rarity-{{selectedRecipe.rarity}}">{{rarityLabel selectedRecipe.rarity}}</span>
+                    <span class="time-badge"><i class="fas fa-clock"></i> {{selectedRecipe.craftingTimeLabel}}</span>
+                    <span class="cost-badge"><i class="fas fa-coins"></i> {{selectedRecipe.craftingCost}} gp</span>
+                    {{#unless selectedRecipe.isLearned}}<span class="unknown-badge"><i class="fas fa-lock"></i> Unknown</span>{{/unless}}
                 </div>
                 <p class="recipe-description">{{selectedRecipe.description}}</p>
             </div>
 
-            {{!-- Required Ingredients --}}
+            {{!-- Rune Circle --}}
+            <div class="rune-circle-container {{#if crafting}}crafting{{/if}} {{#if canCraft}}all-filled{{/if}} rune-rarity-{{selectedRecipe.rarity}}">
+                <div class="rune-circle-svg">
+                    <img src="modules/artificer-foundry/assets/rune-circle.svg" alt="Rune Circle">
+                </div>
+
+                {{!-- Ingredient Slots --}}
+                <div class="rune-slots">
+                    {{#each mappedIngredients}}
+                        <div class="rune-slot slot-{{@index}} {{#if this.fulfilled}}filled{{/if}}" title="{{this.name}} ({{this.provided}}/{{this.quantity}})">
+                            {{#if this.fulfilled}}
+                                <img src="{{this.icon}}" alt="{{this.name}}" class="slot-icon">
+                            {{else}}
+                                <span class="slot-empty">?</span>
+                            {{/if}}
+                            <button class="remove-ingredient-btn slot-remove" data-ingredient-name="{{this.name}}" title="Remove">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    {{/each}}
+                </div>
+
+                {{!-- Center output --}}
+                <div class="rune-center-output">
+                    {{#if crafting}}
+                        <img src="{{selectedRecipe.output.img}}" alt="{{selectedRecipe.output.name}}" class="crafted-item-reveal">
+                    {{else}}
+                        <i class="fas fa-question fa-2x center-question"></i>
+                    {{/if}}
+                </div>
+            </div>
+
+            {{!-- Ingredient Requirements List --}}
             <div class="requirements">
                 <h4><i class="fas fa-list-ul"></i> Required Ingredients</h4>
                 <ul class="ingredient-list">
                     {{#each mappedIngredients}}
                         <li class="ingredient-row {{#if this.fulfilled}}fulfilled{{else}}missing{{/if}}">
-                            <span class="ingredient-status-icon">
-                                {{#if this.fulfilled}}
-                                    <i class="fas fa-check-circle"></i>
-                                {{else}}
-                                    <i class="fas fa-times-circle"></i>
-                                {{/if}}
-                            </span>
+                            <img src="{{this.icon}}" class="ingredient-icon" alt="">
                             <span class="ingredient-name">{{this.name}}</span>
-                            <span class="ingredient-type-badge type-{{this.type}}">{{this.type}}</span>
+                            <span class="ingredient-type-badge type-{{this.type}}">{{this.typeLabel}}</span>
                             <span class="ingredient-count">{{this.provided}} / {{this.quantity}}</span>
-                            {{#if this.fulfilled}}
-                                <button class="remove-ingredient-btn icon-btn" data-ingredient-name="{{this.name}}" title="Remove from station">
-                                    <i class="fas fa-times"></i>
-                                </button>
+                            {{#if (gt this.substitutes.length 0)}}
+                                <span class="substitute-hint" title="Also accepts: {{join this.substitutes ', '}}"><i class="fas fa-exchange-alt"></i></span>
                             {{/if}}
                         </li>
                     {{/each}}
                 </ul>
             </div>
 
-            {{!-- Drop Zone --}}
-            <div class="ingredient-drop-zone" id="ingredient-drop-zone">
-                <i class="fas fa-vial fa-2x"></i>
-                <p>Drag ingredients here from the right panel<br><small>or use the <strong>+</strong> buttons</small></p>
-            </div>
-
-            {{!-- Controls --}}
             <div class="station-controls">
                 <button class="clear-station-btn" {{#unless mappedIngredients}}disabled{{/unless}}>
-                    <i class="fas fa-trash"></i> Clear Station
+                    <i class="fas fa-trash"></i> Clear
                 </button>
                 <button class="craft-btn" {{#unless canCraft}}disabled{{/unless}}>
                     <i class="fas fa-hammer"></i>
@@ -126,20 +134,22 @@
             </div>
 
             {{#unless selectedRecipe.isLearned}}
-                <p class="unknown-warning"><i class="fas fa-exclamation-triangle"></i> You have not yet learned this recipe. A GM can teach it to you.</p>
+                <p class="unknown-warning"><i class="fas fa-exclamation-triangle"></i> You have not yet learned this recipe.</p>
             {{/unless}}
 
         {{else}}
             <div class="placeholder-area">
-                <i class="fas fa-flask fa-4x"></i>
-                <p>Select a recipe from the list on the left to begin crafting.</p>
+                <div class="rune-circle-container idle">
+                    <div class="rune-circle-svg">
+                        <img src="modules/artificer-foundry/assets/rune-circle.svg" alt="Rune Circle">
+                    </div>
+                </div>
+                <p>Select a recipe from the list to begin crafting.</p>
             </div>
         {{/if}}
     </div>
 
-    {{!-- ══════════════════════════════════════════════════ --}}
-    {{!-- RIGHT PANEL — Character Inventory                 --}}
-    {{!-- ══════════════════════════════════════════════════ --}}
+    {{!-- RIGHT PANEL — Character Inventory --}}
     <div class="panel inventory-panel">
         <div class="panel-header">
             <h2><i class="fas fa-backpack"></i> Inventory
@@ -149,10 +159,10 @@
 
         {{#if selectedRecipe}}
             {{#if inventoryItems.length}}
-                <p class="inventory-hint">Items in your pack that match this recipe:</p>
+                <p class="inventory-hint">Drag or click + to add ingredients:</p>
                 <ul class="inventory-list">
                     {{#each inventoryItems}}
-                        <li class="inventory-item" data-item-id="{{this.id}}" draggable="true" title="Drag to crafting station">
+                        <li class="inventory-item" data-item-id="{{this.id}}" draggable="true">
                             <img class="item-img" src="{{this.img}}" alt="{{this.name}}">
                             <span class="item-name">{{this.name}}</span>
                             <span class="item-qty">×{{this.quantity}}</span>
@@ -165,13 +175,13 @@
             {{else}}
                 <div class="no-inventory">
                     <i class="fas fa-box-open fa-2x"></i>
-                    <p>No matching ingredients found in your inventory for this recipe.</p>
+                    <p>No matching ingredients in inventory.</p>
                 </div>
             {{/if}}
         {{else}}
             <div class="no-inventory">
                 <i class="fas fa-box fa-2x"></i>
-                <p>Select a recipe to see which ingredients you have on hand.</p>
+                <p>Select a recipe to see matching ingredients.</p>
             </div>
         {{/if}}
     </div>

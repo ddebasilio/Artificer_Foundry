@@ -1,4 +1,5 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+import { TYPE_LABELS, getIngredientIcon, canSubstitute, getSubstitutes, getCraftingTime, formatCraftingTime, CRAFTING_TIMES } from "./ingredient-data.js";
 
 export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
@@ -10,42 +11,44 @@ export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
         this.filterRarity = "all";
         this.filterLearned = "all";
         this.searchQuery = "";
+        this._crafting = false;
     }
 
-    // ── Application V2 config ─────────────────────────────────────────────────
-
     static DEFAULT_OPTIONS = {
-        window: {
-            title: "Alchemy & Crafting Station",
-            icon: "fas fa-flask",
-            resizable: true,
-        },
+        window: { title: "Alchemy & Crafting Station", icon: "fas fa-flask", resizable: true },
         classes: ["artificer-foundry", "crafting-app"],
-        position: {
-            width: 960,
-            height: 680,
-        }
+        position: { width: 980, height: 700 },
     };
 
     static PARTS = {
-        crafting: {
-            template: "modules/artificer-foundry/templates/crafting-app.hbs"
-        }
+        crafting: { template: "modules/artificer-foundry/templates/crafting-app.hbs" }
     };
 
-    // ── Data for the template ─────────────────────────────────────────────────
+    _isAlchemist() {
+        if (!this.actor) return false;
+        const items = this.actor.items?.contents ?? [];
+        return items.some(i => {
+            const name = (i.name ?? "").toLowerCase();
+            const type = i.type ?? "";
+            if (type === "subclass" && name.includes("alchemist")) return true;
+            if (name.includes("alchemical savant")) return true;
+            return false;
+        });
+    }
 
     async _prepareContext(options) {
         const allRecipes = window.ArtificerFoundry.recipeManager.getRecipesForActor(this.actor);
+        const isAlchemist = this._isAlchemist();
 
         const recipes = allRecipes.filter(r => {
             if (this.filterRarity !== "all" && r.rarity !== this.filterRarity) return false;
-            if (this.filterLearned === "known"   && !r.isLearned) return false;
-            if (this.filterLearned === "unknown" &&  r.isLearned) return false;
-            if (this.searchQuery) {
-                if (!r.name.toLowerCase().includes(this.searchQuery.toLowerCase())) return false;
-            }
+            if (this.filterLearned === "known" && !r.isLearned) return false;
+            if (this.filterLearned === "unknown" && r.isLearned) return false;
+            if (this.searchQuery && !r.name.toLowerCase().includes(this.searchQuery.toLowerCase())) return false;
             return true;
+        }).map(r => {
+            const ct = getCraftingTime(r.rarity, isAlchemist);
+            return { ...r, craftingTimeLabel: formatCraftingTime(ct.days), craftingCost: ct.cost };
         });
 
         let selectedRecipe = null;
@@ -54,85 +57,56 @@ export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
         if (this.selectedRecipeId) {
             selectedRecipe = allRecipes.find(r => r.id === this.selectedRecipeId);
             if (selectedRecipe) {
+                const ct = getCraftingTime(selectedRecipe.rarity, isAlchemist);
+                selectedRecipe = { ...selectedRecipe, craftingTimeLabel: formatCraftingTime(ct.days), craftingCost: ct.cost };
                 mappedIngredients = selectedRecipe.ingredients.map(ing => {
                     const provided = this.providedIngredients[ing.name] || 0;
-                    return { ...ing, provided, fulfilled: provided >= ing.quantity };
+                    const icon = getIngredientIcon(ing.name, ing.type);
+                    const typeLabel = TYPE_LABELS[ing.type] || ing.type;
+                    const subs = getSubstitutes(ing.name, selectedRecipe.rarity);
+                    return { ...ing, provided, fulfilled: provided >= ing.quantity, icon, typeLabel, substitutes: subs };
                 });
             }
         }
 
-        const canCraft = selectedRecipe?.isLearned &&
-            mappedIngredients.length > 0 &&
-            mappedIngredients.every(i => i.fulfilled);
+        const canCraft = selectedRecipe?.isLearned && mappedIngredients.length > 0 && mappedIngredients.every(i => i.fulfilled);
 
         let inventoryItems = [];
         if (this.actor && selectedRecipe) {
-            const required = new Set(selectedRecipe.ingredients.map(i => i.name.toLowerCase()));
+            const allIngNames = new Set();
+            for (const ing of selectedRecipe.ingredients) {
+                allIngNames.add(ing.name.toLowerCase());
+                for (const s of getSubstitutes(ing.name, selectedRecipe.rarity)) allIngNames.add(s.toLowerCase());
+            }
             inventoryItems = (this.actor.items?.contents ?? [])
-                .filter(item => (item.system?.quantity ?? 1) > 0 && required.has(item.name.toLowerCase()))
-                .map(item => ({
-                    id: item.id,
-                    name: item.name,
-                    img: item.img,
-                    quantity: item.system?.quantity ?? 1
-                }));
+                .filter(item => (item.system?.quantity ?? 1) > 0 && allIngNames.has(item.name.toLowerCase()))
+                .map(item => ({ id: item.id, name: item.name, img: item.img, quantity: item.system?.quantity ?? 1 }));
         }
 
         return {
-            actor: this.actor,
-            recipes,
-            selectedRecipe,
-            mappedIngredients,
-            canCraft,
-            inventoryItems,
-            isGM: game.user.isGM,
-            filterRarity: this.filterRarity,
-            filterLearned: this.filterLearned,
-            searchQuery: this.searchQuery,
+            actor: this.actor, recipes, selectedRecipe, mappedIngredients, canCraft,
+            inventoryItems, isGM: game.user.isGM, filterRarity: this.filterRarity,
+            filterLearned: this.filterLearned, searchQuery: this.searchQuery,
+            isAlchemist, crafting: this._crafting,
         };
     }
 
-    // ── Event wiring (V2 equivalent of activateListeners) ─────────────────────
-
     _onRender(context, options) {
         const el = this.element;
+        el.querySelectorAll('.recipe-item').forEach(item => item.addEventListener('click', this._onSelectRecipe.bind(this)));
+        el.querySelectorAll('.learn-recipe-btn').forEach(btn => btn.addEventListener('click', this._onLearnRecipe.bind(this)));
+        el.querySelectorAll('.forget-recipe-btn').forEach(btn => btn.addEventListener('click', this._onForgetRecipe.bind(this)));
+        el.querySelectorAll('.filter-rarity').forEach(sel => sel.addEventListener('change', this._onFilterChange.bind(this)));
+        el.querySelectorAll('.filter-learned').forEach(sel => sel.addEventListener('change', this._onFilterChange.bind(this)));
+        el.querySelectorAll('.search-input').forEach(inp => inp.addEventListener('input', this._onSearchChange.bind(this)));
 
-        // Recipe selection
-        el.querySelectorAll('.recipe-item').forEach(item => {
-            item.addEventListener('click', this._onSelectRecipe.bind(this));
-        });
-
-        // Learn / Forget
-        el.querySelectorAll('.learn-recipe-btn').forEach(btn => {
-            btn.addEventListener('click', this._onLearnRecipe.bind(this));
-        });
-        el.querySelectorAll('.forget-recipe-btn').forEach(btn => {
-            btn.addEventListener('click', this._onForgetRecipe.bind(this));
-        });
-
-        // Filters
-        el.querySelectorAll('.filter-rarity').forEach(sel => {
-            sel.addEventListener('change', this._onFilterChange.bind(this));
-        });
-        el.querySelectorAll('.filter-learned').forEach(sel => {
-            sel.addEventListener('change', this._onFilterChange.bind(this));
-        });
-        el.querySelectorAll('.search-input').forEach(inp => {
-            inp.addEventListener('input', this._onSearchChange.bind(this));
-        });
-
-        // Drop zone
-        const dropZone = el.querySelector('.ingredient-drop-zone');
+        const dropZone = el.querySelector('.rune-circle-container');
         if (dropZone) {
-            dropZone.addEventListener('dragover', e => {
-                e.preventDefault();
-                dropZone.classList.add('drag-over');
-            });
+            dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
             dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
             dropZone.addEventListener('drop', this._onDropIngredient.bind(this));
         }
 
-        // Inventory panel drag sources
         el.querySelectorAll('.inventory-item').forEach(row => {
             row.setAttribute('draggable', 'true');
             row.addEventListener('dragstart', ev => {
@@ -142,22 +116,11 @@ export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
             });
         });
 
-        // Quick-add buttons
-        el.querySelectorAll('.quick-add-btn').forEach(btn => {
-            btn.addEventListener('click', this._onQuickAdd.bind(this));
-        });
-
-        // Remove ingredient from station
-        el.querySelectorAll('.remove-ingredient-btn').forEach(btn => {
-            btn.addEventListener('click', this._onRemoveIngredient.bind(this));
-        });
-
-        // Craft / Clear
+        el.querySelectorAll('.quick-add-btn').forEach(btn => btn.addEventListener('click', this._onQuickAdd.bind(this)));
+        el.querySelectorAll('.remove-ingredient-btn').forEach(btn => btn.addEventListener('click', this._onRemoveIngredient.bind(this)));
         el.querySelector('.craft-btn')?.addEventListener('click', this._onCraftItem.bind(this));
         el.querySelector('.clear-station-btn')?.addEventListener('click', this._onClearStation.bind(this));
     }
-
-    // ── Recipe selection ──────────────────────────────────────────────────────
 
     _onSelectRecipe(event) {
         event.preventDefault();
@@ -168,67 +131,43 @@ export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
         this.render();
     }
 
-    // ── Learn / Forget ────────────────────────────────────────────────────────
-
     async _onLearnRecipe(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        if (!this.actor) { ui.notifications.warn("No actor associated with this crafting station."); return; }
-        const recipeId = event.currentTarget.dataset.recipeId;
-        await window.ArtificerFoundry.recipeManager.learnRecipe(this.actor.id, recipeId);
+        event.preventDefault(); event.stopPropagation();
+        if (!this.actor) { ui.notifications.warn("No actor associated."); return; }
+        await window.ArtificerFoundry.recipeManager.learnRecipe(this.actor.id, event.currentTarget.dataset.recipeId);
         ui.notifications.info(`${this.actor.name} has learned a new recipe!`);
         this.render();
     }
 
     async _onForgetRecipe(event) {
-        event.preventDefault();
-        event.stopPropagation();
+        event.preventDefault(); event.stopPropagation();
         if (!this.actor) return;
-        const recipeId = event.currentTarget.dataset.recipeId;
-        await window.ArtificerFoundry.recipeManager.forgetRecipe(this.actor.id, recipeId);
+        await window.ArtificerFoundry.recipeManager.forgetRecipe(this.actor.id, event.currentTarget.dataset.recipeId);
         ui.notifications.info(`${this.actor.name} has forgotten a recipe.`);
         this.render();
     }
 
-    // ── Filters ───────────────────────────────────────────────────────────────
-
     _onFilterChange(event) {
         const el = event.currentTarget;
-        if (el.classList.contains('filter-rarity'))  this.filterRarity  = el.value;
+        if (el.classList.contains('filter-rarity')) this.filterRarity = el.value;
         if (el.classList.contains('filter-learned')) this.filterLearned = el.value;
         this.render();
     }
 
-    _onSearchChange(event) {
-        this.searchQuery = event.currentTarget.value;
-        this.render();
-    }
-
-    // ── Drag & Drop ───────────────────────────────────────────────────────────
+    _onSearchChange(event) { this.searchQuery = event.currentTarget.value; this.render(); }
 
     async _onDropIngredient(event) {
         event.preventDefault();
         event.currentTarget.classList?.remove('drag-over');
-
         if (!this.selectedRecipeId) { ui.notifications.warn("Select a recipe first."); return; }
-
         try {
-            const raw = event.dataTransfer?.getData('text/plain');
-            if (!raw) return;
-            const data = JSON.parse(raw);
+            const data = JSON.parse(event.dataTransfer?.getData('text/plain') || "{}");
             if (data.type !== "Item") return;
-
             const item = await fromUuid(data.uuid);
             if (!item) return;
-
-            if (item.parent?.id !== this.actor?.id) {
-                ui.notifications.warn("You can only use items from your own inventory.");
-                return;
-            }
+            if (item.parent?.id !== this.actor?.id) { ui.notifications.warn("You can only use items from your own inventory."); return; }
             this._addIngredientFromItem(item);
-        } catch (err) {
-            console.error("Artificer Foundry | Drop error:", err);
-        }
+        } catch (err) { console.error("Artificer Foundry | Drop error:", err); }
     }
 
     async _onQuickAdd(event) {
@@ -242,32 +181,21 @@ export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
         const recipe = allRecipes.find(r => r.id === this.selectedRecipeId);
         if (!recipe) return;
 
-        const required = recipe.ingredients.find(
-            i => i.name.toLowerCase() === item.name.toLowerCase()
-        );
+        const required = recipe.ingredients.find(i => canSubstitute(item.name, i.name, recipe.rarity));
         if (!required) { ui.notifications.warn(`"${item.name}" is not needed for this recipe.`); return; }
 
-        // Total inventory quantity across all stacks of this ingredient
         const totalInInventory = (this.actor?.items?.contents ?? [])
-            .filter(i => i.name.toLowerCase() === required.name.toLowerCase())
+            .filter(i => canSubstitute(i.name, required.name, recipe.rarity))
             .reduce((sum, i) => sum + (i.system?.quantity ?? 1), 0);
 
         const already = this.providedIngredients[required.name] || 0;
-
-        // Cap: cannot commit more than is actually in inventory, and no more than recipe needs
         const maxCanCommit = Math.min(required.quantity, totalInInventory);
         if (already >= maxCanCommit) {
-            if (totalInInventory < required.quantity) {
-                ui.notifications.warn(`Not enough ${required.name} in inventory (have ${totalInInventory}, need ${required.quantity}).`);
-            } else {
-                ui.notifications.info(`Already have enough ${required.name} staged.`);
-            }
+            ui.notifications.info(`Already have enough ${required.name} staged.`);
             return;
         }
-
-        const toAdd = maxCanCommit - already;
-        this.providedIngredients[required.name] = already + toAdd;
-        ui.notifications.info(`Added ${toAdd}× ${item.name} to the crafting station.`);
+        this.providedIngredients[required.name] = maxCanCommit;
+        ui.notifications.info(`Added ${item.name} to the crafting station.`);
         this.render();
     }
 
@@ -277,28 +205,29 @@ export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
         if (name) { delete this.providedIngredients[name]; this.render(); }
     }
 
-    // ── Crafting ──────────────────────────────────────────────────────────────
-
     async _onCraftItem(event) {
         event.preventDefault();
         if (!this.selectedRecipeId || !this.actor) return;
-
         const allRecipes = window.ArtificerFoundry.recipeManager.getRecipesForActor(this.actor);
         const recipe = allRecipes.find(r => r.id === this.selectedRecipeId);
         if (!recipe) return;
-
         for (const ing of recipe.ingredients) {
-            const provided = this.providedIngredients[ing.name] || 0;
-            if (provided < ing.quantity) {
-                ui.notifications.error(`Not enough ${ing.name} (need ${ing.quantity}, have ${provided}).`);
+            if ((this.providedIngredients[ing.name] || 0) < ing.quantity) {
+                ui.notifications.error(`Not enough ${ing.name}.`);
                 return;
             }
         }
 
-        // Deduct ingredients
+        // Animation
+        this._crafting = true;
+        this.render();
+        await new Promise(r => setTimeout(r, 2200));
+
+        // Deduct
         for (const ing of recipe.ingredients) {
             let remaining = ing.quantity;
-            for (const actorItem of this.actor.items.filter(i => i.name.toLowerCase() === ing.name.toLowerCase())) {
+            const matching = this.actor.items.filter(i => canSubstitute(i.name, ing.name, recipe.rarity));
+            for (const actorItem of matching) {
                 if (remaining <= 0) break;
                 const qty = actorItem.system?.quantity ?? 1;
                 if (qty <= remaining) { remaining -= qty; await actorItem.delete(); }
@@ -306,45 +235,51 @@ export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
             }
         }
 
-        // Add crafted item — prefer compendium match, fall back to loot
+        // Create output
         const output = recipe.output;
         const compendiumItem = await this._findInCompendiums(output.name);
         if (compendiumItem) {
             const itemData = compendiumItem.toObject();
             itemData.system.quantity = output.quantity ?? 1;
             await this.actor.createEmbeddedDocuments("Item", [itemData]);
-            console.log(`Artificer Foundry | Created "${output.name}" from compendium`);
         } else {
             await this.actor.createEmbeddedDocuments("Item", [{
-                name: output.name,
-                type: "loot",
+                name: output.name, type: "loot",
                 img: output.img ?? "icons/consumables/potions/potion-flask-corked-red.webp",
                 system: { quantity: output.quantity ?? 1 }
             }]);
-            console.log(`Artificer Foundry | Created "${output.name}" as loot item`);
         }
 
-        ui.notifications.info(`✓ ${this.actor.name} crafted ${output.name}!`);
+        ui.notifications.info(`\u2713 ${this.actor.name} crafted ${output.name}!`);
         this.providedIngredients = {};
+        this._crafting = false;
         this.render();
     }
 
     async _findInCompendiums(name) {
         const target = name.toLowerCase();
+        const preferredPack = game.settings.get("artificer-foundry", "potionCompendiumPack");
+        if (preferredPack) {
+            const pack = game.packs.get(preferredPack);
+            if (pack?.documentName === "Item") {
+                try {
+                    const idx = await pack.getIndex();
+                    const entry = idx.find(e => e.name.toLowerCase() === target);
+                    if (entry) return await pack.getDocument(entry._id);
+                } catch {}
+            }
+        }
         for (const pack of game.packs) {
             if (pack.documentName !== "Item") continue;
+            if (pack.collection === preferredPack) continue;
             try {
-                const index = await pack.getIndex();
-                const entry = index.find(e => e.name.toLowerCase() === target);
+                const idx = await pack.getIndex();
+                const entry = idx.find(e => e.name.toLowerCase() === target);
                 if (entry) return await pack.getDocument(entry._id);
-            } catch { /* pack unavailable */ }
+            } catch {}
         }
         return null;
     }
 
-    _onClearStation(event) {
-        event.preventDefault();
-        this.providedIngredients = {};
-        this.render();
-    }
+    _onClearStation(event) { event.preventDefault(); this.providedIngredients = {}; this.render(); }
 }

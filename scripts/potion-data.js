@@ -44,37 +44,37 @@ export const POTION_DATA = {
     resist: [], ability: null, attachedSpells: [], bonusWeapon: null
   },
 
-  "elixir of cloud giant strength": {
+  "potion of cloud giant strength": {
     description: "When you drink this potion, your Strength score changes to 27 for 1 hour. The potion has no effect on you if your Strength is equal to or greater than that score. This potion's transparent liquid has floating in it a sliver of fingernail from a cloud giant.",
     rarity: "very rare",
     resist: [], ability: { static: { str: 27 } }, attachedSpells: [], bonusWeapon: null
   },
 
-  "elixir of fire giant strength": {
+  "potion of fire giant strength": {
     description: "When you drink this potion, your Strength score changes to 25 for 1 hour. The potion has no effect on you if your Strength is equal to or greater than that score. This potion's transparent liquid has floating in it a sliver of fingernail from a fire giant.",
     rarity: "rare",
     resist: [], ability: { static: { str: 25 } }, attachedSpells: [], bonusWeapon: null
   },
 
-  "elixir of frost giant strength": {
+  "potion of frost giant strength": {
     description: "When you drink this potion, your Strength score changes to 23 for 1 hour. The potion has no effect on you if your Strength is equal to or greater than that score. This potion's transparent liquid has floating in it a sliver of fingernail from a frost giant.",
     rarity: "rare",
     resist: [], ability: { static: { str: 23 } }, attachedSpells: [], bonusWeapon: null
   },
 
-  "elixir of hill giant strength": {
+  "potion of hill giant strength": {
     description: "When you drink this potion, your Strength score changes to 21 for 1 hour. The potion has no effect on you if your Strength is equal to or greater than that score. This potion's transparent liquid has floating in it a sliver of fingernail from a hill giant.",
     rarity: "uncommon",
     resist: [], ability: { static: { str: 21 } }, attachedSpells: [], bonusWeapon: null
   },
 
-  "elixir of stone giant strength": {
+  "potion of stone giant strength": {
     description: "When you drink this potion, your Strength score changes to 23 for 1 hour. The potion has no effect on you if your Strength is equal to or greater than that score. This potion's transparent liquid has floating in it a sliver of fingernail from a stone giant.",
     rarity: "rare",
     resist: [], ability: { static: { str: 23 } }, attachedSpells: [], bonusWeapon: null
   },
 
-  "elixir of storm giant strength": {
+  "potion of storm giant strength": {
     description: "When you drink this potion, your Strength score changes to 29 for 1 hour. The potion has no effect on you if your Strength is equal to or greater than that score. This potion's transparent liquid has floating in it a sliver of fingernail from a storm giant.",
     rarity: "legendary",
     resist: [], ability: { static: { str: 29 } }, attachedSpells: [], bonusWeapon: null
@@ -194,7 +194,7 @@ export const POTION_DATA = {
 
   "potion of flying": {
     description: "When you drink this potion, you gain a flying speed equal to your walking speed for 1 hour and can hover. If you're airborne when the potion wears off, you fall unless you have some other means of staying aloft. The potion's clear liquid floats at the top of its container and has cloudy white impurities drifting in it.",
-    rarity: "rare",
+    rarity: "very rare",
     resist: [], ability: null, attachedSpells: [], bonusWeapon: null
   },
 
@@ -206,7 +206,7 @@ export const POTION_DATA = {
 
   "potion of gaseous form": {
     description: "When you drink this potion, you gain the effect of the Gaseous Form spell for 1 hour (no concentration required) or until you end the effect as a bonus action. This potion's container seems to hold fog that moves and pours like water.",
-    rarity: "very rare",
+    rarity: "rare",
     resist: [], ability: null, attachedSpells: ["gaseous form"], bonusWeapon: null
   },
 

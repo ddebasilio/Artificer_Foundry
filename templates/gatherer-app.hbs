@@ -1,8 +1,6 @@
 <div class="gatherer-layout">
 
-    {{!-- ══════════════════════════════════════════════════ --}}
-    {{!-- LEFT PANEL — Ingredient Catalog                   --}}
-    {{!-- ══════════════════════════════════════════════════ --}}
+    {{!-- LEFT PANEL — Ingredient Catalog --}}
     <div class="panel gatherer-catalog-panel">
         <div class="panel-header">
             <h2><i class="fas fa-seedling"></i> Ingredient Catalog</h2>
@@ -12,9 +10,13 @@
             <input class="gatherer-search" type="text" placeholder="Search ingredients…" value="{{searchQuery}}">
             <select class="gatherer-filter-type">
                 <option value="all" {{#if (eq filterType "all")}}selected{{/if}}>All Types</option>
-                {{#each allTypes}}
-                    <option value="{{this}}" {{#if (eq ../filterType this)}}selected{{/if}}>{{this}}</option>
+                {{#each allTypeLabels}}
+                    <option value="{{this.value}}" {{#if (eq ../filterType this.value)}}selected{{/if}}>{{this.label}}</option>
                 {{/each}}
+            </select>
+            <select class="gatherer-sort">
+                <option value="name" {{#if (eq sortBy "name")}}selected{{/if}}>Sort: Name</option>
+                <option value="type" {{#if (eq sortBy "type")}}selected{{/if}}>Sort: Type</option>
             </select>
         </div>
 
@@ -24,30 +26,27 @@
                      data-name="{{this.name}}"
                      data-ing-type="{{this.type}}"
                      draggable="true"
-                     title="Drag to backpack or click + to add">
+                     title="{{this.name}} — {{this.typeLabel}} ({{this.cost}} gp)">
+                    <img class="catalog-icon" src="{{this.icon}}" alt="">
                     <div class="catalog-item-info">
                         <span class="catalog-name">{{this.name}}</span>
-                        <span class="ingredient-type-badge type-{{this.type}}">{{this.type}}</span>
+                        <span class="ingredient-type-badge type-{{this.type}}">{{this.typeLabel}}</span>
                     </div>
+                    <span class="catalog-cost">{{this.cost}} gp</span>
                     <div class="catalog-add-controls">
-                        <input class="catalog-qty" type="number" min="1" max="99" value="1" title="Quantity to add">
-                        <button class="add-ingredient-btn icon-btn"
-                                data-name="{{this.name}}"
-                                data-ing-type="{{this.type}}"
-                                title="Add to backpack">
+                        <input class="catalog-qty" type="number" min="1" max="99" value="1">
+                        <button class="add-ingredient-btn icon-btn" data-name="{{this.name}}" data-ing-type="{{this.type}}" title="Add to backpack">
                             <i class="fas fa-plus"></i>
                         </button>
                     </div>
                 </div>
             {{else}}
-                <p class="empty-list">No ingredients match your search.</p>
+                <p class="empty-list">No ingredients found.</p>
             {{/each}}
         </div>
     </div>
 
-    {{!-- ══════════════════════════════════════════════════ --}}
-    {{!-- RIGHT PANEL — Backpack                            --}}
-    {{!-- ══════════════════════════════════════════════════ --}}
+    {{!-- RIGHT PANEL — Backpack + Foraging --}}
     <div class="panel gatherer-inventory-panel">
         <div class="panel-header">
             <h2><i class="fas fa-backpack"></i>
@@ -55,6 +54,47 @@
             </h2>
         </div>
 
+        {{!-- Foraging Section --}}
+        <div class="foraging-section">
+            <h3><i class="fas fa-dice-d20"></i> Foraging</h3>
+            <div class="forage-form">
+                <div class="forage-row">
+                    <label>Biome:</label>
+                    <select class="forage-biome">
+                        {{#each biomes}}
+                            <option value="{{this.value}}" {{#if (eq ../forageBiome this.value)}}selected{{/if}}>
+                                {{this.name}}
+                            </option>
+                        {{/each}}
+                    </select>
+                </div>
+                <div class="forage-row">
+                    <label>Abundance:</label>
+                    <select class="forage-abundance">
+                        {{#each abundances}}
+                            <option value="{{this.value}}" {{#if (eq ../forageAbundance this.value)}}selected{{/if}}>
+                                {{this.name}}
+                            </option>
+                        {{/each}}
+                    </select>
+                </div>
+                <div class="forage-row">
+                    <label>Time spent:</label>
+                    <select class="forage-time">
+                        {{#each times}}
+                            <option value="{{this.value}}" {{#if (eq ../forageTime this.value)}}selected{{/if}}>
+                                {{this.label}}
+                            </option>
+                        {{/each}}
+                    </select>
+                </div>
+                <button class="forage-roll-btn">
+                    <i class="fas fa-dice-d20"></i> Roll to Forage
+                </button>
+            </div>
+        </div>
+
+        {{!-- Inventory --}}
         <div class="gatherer-inventory">
             <div class="gatherer-drop-hint">
                 <i class="fas fa-hand-point-left"></i> Drag ingredients here to add them
@@ -71,7 +111,7 @@
                                 <span class="item-qty">{{this.quantity}}</span>
                                 <button class="inv-qty-btn icon-btn" data-item-id="{{this.id}}" data-delta="1" title="Add one">+</button>
                             </div>
-                            <button class="inv-remove-btn icon-btn" data-item-id="{{this.id}}" title="Remove from inventory">
+                            <button class="inv-remove-btn icon-btn" data-item-id="{{this.id}}" title="Remove all">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </li>
@@ -80,8 +120,7 @@
             {{else}}
                 <div class="gatherer-empty">
                     <i class="fas fa-box-open fa-2x"></i>
-                    <p>No reagents in inventory yet.</p>
-                    <p>Drag ingredients from the catalog or use the <strong>+</strong> buttons.</p>
+                    <p>No reagents yet. Use the catalog or forage!</p>
                 </div>
             {{/if}}
         </div>

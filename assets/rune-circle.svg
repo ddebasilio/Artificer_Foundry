@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="strongGlow">
+      <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Outer circle -->
+  <circle cx="200" cy="200" r="180" fill="none" stroke="currentColor" stroke-width="2" opacity="0.4" class="rune-outer"/>
+
+  <!-- Middle circle -->
+  <circle cx="200" cy="200" r="150" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3" class="rune-middle"/>
+
+  <!-- Inner circle -->
+  <circle cx="200" cy="200" r="60" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.35" class="rune-inner"/>
+
+  <!-- Radial lines (8 spokes) -->
+  <g class="rune-spokes" opacity="0.25" stroke="currentColor" stroke-width="1">
+    <line x1="200" y1="20" x2="200" y2="380"/>
+    <line x1="20" y1="200" x2="380" y2="200"/>
+    <line x1="72.7" y1="72.7" x2="327.3" y2="327.3"/>
+    <line x1="327.3" y1="72.7" x2="72.7" y2="327.3"/>
+  </g>
+
+  <!-- Arcane rune symbols on outer ring -->
+  <g class="rune-symbols" fill="currentColor" opacity="0.3" font-family="serif" font-size="18">
+    <text x="200" y="28" text-anchor="middle">᛭</text>
+    <text x="327" y="80" text-anchor="middle">ᚱ</text>
+    <text x="376" y="205" text-anchor="middle">ᚦ</text>
+    <text x="327" y="330" text-anchor="middle">ᚹ</text>
+    <text x="200" y="388" text-anchor="middle">ᛟ</text>
+    <text x="73" y="330" text-anchor="middle">ᚢ</text>
+    <text x="24" y="205" text-anchor="middle">ᚨ</text>
+    <text x="73" y="80" text-anchor="middle">ᛗ</text>
+  </g>
+
+  <!-- Decorative inner triangles -->
+  <polygon points="200,80 280,260 120,260" fill="none" stroke="currentColor" stroke-width="1" opacity="0.2" class="rune-triangle-up"/>
+  <polygon points="200,320 120,140 280,140" fill="none" stroke="currentColor" stroke-width="1" opacity="0.2" class="rune-triangle-down"/>
+
+  <!-- Slot indicators at fixed positions on the middle circle -->
+  <g class="rune-slot-markers">
+    <circle cx="200" cy="50" r="22" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3" stroke-dasharray="4 3"/>
+    <circle cx="306" cy="89" r="22" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3" stroke-dasharray="4 3"/>
+    <circle cx="350" cy="200" r="22" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3" stroke-dasharray="4 3"/>
+    <circle cx="306" cy="311" r="22" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3" stroke-dasharray="4 3"/>
+    <circle cx="200" cy="350" r="22" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3" stroke-dasharray="4 3"/>
+    <circle cx="94" cy="311" r="22" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3" stroke-dasharray="4 3"/>
+    <circle cx="50" cy="200" r="22" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3" stroke-dasharray="4 3"/>
+    <circle cx="94" cy="89" r="22" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3" stroke-dasharray="4 3"/>
+  </g>
+
+  <!-- Center output area -->
+  <circle cx="200" cy="200" r="38" fill="none" stroke="currentColor" stroke-width="2" opacity="0.3" stroke-dasharray="6 4" class="rune-center"/>
+</svg>
+

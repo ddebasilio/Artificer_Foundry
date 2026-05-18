@@ -1,6 +1,7 @@
 import { CraftingApp } from "./crafting-app.js";
 import { GathererApp } from "./gatherer-app.js";
 import { RecipeManager } from "./recipe-manager.js";
+import { TYPE_LABELS } from "./ingredient-data.js";
 
 const MODULE    = "Artificer Foundry";
 const MODULE_ID = "artificer-foundry";
@@ -30,7 +31,32 @@ Hooks.once('init', function () {
         default: true
     });
 
+    game.settings.register(MODULE_ID, "potionCompendiumPack", {
+        name: "Preferred Potion Compendium",
+        hint: "Compendium pack ID to source crafted potion items from (e.g. 'plutonium-backend.items'). Leave blank for auto-detect.",
+        scope: "world",
+        config: true,
+        type: String,
+        default: ""
+    });
+
+    game.settings.register(MODULE_ID, "defaultBiome", {
+        name: "Default Foraging Biome",
+        hint: "Default biome selection for the foraging interface.",
+        scope: "world",
+        config: true,
+        type: String,
+        default: "forest"
+    });
+
     Handlebars.registerHelper('eq', (a, b) => a === b);
+    Handlebars.registerHelper('typeLabel', (typeCode) => TYPE_LABELS[typeCode] || typeCode);
+    Handlebars.registerHelper('rarityLabel', (rarity) => {
+        const labels = { common: "Common", uncommon: "Uncommon", rare: "Rare", very_rare: "Very rare", legendary: "Legendary" };
+        return labels[rarity] || rarity;
+    });
+    Handlebars.registerHelper('gt', (a, b) => a > b);
+    Handlebars.registerHelper('join', (arr, sep) => (arr || []).join(sep || ", "));
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
