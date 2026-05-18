@@ -80,10 +80,11 @@
                 </div>
                 <div class="forage-row">
                     <label>Time spent:</label>
-                    <select class="forage-time">
-                        {{#each times}}
-                            <option value="{{this.value}}" {{#if (eq ../forageTime this.value)}}selected{{/if}}>
-                                {{this.label}}
+                    <input class="forage-time-amount" type="number" min="1" max="999" value="{{forageTimeAmount}}">
+                    <select class="forage-time-unit">
+                        {{#each timeUnits}}
+                            <option value="{{this.value}}" {{#if (eq ../forageTimeUnit this.value)}}selected{{/if}}>
+                                {{this.name}}
                             </option>
                         {{/each}}
                     </select>

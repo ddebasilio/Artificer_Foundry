@@ -260,12 +260,11 @@ export const ABUNDANCE_MODIFIERS = {
     barren:    { name: "Barren",    dcMod: +8, qtyMul: 0.25 },
 };
 
-export const FORAGING_TIMES = {
-    "6sec":  { name: "6 seconds (one action)", dcMod: +6, maxItems: 1, label: "6 seconds" },
-    "1min":  { name: "1 minute",               dcMod: +4, maxItems: 2, label: "1 minute" },
-    "10min": { name: "10 minutes",             dcMod: +2, maxItems: 3, label: "10 minutes" },
-    "1hr":   { name: "1 hour",                 dcMod: 0,  maxItems: 5, label: "1 hour" },
-    "8hr":   { name: "8 hours (full day)",     dcMod: -4, maxItems: 10, label: "8 hours" },
+export const TIME_UNITS = {
+    seconds: { name: "Seconds", hours: 1 / 3600 },
+    minutes: { name: "Minutes", hours: 1 / 60 },
+    hours:   { name: "Hours",   hours: 1 },
+    days:    { name: "Days",    hours: 8 }, // Assuming 8 hours of foraging per day
 };
 
 // Which ingredients are commonly found in each biome (weighted by rarity tier)
@@ -400,22 +399,53 @@ export const INGREDIENT_COSTS = {
     "Unicorn Horn": 12000, "Dragon Scale": 7000, "Demon Horn Fragment": 6000,
 };
 
+function calculateTimeModifiers(amount, unit) {
+    const hours = amount * TIME_UNITS[unit].hours;
+    let dcMod = 0;
+    let maxItems = 0;
+
+    if (hours <= 1 / 600) { // <= 6 seconds
+        dcMod = +6;
+        maxItems = 2;
+    } else if (hours <= 1 / 60) { // <= 1 minute
+        dcMod = +4;
+        maxItems = 5;
+    } else if (hours <= 10 / 60) { // <= 10 minutes
+        dcMod = +2;
+        maxItems = 8;
+    } else if (hours <= 1) { // <= 1 hour
+        dcMod = 0;
+        maxItems = 10;
+    } else { // > 1 hour
+        const hourBlocks = Math.floor(hours);
+        dcMod = -Math.min(4, Math.floor(hourBlocks / 2)); // Caps at -4 for 8+ hours
+        maxItems = 5 + Math.floor((hours - 1) * 1); // 1 extra item per hour over 1, maxes based on total time
+        // Just setting a reasonable cap
+        if (hours >= 8) maxItems = 50;
+        if (hours > 8) maxItems += Math.floor((hours - 8) / 2);
+    }
+
+    return { dcMod, maxItems, label: `${amount} ${TIME_UNITS[unit].name.toLowerCase()}` };
+}
+
+
 /**
  * Perform a foraging roll and return results.
  * @param {string} biomeKey - Key from BIOMES
  * @param {string} abundanceKey - Key from ABUNDANCE_MODIFIERS
- * @param {string} timeKey - Key from FORAGING_TIMES
+ * @param {number} timeAmount - The numerical amount of time
+ * @param {string} timeUnit - Key from TIME_UNITS
  * @param {number} rollResult - The d20 roll result
  * @returns {{ success: boolean, dc: number, items: Array<{name, type, qty}>, critFail: boolean }}
  */
-export function resolveForaging(biomeKey, abundanceKey, timeKey, rollResult) {
+export function resolveForaging(biomeKey, abundanceKey, timeAmount, timeUnit, rollResult) {
     const biome = BIOMES[biomeKey];
     const abundance = ABUNDANCE_MODIFIERS[abundanceKey];
-    const time = FORAGING_TIMES[timeKey];
+    const timeModifiers = calculateTimeModifiers(timeAmount, timeUnit);
 
-    if (!biome || !abundance || !time) return { success: false, dc: 20, items: [], critFail: false };
+    if (!biome || !abundance || !timeUnit || isNaN(timeAmount)) return { success: false, dc: 20, items: [], critFail: false };
 
-    const dc = Math.max(1, biome.baseDC + abundance.dcMod + time.dcMod);
+    const dc = Math.max(1, biome.baseDC + abundance.dcMod + timeModifiers.dcMod);
     const critFail = rollResult === 1;
     const critSuccess = rollResult === 20;
 
@@ -430,11 +460,11 @@ export function resolveForaging(biomeKey, abundanceKey, timeKey, rollResult) {
     // Success — determine how many items
     const margin = rollResult - dc;
     let itemCount = Math.min(
-        time.maxItems,
+        timeModifiers.maxItems,
         Math.max(1, Math.floor(1 + margin / 3))
     );
     itemCount = Math.ceil(itemCount * abundance.qtyMul);
-    if (critSuccess) itemCount = Math.min(time.maxItems, itemCount + 2);
+    if (critSuccess) itemCount = Math.min(timeModifiers.maxItems, itemCount + 2);
 
     // Pick random ingredients from this biome
     const biomePool = BIOME_INGREDIENTS[biomeKey] ?? {};

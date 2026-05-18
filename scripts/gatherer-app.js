@@ -1,5 +1,5 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
-import { TYPE_LABELS, getIngredientIcon, TYPE_ICONS, INGREDIENT_COSTS, BIOMES, ABUNDANCE_MODIFIERS, FORAGING_TIMES, resolveForaging } from "./ingredient-data.js";
+import { TYPE_LABELS, getIngredientIcon, TYPE_ICONS, INGREDIENT_COSTS, BIOMES, ABUNDANCE_MODIFIERS, TIME_UNITS, resolveForaging } from "./ingredient-data.js";
 
 const DEFAULT_INGREDIENT_IMG = 'icons/svg/item-bag.svg';
 
@@ -14,7 +14,8 @@ export class GathererApp extends HandlebarsApplicationMixin(ApplicationV2) {
         // Foraging state
         this.forageBiome = "forest";
         this.forageAbundance = "medium";
-        this.forageTime = "1hr";
+        this.forageTimeAmount = 1;
+        this.forageTimeUnit = "hours";
     }
 
     static DEFAULT_OPTIONS = {
@@ -62,13 +63,14 @@ export class GathererApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
         const biomes = Object.entries(BIOMES).map(([k, v]) => ({ value: k, ...v }));
         const abundances = Object.entries(ABUNDANCE_MODIFIERS).map(([k, v]) => ({ value: k, ...v }));
-        const times = Object.entries(FORAGING_TIMES).map(([k, v]) => ({ value: k, ...v }));
+        const timeUnits = Object.entries(TIME_UNITS).map(([k, v]) => ({ value: k, ...v }));
 
         return {
             actor: this.actor, ingredients, inventory, allTypes, allTypeLabels,
             filterType: this.filterType, searchQuery: this.searchQuery, sortBy: this.sortBy,
-            biomes, abundances, times,
-            forageBiome: this.forageBiome, forageAbundance: this.forageAbundance, forageTime: this.forageTime,
+            biomes, abundances, timeUnits,
+            forageBiome: this.forageBiome, forageAbundance: this.forageAbundance,
+            forageTimeAmount: this.forageTimeAmount, forageTimeUnit: this.forageTimeUnit,
         };
     }
 
@@ -139,7 +141,8 @@ export class GathererApp extends HandlebarsApplicationMixin(ApplicationV2) {
         // Foraging controls
         el.querySelector('.forage-biome')?.addEventListener('change', e => { this.forageBiome = e.target.value; });
         el.querySelector('.forage-abundance')?.addEventListener('change', e => { this.forageAbundance = e.target.value; });
-        el.querySelector('.forage-time')?.addEventListener('change', e => { this.forageTime = e.target.value; });
+        el.querySelector('.forage-time-amount')?.addEventListener('change', e => { this.forageTimeAmount = Number(e.target.value) || 1; });
+        el.querySelector('.forage-time-unit')?.addEventListener('change', e => { this.forageTimeUnit = e.target.value; });
         el.querySelector('.forage-roll-btn')?.addEventListener('click', this._onForage.bind(this));
     }
 
@@ -182,10 +185,10 @@ export class GathererApp extends HandlebarsApplicationMixin(ApplicationV2) {
         const roll = await new Roll("1d20").evaluate();
         await roll.toMessage({
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            flavor: `<strong>Foraging Roll</strong> (${BIOMES[this.forageBiome]?.name}, ${ABUNDANCE_MODIFIERS[this.forageAbundance]?.name}, ${FORAGING_TIMES[this.forageTime]?.label})`,
+            flavor: `<strong>Foraging Roll</strong> (${BIOMES[this.forageBiome]?.name}, ${ABUNDANCE_MODIFIERS[this.forageAbundance]?.name}, ${this.forageTimeAmount} ${TIME_UNITS[this.forageTimeUnit]?.name.toLowerCase()})`,
         });
 
-        const result = resolveForaging(this.forageBiome, this.forageAbundance, this.forageTime, roll.total);
+        const result = resolveForaging(this.forageBiome, this.forageAbundance, this.forageTimeAmount, this.forageTimeUnit, roll.total);
 
         if (result.critFail) {
             ui.notifications.warn("Critical failure! You found nothing and disturbed the area.");
