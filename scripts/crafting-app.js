@@ -241,6 +241,12 @@ export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
         if (compendiumItem) {
             const itemData = compendiumItem.toObject();
             itemData.system.quantity = output.quantity ?? 1;
+            
+            // Remove activities from compendium items to prevent validation errors in newer dnd5e versions
+            if (itemData.system && itemData.system.activities) {
+                itemData.system.activities = {};
+            }
+
             await this.actor.createEmbeddedDocuments("Item", [itemData]);
         } else {
             await this.actor.createEmbeddedDocuments("Item", [{
