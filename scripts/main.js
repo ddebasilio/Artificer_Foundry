@@ -170,7 +170,6 @@ function injectCraftingTab(app, htmlArg) {
         }
 
         if (!root) {
-            console.warn(`${MODULE} | Could not resolve root element for ${actor.name}`);
             return;
         }
 
@@ -193,16 +192,11 @@ function injectCraftingTab(app, htmlArg) {
         for (const sel of NAV_SELECTORS) {
             tabsNav = root.querySelector(sel);
             if (tabsNav) {
-                console.log(`${MODULE} | Nav found ("${sel}") for ${actor.name}`);
                 break;
             }
         }
 
         if (!tabsNav) {
-            // Debug dump so we can see the actual structure
-            console.warn(`${MODULE} | No tab nav found for ${actor.name}`);
-            console.warn(`${MODULE} | Root: <${root.tagName} id="${root.id}" class="${root.className}">`);
-            console.warn(`${MODULE} | Root HTML (first 800 chars):`, root.outerHTML?.slice(0, 800));
             return;
         }
 
@@ -225,7 +219,6 @@ function injectCraftingTab(app, htmlArg) {
         gathererItem._af_actor = actor;
         tabsNav.appendChild(gathererItem);
 
-        console.log(`${MODULE} | ✓ Crafting tabs injected for ${actor.name}`);
 
     } catch (err) {
         console.error(`${MODULE} | injectCraftingTab error:`, err);

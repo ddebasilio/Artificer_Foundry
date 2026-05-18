@@ -168,6 +168,12 @@ export class GathererApp extends HandlebarsApplicationMixin(ApplicationV2) {
         if (compendiumItem) {
             const itemData = compendiumItem.toObject();
             itemData.system.quantity = qty;
+            
+            // Remove activities from compendium items if they cause validation errors
+            if (itemData.system && itemData.system.activities) {
+                itemData.system.activities = {};
+            }
+
             try {
                 await this.actor.createEmbeddedDocuments("Item", [itemData]);
             } catch (error) {
