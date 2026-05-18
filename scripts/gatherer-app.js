@@ -187,35 +187,36 @@ export class GathererApp extends HandlebarsApplicationMixin(ApplicationV2) {
         event.preventDefault();
         if (!this.actor) { ui.notifications.warn("No actor associated."); return; }
 
+        const flavorText = `<strong>Foraging Roll</strong> (${BIOMES[this.forageBiome]?.name}, ${ABUNDANCE_MODIFIERS[this.forageAbundance]?.name}, ${this.forageTimeAmount} ${TIME_UNITS[this.forageTimeUnit]?.name.toLowerCase()})`;
+
         // Roll d20
         const roll = await new Roll("1d20").evaluate();
         await roll.toMessage({
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            flavor: `<strong>Foraging Roll</strong> (${BIOMES[this.forageBiome]?.name}, ${ABUNDANCE_MODIFIERS[this.forageAbundance]?.name}, ${this.forageTimeAmount} ${TIME_UNITS[this.forageTimeUnit]?.name.toLowerCase()})`,
+            flavor: flavorText,
         });
 
         const result = resolveForaging(this.forageBiome, this.forageAbundance, this.forageTimeAmount, this.forageTimeUnit, roll.total);
 
+        let msg = "";
+
         if (result.critFail) {
-            ui.notifications.warn("Critical failure! You found nothing and disturbed the area.");
-            return;
+             msg = `<p><strong>Critical failure!</strong> You found nothing and disturbed the area.</p>`;
+        } else if (!result.success) {
+             msg = `<p><strong>Failed.</strong> You didn't find anything useful this time.</p><p><em>DC was ${result.dc}</em></p>`;
+        } else {
+            // Add found items
+            msg = `<strong>${this.actor.name} found:</strong><ul>`;
+            for (const item of result.items) {
+                await this._addIngredient(item.name, item.type, item.qty);
+                msg += `<li>${item.qty}\u00d7 ${item.name}</li>`;
+            }
+            msg += `</ul><em>DC was ${result.dc}</em>`;
         }
-
-        if (!result.success) {
-            ui.notifications.info(`DC was ${result.dc}. You didn't find anything useful this time.`);
-            return;
-        }
-
-        // Add found items
-        let msg = `<strong>${this.actor.name} found:</strong><ul>`;
-        for (const item of result.items) {
-            await this._addIngredient(item.name, item.type, item.qty);
-            msg += `<li>${item.qty}\u00d7 ${item.name}</li>`;
-        }
-        msg += `</ul><em>DC was ${result.dc}</em>`;
 
         ChatMessage.create({
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            flavor: flavorText,
             content: msg,
         });
     }
