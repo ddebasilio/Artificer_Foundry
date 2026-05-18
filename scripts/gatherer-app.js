@@ -168,7 +168,13 @@ export class GathererApp extends HandlebarsApplicationMixin(ApplicationV2) {
         if (compendiumItem) {
             const itemData = compendiumItem.toObject();
             itemData.system.quantity = qty;
-            await this.actor.createEmbeddedDocuments("Item", [itemData]);
+            try {
+                await this.actor.createEmbeddedDocuments("Item", [itemData]);
+            } catch (error) {
+                console.warn(`Artificer Foundry | Failed to create item from compendium data, falling back to basic loot item. Error:`, error);
+                const img = getIngredientIcon(name, ingType) || compendiumItem.img;
+                await this.actor.createEmbeddedDocuments("Item", [{ name, type: "loot", img, system: { quantity: qty } }]);
+            }
         } else {
             const img = getIngredientIcon(name, ingType);
             await this.actor.createEmbeddedDocuments("Item", [{ name, type: "loot", img, system: { quantity: qty } }]);

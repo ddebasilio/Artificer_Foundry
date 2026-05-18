@@ -213,7 +213,7 @@
 .foraging-section { padding: 8px 10px; background: linear-gradient(180deg, #142008 0%, #0e1a06 100%); border-bottom: 2px solid #3a6015; flex-shrink: 0; }
 .foraging-section h3 { margin: 0 0 6px; font-size: 0.9em; color: #a0d060; }
 .forage-form { display: flex; flex-direction: column; gap: 5px; }
-.forage-row { display: flex; align-items: center; gap: 6px; }
+.forage-row { display: flex; align-items: center; gap: 6px; width: auto }
 .forage-row label { font-size: 0.75em; color: #7a9a40; min-width: 70px; }
 .forage-row select { flex: 1; background: #060a02; color: #a0c870; border: 1px solid #3a5a18; border-radius: 3px; padding: 3px 5px; font-size: 0.78em; }
 .forage-roll-btn { margin-top: 4px; padding: 8px 12px; background: linear-gradient(180deg, #2a4a10 0%, #1a3008 100%); color: #c0e080; border: 1px solid #4a7020; border-radius: 4px; font-weight: bold; font-size: 0.85em; cursor: pointer; transition: all 0.15s; }
