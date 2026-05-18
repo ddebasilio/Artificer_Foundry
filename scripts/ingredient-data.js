@@ -42,12 +42,12 @@ export const INGREDIENT_ICONS = {
 
     // Liquids
     "Pure Water":             "icons/consumables/potions/bottle-corked-blue.webp",
-    "Naphtha Oil":            "icons/consumables/potions/vial-corked-red.webp",
+    "Naphtha Oil":            "icons/commodities/materials/liquid-orange.webp",
 
     // Common components
     "Charcoal Powder":        "icons/commodities/materials/powder-black.webp",
     "Pine Resin":             "icons/commodities/materials/liquid-orange.webp",
-    "Sulphur":                "icons/commodities/materials/powder-yellow.webp",
+    "Sulphur":                "icons/commodities/materials/bowl-powder-yellow.webp",
     "Rendered Fat":           "icons/commodities/materials/bowl-liquid-white.webp",
     "Powdered Charcoal":      "icons/commodities/materials/powder-grey.webp",
 
@@ -60,12 +60,12 @@ export const INGREDIENT_ICONS = {
     "Merfolk Scale":          "icons/commodities/biological/shell-ribbed-grey.webp",
     "Rabbit Foot":            "icons/commodities/bones/bone-foot-bird-brown.webp",
     "Salamander Scale":       "icons/commodities/biological/shell-ribbed-gold.webp",
-    "Giant Toenail":          "icons/commodities/bones/claw-worn-tan.webp",
+    "Giant Toenail":          "icons/commodities/claws/claw-worn-tan.webp",
     "Goblin Teeth":           "icons/commodities/bones/bone-jaw-teeth-white-grey.webp",
-    "Troll Blood":            "icons/consumables/potions/potion-bottle-corked-green.webp",
+    "Troll Blood":            "icons/commodities/materials/liquid-green.webp",
 
     // Rare components
-    "Ethereal Dust":          "icons/commodities/materials/powder-blue.webp",
+    "Ethereal Dust":          "icons/commodities/materials/bowl-powder-blue.webp",
 
     // Rare monster parts
     "Basilisk Eye":           "icons/creatures/eyes/lizard-single-slit-green.webp",
@@ -78,31 +78,31 @@ export const INGREDIENT_ICONS = {
     "Beholder Eyestalk":      "icons/creatures/eyes/slime-stalk-green.webp",
     "Manticore Spine":        "icons/commodities/bones/bone-spine-grey.webp",
     "Frost Giant Knuckle":    "icons/commodities/bones/bone-joint-tan.webp",
-    "Fire Giant Heartstring": "icons/commodities/materials/liquid-red.webp",
+    "Fire Giant Heartstring": "icons/commodities/biological/organ-heart-red.webp",
     "Will-o-Wisp Essence":    "icons/commodities/materials/liquid-green.webp",
     "Displacer Beast Tentacle": "icons/creatures/tentacles/tentacles-octopus-black-pink.webp",
     "Wyvern Poison Gland":    "icons/commodities/materials/slime-green.webp",
     "Aboleth Slime":          "icons/commodities/materials/slime-green.webp",
-    "Storm Eagle Talon":      "icons/commodities/claws/claw-eagle-grey.webp",
+    "Storm Eagle Talon":      "icons/commodities/claws/claw-blue-grey.webp",
 
     // Very rare components
     "Unicorn Horn Shaving":   "icons/commodities/bones/horn-simple-white.webp",
     "Phoenix Ash":            "icons/commodities/materials/bowl-powder-gold.webp",
     "Shadow Essence":         "icons/commodities/materials/liquid-purple.webp",
     "Vampire Dust":           "icons/commodities/materials/powder-grey.webp",
-    "Paladin's Tear":         "icons/commodities/gems/gem-teardrop-gold.webp",
+    "Paladin's Tear":         "icons/commodities/gems/gem-teardrop-blue.webp",
     "Celestial Feather":      "icons/commodities/materials/feather-white.webp",
     "Cloud Giant Heartstring": "icons/commodities/materials/liquid-blue.webp",
-    "Lightning-Struck Wood":  "icons/commodities/wood/wood-splintered-charred.webp",
+    "Lightning-Struck Wood":  "icons/commodities/wood/log-split-beige.webp",
     "Medusa Blood":           "icons/commodities/materials/liquid-purple.webp",
 
     // Legendary components
     "Storm Giant Blood":      "icons/commodities/materials/liquid-blue.webp",
-    "Dragon Blood":           "icons/commodities/materials/liquid-red.webp",
+    "Dragon Blood":           "icons/commodities/materials/bowl-liquid-red.webp",
     "Lich Finger Bone":       "icons/commodities/bones/bones-hand-grey.webp",
     "Unicorn Horn":           "icons/commodities/bones/horn-simple-white.webp",
     "Dragon Scale":           "icons/commodities/biological/shell-ribbed-gold.webp",
-    "Demon Horn Fragment":    "icons/commodities/bones/horn-broken-red.webp",
+    "Demon Horn Fragment":    "icons/commodities/bones/horn-twisted-brown-red.webp",
 };
 
 // Fallback icon when a specific ingredient icon isn't defined
