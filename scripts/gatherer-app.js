@@ -164,28 +164,32 @@ export class GathererApp extends HandlebarsApplicationMixin(ApplicationV2) {
             this.render();
             return;
         }
-        const compendiumItem = await this._findInCompendiums(name);
-        if (compendiumItem) {
-            const itemData = compendiumItem.toObject();
-            itemData.system.quantity = qty;
-            
-            // Remove activities from compendium items if they cause validation errors
-            if (itemData.system && itemData.system.activities) {
-                itemData.system.activities = {};
-            }
 
-            try {
-                await this.actor.createEmbeddedDocuments("Item", [itemData]);
-            } catch (error) {
-                console.warn(`Artificer Foundry | Failed to create item from compendium data, falling back to basic loot item. Error:`, error);
-                const img = getIngredientIcon(name, ingType) || compendiumItem.img;
-                await this.actor.createEmbeddedDocuments("Item", [{ name, type: "loot", img, system: { quantity: qty } }]);
+        const compendiumItem = await this._findInCompendiums(name);
+        const img = getIngredientIcon(name, ingType) || compendiumItem?.img || DEFAULT_INGREDIENT_IMG;
+        
+        // Always construct a new, clean item data object to avoid validation errors
+        // from old/incompatible compendium data structure in newer dnd5e versions.
+        const cleanItemData = {
+            name: name,
+            type: "loot",
+            img: img,
+            system: {
+                quantity: qty,
+                description: {
+                    value: compendiumItem?.system?.description?.value || ""
+                }
             }
-        } else {
-            const img = getIngredientIcon(name, ingType);
-            await this.actor.createEmbeddedDocuments("Item", [{ name, type: "loot", img, system: { quantity: qty } }]);
+        };
+
+        try {
+            await this.actor.createEmbeddedDocuments("Item", [cleanItemData]);
+            ui.notifications.info(`Added ${qty}\u00d7 ${name} to ${this.actor.name}'s inventory.`);
+        } catch (error) {
+            console.error(`Artificer Foundry | Failed to create clean item ${name}. Error:`, error);
+            ui.notifications.error(`Failed to add ${name}. See console.`);
         }
-        ui.notifications.info(`Added ${qty}\u00d7 ${name} to ${this.actor.name}'s inventory.`);
+
         this.render();
     }
 

@@ -238,25 +238,27 @@ export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
         // Create output
         const output = recipe.output;
         const compendiumItem = await this._findInCompendiums(output.name);
-        if (compendiumItem) {
-            const itemData = compendiumItem.toObject();
-            itemData.system.quantity = output.quantity ?? 1;
-            
-            // Remove activities from compendium items to prevent validation errors in newer dnd5e versions
-            if (itemData.system && itemData.system.activities) {
-                itemData.system.activities = {};
+        
+        const cleanItemData = {
+            name: output.name,
+            type: compendiumItem?.type || "loot",
+            img: output.img || compendiumItem?.img || "icons/svg/item-bag.svg",
+            system: {
+                quantity: output.quantity ?? 1,
+                description: {
+                    value: compendiumItem?.system?.description?.value || ""
+                }
             }
+        };
 
-            await this.actor.createEmbeddedDocuments("Item", [itemData]);
-        } else {
-            await this.actor.createEmbeddedDocuments("Item", [{
-                name: output.name, type: "loot",
-                img: output.img ?? "icons/consumables/potions/potion-flask-corked-red.webp",
-                system: { quantity: output.quantity ?? 1 }
-            }]);
+        try {
+            await this.actor.createEmbeddedDocuments("Item", [cleanItemData]);
+            ui.notifications.info(`\u2713 ${this.actor.name} crafted ${output.name}!`);
+        } catch (error) {
+            console.error(`Artificer Foundry | Failed to create clean item ${output.name}. Error:`, error);
+            ui.notifications.error(`Failed to craft ${output.name}. See console.`);
         }
 
-        ui.notifications.info(`\u2713 ${this.actor.name} crafted ${output.name}!`);
         this.providedIngredients = {};
         this._crafting = false;
         this.render();
