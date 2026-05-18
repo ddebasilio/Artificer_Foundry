@@ -157,39 +157,94 @@ export class GathererApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
     async _addIngredient(name, ingType, qty = 1) {
         if (!this.actor) return;
-        const existing = this.actor.items.find(i => i.name.toLowerCase() === name.toLowerCase());
-        if (existing) {
-            await existing.update({ 'system.quantity': (existing.system?.quantity ?? 1) + qty });
-            ui.notifications.info(`Added ${qty}\u00d7 ${name}.`);
+        const targetName = name.toLowerCase();
+
+        // 1. Find all matching items (valid or invalid)
+        let matchingItems = this.actor.items.contents.filter(i => i.name.toLowerCase() === targetName);
+        
+        // Also check invalid documents explicitly (Foundry v12+)
+        if (this.actor.items.invalidDocumentIds) {
+            for (const id of this.actor.items.invalidDocumentIds) {
+                if (!matchingItems.find(i => i.id === id)) {
+                    const raw = this.actor._source.items.find(i => i._id === id);
+                    if (raw && raw.name.toLowerCase() === targetName) {
+                        matchingItems.push({ 
+                            id: id, 
+                            _source: raw, 
+                            isInvalid: true, 
+                            delete: async () => { await this.actor.deleteEmbeddedDocuments("Item", [id]); } 
+                        });
+                    }
+                }
+            }
+        }
+
+        // 2. Process existing items
+        if (matchingItems.length > 0) {
+            let totalQty = 0;
+            let isCorrupted = false;
+            let validExisting = null;
+
+            for (const item of matchingItems) {
+                const raw = item._source || item;
+                totalQty += raw.system?.quantity ?? 1;
+
+                const hasActivities = raw.system?.activities && Object.keys(raw.system.activities).length > 0;
+                if (raw.type !== "loot" || hasActivities || item.isInvalid || this.actor.items.invalidDocumentIds?.has(item.id)) {
+                    isCorrupted = true;
+                } else {
+                    if (!validExisting) validExisting = item;
+                }
+            }
+
+            if (isCorrupted || matchingItems.length > 1 || !validExisting) {
+                console.warn(`Artificer Foundry | Cleaning up corrupted/duplicate items for ${name}.`);
+                // Delete all
+                for (const item of matchingItems) {
+                    try { await item.delete(); } catch(e) {}
+                }
+
+                // Create a single clean item
+                const compendiumItem = await this._findInCompendiums(name);
+                const img = getIngredientIcon(name, ingType) || compendiumItem?.img || DEFAULT_INGREDIENT_IMG;
+                const cleanItemData = {
+                    name: name, type: "loot", img: img,
+                    system: { quantity: totalQty + qty, description: { value: compendiumItem?.system?.description?.value || "" } }
+                };
+                
+                await this.actor.createEmbeddedDocuments("Item", [cleanItemData]);
+                ui.notifications.info(`Added ${qty}\u00d7 ${name} (and cleaned up corrupted item).`);
+            } else {
+                // Safely update the valid item
+                try {
+                    await validExisting.update({ 'system.quantity': totalQty + qty });
+                    ui.notifications.info(`Added ${qty}\u00d7 ${name}.`);
+                } catch(e) {
+                    // Fallback if it still fails
+                    await validExisting.delete();
+                    const cleanItemData = {
+                        name: validExisting.name, type: "loot", img: validExisting.img,
+                        system: { quantity: totalQty + qty, description: validExisting._source?.system?.description || {} }
+                    };
+                    await this.actor.createEmbeddedDocuments("Item", [cleanItemData]);
+                    ui.notifications.info(`Added ${qty}\u00d7 ${name}.`);
+                }
+            }
             this.render();
             return;
         }
 
+        // 3. Create fresh item
         const compendiumItem = await this._findInCompendiums(name);
         const img = getIngredientIcon(name, ingType) || compendiumItem?.img || DEFAULT_INGREDIENT_IMG;
         
-        // Always construct a new, clean item data object to avoid validation errors
-        // from old/incompatible compendium data structure in newer dnd5e versions.
         const cleanItemData = {
-            name: name,
-            type: "loot",
-            img: img,
-            system: {
-                quantity: qty,
-                description: {
-                    value: compendiumItem?.system?.description?.value || ""
-                }
-            }
+            name: name, type: "loot", img: img,
+            system: { quantity: qty, description: { value: compendiumItem?.system?.description?.value || "" } }
         };
 
-        try {
-            await this.actor.createEmbeddedDocuments("Item", [cleanItemData]);
-            ui.notifications.info(`Added ${qty}\u00d7 ${name} to ${this.actor.name}'s inventory.`);
-        } catch (error) {
-            console.error(`Artificer Foundry | Failed to create clean item ${name}. Error:`, error);
-            ui.notifications.error(`Failed to add ${name}. See console.`);
-        }
-
+        await this.actor.createEmbeddedDocuments("Item", [cleanItemData]);
+        ui.notifications.info(`Added ${qty}\u00d7 ${name} to ${this.actor.name}'s inventory.`);
         this.render();
     }
 

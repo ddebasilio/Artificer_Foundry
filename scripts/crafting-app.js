@@ -239,9 +239,10 @@ export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
         const output = recipe.output;
         const compendiumItem = await this._findInCompendiums(output.name);
         
+        // We avoid carrying over problematic properties entirely.
         const cleanItemData = {
             name: output.name,
-            type: compendiumItem?.type || "loot",
+            type: compendiumItem?.type === "consumable" || compendiumItem?.type === "loot" ? compendiumItem.type : "loot",
             img: output.img || compendiumItem?.img || "icons/svg/item-bag.svg",
             system: {
                 quantity: output.quantity ?? 1,
