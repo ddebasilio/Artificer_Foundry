@@ -42,7 +42,7 @@ export const INGREDIENT_ICONS = {
 
     // Liquids
     "Pure Water":             "icons/consumables/potions/bottle-corked-blue.webp",
-    "Naphtha Oil":            "icons/commodities/materials/liquid-orange.webp",
+    "Naphtha Oil":            "icons/consumables/potions/bottle-round-corked-orange.webp",
 
     // Common components
     "Charcoal Powder":        "icons/commodities/materials/powder-black.webp",
@@ -62,7 +62,7 @@ export const INGREDIENT_ICONS = {
     "Salamander Scale":       "icons/commodities/biological/shell-ribbed-gold.webp",
     "Giant Toenail":          "icons/commodities/claws/claw-worn-tan.webp",
     "Goblin Teeth":           "icons/commodities/bones/bone-jaw-teeth-white-grey.webp",
-    "Troll Blood":            "icons/commodities/materials/liquid-green.webp",
+    "Troll Blood":            "icons/consumables/potions/vial-cork-green.webp",
 
     // Rare components
     "Ethereal Dust":          "icons/commodities/materials/bowl-powder-blue.webp",
@@ -83,7 +83,7 @@ export const INGREDIENT_ICONS = {
     "Displacer Beast Tentacle": "icons/creatures/tentacles/tentacles-octopus-black-pink.webp",
     "Wyvern Poison Gland":    "icons/commodities/materials/slime-green.webp",
     "Aboleth Slime":          "icons/commodities/materials/slime-green.webp",
-    "Storm Eagle Talon":      "icons/commodities/claws/claw-blue-grey.webp",
+    "Storm Eagle Talon":      "icons/commodities/claws/talon-blue.webp",
 
     // Very rare components
     "Unicorn Horn Shaving":   "icons/commodities/bones/horn-simple-white.webp",
@@ -93,16 +93,16 @@ export const INGREDIENT_ICONS = {
     "Paladin's Tear":         "icons/commodities/gems/gem-teardrop-blue.webp",
     "Celestial Feather":      "icons/commodities/materials/feather-white.webp",
     "Cloud Giant Heartstring": "icons/commodities/materials/liquid-blue.webp",
-    "Lightning-Struck Wood":  "icons/commodities/wood/log-split-beige.webp",
+    "Lightning-Struck Wood":  "icons/commodities/wood/wood-carved-runes.webp",
     "Medusa Blood":           "icons/commodities/materials/liquid-purple.webp",
 
     // Legendary components
     "Storm Giant Blood":      "icons/commodities/materials/liquid-blue.webp",
-    "Dragon Blood":           "icons/commodities/materials/bowl-liquid-red.webp",
+    "Dragon Blood":           "icons/consumables/potions/vial-cork-red.webp",
     "Lich Finger Bone":       "icons/commodities/bones/bones-hand-grey.webp",
     "Unicorn Horn":           "icons/commodities/bones/horn-simple-white.webp",
     "Dragon Scale":           "icons/commodities/biological/shell-ribbed-gold.webp",
-    "Demon Horn Fragment":    "icons/commodities/bones/horn-twisted-brown-red.webp",
+    "Demon Horn Fragment":    "icons/commodities/bones/bone-broken-brown.webp",
 };
 
 // Fallback icon when a specific ingredient icon isn't defined
