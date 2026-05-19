@@ -499,3 +499,125 @@ export function resolveForaging(biomeKey, abundanceKey, timeAmount, timeUnit, ro
 
     return { success: true, dc, items, critFail: false };
 }
+
+/**
+ * Resolve a gathering roll against a pre-computed DC (set by the DM).
+ * Uses the same item-pool and count logic as resolveForaging, but skips DC computation.
+ * @param {number} dc - The DC the DM has set
+ * @param {string} biomeKey - Key from BIOMES (for item pool selection)
+ * @param {number} rollResult - The player's d20 + modifier total
+ * @returns {{ success: boolean, dc: number, items: Array<{name, type, qty}>, critFail: boolean }}
+ */
+export function resolveForagingByDC(dc, biomeKey, rollResult) {
+    const critFail = rollResult === 1;
+    const critSuccess = rollResult === 20;
+
+    if (critFail) return { success: false, dc, items: [], critFail: true };
+    if (rollResult < dc && !critSuccess) return { success: false, dc, items: [], critFail: false };
+
+    const margin = rollResult - dc;
+    let itemCount = Math.max(1, Math.floor(1 + margin / 3));
+    if (critSuccess) itemCount += 2;
+
+    const biomePool = BIOME_INGREDIENTS[biomeKey] ?? {};
+    const items = [];
+
+    const weightedPool = [];
+    for (const [tier, names] of Object.entries(biomePool)) {
+        const weight = RARITY_WEIGHTS[tier] ?? 0;
+        for (const name of names) weightedPool.push({ name, type: tier, weight });
+    }
+
+    if (weightedPool.length === 0) return { success: true, dc, items: [], critFail: false };
+
+    const totalWeight = weightedPool.reduce((sum, e) => sum + e.weight, 0);
+
+    for (let i = 0; i < itemCount; i++) {
+        let roll = Math.random() * totalWeight;
+        for (const entry of weightedPool) {
+            roll -= entry.weight;
+            if (roll <= 0) {
+                const existing = items.find(it => it.name === entry.name);
+                if (existing) existing.qty++;
+                else items.push({ name: entry.name, type: entry.type, qty: 1 });
+                break;
+            }
+        }
+    }
+
+    return { success: true, dc, items, critFail: false };
+}
+
+/**
+ * Add or update an ingredient item on an actor. Handles corrupted/duplicate items.
+ * Extracted so both GathererApp and the socket GM handler can share this logic.
+ * @param {Actor} actor
+ * @param {string} name
+ * @param {string} ingType
+ * @param {number} qty
+ */
+export async function addIngredientToActor(actor, name, ingType, qty = 1) {
+    if (!actor) return;
+    const DEFAULT_INGREDIENT_IMG = 'icons/svg/item-bag.svg';
+    const targetName = name.toLowerCase();
+
+    let matchingItems = actor.items.contents.filter(i => i.name.toLowerCase() === targetName);
+
+    if (actor.items.invalidDocumentIds) {
+        for (const id of actor.items.invalidDocumentIds) {
+            if (!matchingItems.find(i => i.id === id)) {
+                const raw = actor._source.items.find(i => i._id === id);
+                if (raw && raw.name.toLowerCase() === targetName) {
+                    matchingItems.push({
+                        id, _source: raw, isInvalid: true,
+                        delete: async () => { await actor.deleteEmbeddedDocuments("Item", [id]); }
+                    });
+                }
+            }
+        }
+    }
+
+    if (matchingItems.length > 0) {
+        let totalQty = 0;
+        let isCorrupted = false;
+        let validExisting = null;
+
+        for (const item of matchingItems) {
+            const raw = item._source || item;
+            totalQty += raw.system?.quantity ?? 1;
+            const hasActivities = raw.system?.activities && Object.keys(raw.system.activities).length > 0;
+            if (raw.type !== "loot" || hasActivities || item.isInvalid || actor.items.invalidDocumentIds?.has(item.id)) {
+                isCorrupted = true;
+            } else {
+                if (!validExisting) validExisting = item;
+            }
+        }
+
+        if (isCorrupted || matchingItems.length > 1 || !validExisting) {
+            for (const item of matchingItems) { try { await item.delete(); } catch(e) {} }
+            // Find icon from compendium or fallback
+            let img = getIngredientIcon(name, ingType) || DEFAULT_INGREDIENT_IMG;
+            await actor.createEmbeddedDocuments("Item", [{
+                name, type: "loot", img,
+                system: { quantity: totalQty + qty, description: { value: "" } }
+            }]);
+        } else {
+            try {
+                await validExisting.update({ 'system.quantity': totalQty + qty });
+            } catch(e) {
+                await validExisting.delete();
+                await actor.createEmbeddedDocuments("Item", [{
+                    name: validExisting.name, type: "loot", img: validExisting.img,
+                    system: { quantity: totalQty + qty, description: validExisting._source?.system?.description || {} }
+                }]);
+            }
+        }
+        return;
+    }
+
+    const img = getIngredientIcon(name, ingType) || DEFAULT_INGREDIENT_IMG;
+    await actor.createEmbeddedDocuments("Item", [{
+        name, type: "loot", img,
+        system: { quantity: qty, description: { value: "" } }
+    }]);
+}

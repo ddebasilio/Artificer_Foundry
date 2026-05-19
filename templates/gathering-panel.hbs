@@ -1,0 +1,111 @@
+{{#if @root}}
+<div class="af-gathering-panel">
+
+    {{!-- ── Players in Scene ── --}}
+    <section class="gathering-section gathering-players">
+        <h3 class="gathering-section-title"><i class="fas fa-users"></i> Players in Scene</h3>
+
+        {{#if sceneActors.length}}
+            <div class="gathering-actor-list">
+                {{#each sceneActors}}
+                    <label class="gathering-actor-row">
+                        <input type="checkbox"
+                               class="gathering-player-check"
+                               data-actor-id="{{this.id}}"
+                               {{#if this.selected}}checked{{/if}}>
+                        <span class="gathering-actor-name">{{this.name}}</span>
+                    </label>
+                {{/each}}
+            </div>
+            <div class="gathering-select-controls">
+                <a class="gather-select-all">All</a> /
+                <a class="gather-select-none">None</a>
+            </div>
+        {{else}}
+            <p class="gathering-empty-notice">No player-controlled tokens in the active scene.</p>
+        {{/if}}
+    </section>
+
+    {{!-- ── Environment ── --}}
+    <section class="gathering-section gathering-environment">
+        <h3 class="gathering-section-title"><i class="fas fa-map"></i> Environment</h3>
+
+        <div class="gather-row">
+            <label>Biome</label>
+            <select class="gather-biome">
+                {{#each biomes}}
+                    <option value="{{this.value}}" {{#if (eq ../biome this.value)}}selected{{/if}}>{{this.name}}</option>
+                {{/each}}
+            </select>
+        </div>
+
+        <div class="gather-row">
+            <label>Abundance</label>
+            <select class="gather-abundance">
+                {{#each abundances}}
+                    <option value="{{this.value}}" {{#if (eq ../abundance this.value)}}selected{{/if}}>{{this.name}}</option>
+                {{/each}}
+            </select>
+        </div>
+
+        <div class="gather-row">
+            <label>Time Spent</label>
+            <input class="gather-time-amount" type="number" min="1" max="999" value="{{timeAmount}}">
+            <select class="gather-time-unit">
+                {{#each timeUnits}}
+                    <option value="{{this.value}}" {{#if (eq ../timeUnit this.value)}}selected{{/if}}>{{this.name}}</option>
+                {{/each}}
+            </select>
+        </div>
+
+        <div class="gather-row">
+            <label>Weather</label>
+            <select class="gather-weather">
+                {{#each weatherOptions}}
+                    <option value="{{this.value}}" {{#if (eq ../weatherMod this.value)}}selected{{/if}}>{{this.label}}</option>
+                {{/each}}
+            </select>
+        </div>
+
+        <div class="gather-row">
+            <label>Season</label>
+            <select class="gather-season">
+                {{#each seasonOptions}}
+                    <option value="{{this.value}}" {{#if (eq ../seasonMod this.value)}}selected{{/if}}>{{this.label}}</option>
+                {{/each}}
+            </select>
+        </div>
+    </section>
+
+    {{!-- ── DC & Skill ── --}}
+    <section class="gathering-section gathering-dc-section">
+        <h3 class="gathering-section-title"><i class="fas fa-bullseye"></i> Difficulty Class</h3>
+
+        <div class="gather-dc-row">
+            <label>DC</label>
+            <input class="dc-display" type="number" min="1" max="30" value="{{displayDC}}">
+            <span class="dc-auto-label">Auto: {{autoDC}}</span>
+            <button class="dc-reset-btn icon-btn" title="Reset to auto" style="{{#unless isManualDC}}display:none{{/unless}}">
+                <i class="fas fa-undo"></i>
+            </button>
+        </div>
+
+        <div class="gather-row">
+            <label>Skill</label>
+            <select class="gather-skill">
+                {{#each skillOptions}}
+                    <option value="{{this.value}}" {{#if (eq ../skillKey this.value)}}selected{{/if}}>{{this.label}}</option>
+                {{/each}}
+            </select>
+        </div>
+    </section>
+
+    {{!-- ── Action ── --}}
+    <div class="gathering-action">
+        <button class="request-roll-btn">
+            <i class="fas fa-dice-d20"></i> Request Roll
+        </button>
+    </div>
+
+</div>
+{{/if}}
