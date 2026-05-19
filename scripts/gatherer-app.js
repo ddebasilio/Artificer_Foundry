@@ -1,5 +1,5 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
-import { TYPE_LABELS, getIngredientIcon, TYPE_ICONS, INGREDIENT_COSTS } from "./ingredient-data.js";
+import { TYPE_LABELS, getIngredientIcon, TYPE_ICONS, INGREDIENT_COSTS, BIOMES, ABUNDANCE_MODIFIERS, TIME_UNITS, resolveForaging } from "./ingredient-data.js";
 
 const DEFAULT_INGREDIENT_IMG = 'icons/svg/item-bag.svg';
 
@@ -11,6 +11,11 @@ export class GathererApp extends HandlebarsApplicationMixin(ApplicationV2) {
         this.searchQuery = "";
         this.filterType = "all";
         this.sortBy = "name";
+        // Foraging state
+        this.forageBiome = "forest";
+        this.forageAbundance = "medium";
+        this.forageTimeAmount = 1;
+        this.forageTimeUnit = "hours";
     }
 
     static DEFAULT_OPTIONS = {
@@ -56,9 +61,16 @@ export class GathererApp extends HandlebarsApplicationMixin(ApplicationV2) {
             .map(item => ({ id: item.id, name: item.name, img: item.img, quantity: item.system?.quantity ?? 1 }))
             .sort((a, b) => a.name.localeCompare(b.name));
 
+        const biomes = Object.entries(BIOMES).map(([k, v]) => ({ value: k, ...v }));
+        const abundances = Object.entries(ABUNDANCE_MODIFIERS).map(([k, v]) => ({ value: k, ...v }));
+        const timeUnits = Object.entries(TIME_UNITS).map(([k, v]) => ({ value: k, ...v }));
+
         return {
             actor: this.actor, ingredients, inventory, allTypes, allTypeLabels,
             filterType: this.filterType, searchQuery: this.searchQuery, sortBy: this.sortBy,
+            biomes, abundances, timeUnits,
+            forageBiome: this.forageBiome, forageAbundance: this.forageAbundance,
+            forageTimeAmount: this.forageTimeAmount, forageTimeUnit: this.forageTimeUnit,
         };
     }
 
@@ -126,6 +138,12 @@ export class GathererApp extends HandlebarsApplicationMixin(ApplicationV2) {
             });
         });
 
+        // Foraging controls
+        el.querySelector('.forage-biome')?.addEventListener('change', e => { this.forageBiome = e.target.value; });
+        el.querySelector('.forage-abundance')?.addEventListener('change', e => { this.forageAbundance = e.target.value; });
+        el.querySelector('.forage-time-amount')?.addEventListener('change', e => { this.forageTimeAmount = Number(e.target.value) || 1; });
+        el.querySelector('.forage-time-unit')?.addEventListener('change', e => { this.forageTimeUnit = e.target.value; });
+        el.querySelector('.forage-roll-btn')?.addEventListener('click', this._onForage.bind(this));
     }
 
     async _onDrop(e) {
@@ -228,6 +246,44 @@ export class GathererApp extends HandlebarsApplicationMixin(ApplicationV2) {
         await this.actor.createEmbeddedDocuments("Item", [cleanItemData]);
         ui.notifications.info(`Added ${qty}\u00d7 ${name} to ${this.actor.name}'s inventory.`);
         this.render();
+    }
+
+    async _onForage(event) {
+        event.preventDefault();
+        if (!this.actor) { ui.notifications.warn("No actor associated."); return; }
+
+        const flavorText = `<strong>Foraging Roll</strong> (${BIOMES[this.forageBiome]?.name}, ${ABUNDANCE_MODIFIERS[this.forageAbundance]?.name}, ${this.forageTimeAmount} ${TIME_UNITS[this.forageTimeUnit]?.name.toLowerCase()})`;
+
+        // Roll d20
+        const roll = await new Roll("1d20").evaluate();
+        await roll.toMessage({
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            flavor: flavorText,
+        });
+
+        const result = resolveForaging(this.forageBiome, this.forageAbundance, this.forageTimeAmount, this.forageTimeUnit, roll.total);
+
+        let msg = "";
+
+        if (result.critFail) {
+             msg = `<p><strong>Critical failure!</strong> You found nothing and disturbed the area.</p>`;
+        } else if (!result.success) {
+             msg = `<p><strong>Failed.</strong> You didn't find anything useful this time.</p><p><em>DC was ${result.dc}</em></p>`;
+        } else {
+            // Add found items
+            msg = `<strong>${this.actor.name} found:</strong><ul>`;
+            for (const item of result.items) {
+                await this._addIngredient(item.name, item.type, item.qty);
+                msg += `<li>${item.qty}\u00d7 ${item.name}</li>`;
+            }
+            msg += `</ul><em>DC was ${result.dc}</em>`;
+        }
+
+        ChatMessage.create({
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            flavor: flavorText,
+            content: msg,
+        });
     }
 
     async _findInCompendiums(name) {

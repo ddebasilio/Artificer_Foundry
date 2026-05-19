@@ -1,7 +1,5 @@
 import { CraftingApp } from "./crafting-app.js";
 import { GathererApp } from "./gatherer-app.js";
-import { GatheringPanel } from "./gathering-panel.js";
-import { GatheringRollDialog } from "./gathering-roll-dialog.js";
 import { RecipeManager } from "./recipe-manager.js";
 import { TYPE_LABELS } from "./ingredient-data.js";
 
@@ -51,17 +49,6 @@ Hooks.once('init', function () {
         default: "forest"
     });
 
-    game.settings.register(MODULE_ID, "activeGatherRequests", {
-        name: "Active Gather Requests",
-        scope: "world",
-        config: false,
-        type: Object,
-        default: {}
-    });
-
-    // Register the Gathering sidebar tab (GM-only)
-    CONFIG.ui['af-gathering'] = GatheringPanel;
-
     Handlebars.registerHelper('eq', (a, b) => a === b);
     Handlebars.registerHelper('typeLabel', (typeCode) => TYPE_LABELS[typeCode] || typeCode);
     Handlebars.registerHelper('rarityLabel', (rarity) => {
@@ -84,34 +71,10 @@ Hooks.once('ready', function () {
         showCraftingApp: (actor) => new CraftingApp(actor ?? null).render(true)
     };
 
-    // ── Module socket handler ─────────────────────────────────────────────────
-    game.socket.on(`module.${MODULE_ID}`, async (msg) => {
-        if (msg.type === 'gatherRollResult' && game.user.isGM) {
-            await GatheringPanel.handleRollResult(msg);
-        }
-    });
-
-    // Document-level capture handler for the injected crafting/gatherer nav buttons
-    // AND the gathering roll buttons in chat messages.
+    // Document-level capture handler for the injected crafting/gatherer nav buttons.
     // Using capture phase (third arg = true) ensures this fires before dnd5e's
     // own tab-nav click delegation, which can otherwise swallow the event.
     document.addEventListener('click', (e) => {
-        // Gathering roll button in chat
-        const rollBtn = e.target.closest?.('[data-action="af-gather-roll"]');
-        if (rollBtn) {
-            e.stopImmediatePropagation();
-            e.preventDefault();
-            const { requestId, actorId } = rollBtn.dataset;
-            const actor = game.actors?.get(actorId);
-            if (!actor) { ui.notifications.warn("Actor not found."); return; }
-            if (!actor.isOwner) { ui.notifications.warn("You don't own this character."); return; }
-            // Check request is still active
-            const active = game.settings.get(MODULE_ID, "activeGatherRequests");
-            if (!active[requestId]) { ui.notifications.warn("This gathering request has already been fulfilled or expired."); return; }
-            new GatheringRollDialog(actor, requestId).render(true);
-            return;
-        }
-
         const navItem = e.target.closest?.('.af-crafting-nav-item, .af-gatherer-nav-item');
         if (!navItem) return;
         e.stopImmediatePropagation();

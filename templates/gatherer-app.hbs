@@ -54,6 +54,47 @@
             </h2>
         </div>
 
+        {{!-- Foraging Section --}}
+        <div class="foraging-section">
+            <h3><i class="fas fa-dice-d20"></i> Foraging</h3>
+            <div class="forage-form">
+                <div class="forage-row">
+                    <label>Biome:</label>
+                    <select class="forage-biome">
+                        {{#each biomes}}
+                            <option value="{{this.value}}" {{#if (eq ../forageBiome this.value)}}selected{{/if}}>
+                                {{this.name}}
+                            </option>
+                        {{/each}}
+                    </select>
+                </div>
+                <div class="forage-row">
+                    <label>Abundance:</label>
+                    <select class="forage-abundance">
+                        {{#each abundances}}
+                            <option value="{{this.value}}" {{#if (eq ../forageAbundance this.value)}}selected{{/if}}>
+                                {{this.name}}
+                            </option>
+                        {{/each}}
+                    </select>
+                </div>
+                <div class="forage-row">
+                    <label>Time spent:</label>
+                    <input class="forage-time-amount" type="number" min="1" max="999" value="{{forageTimeAmount}}">
+                    <select class="forage-time-unit">
+                        {{#each timeUnits}}
+                            <option value="{{this.value}}" {{#if (eq ../forageTimeUnit this.value)}}selected{{/if}}>
+                                {{this.name}}
+                            </option>
+                        {{/each}}
+                    </select>
+                </div>
+                <button class="forage-roll-btn">
+                    <i class="fas fa-dice-d20"></i> Roll to Gather
+                </button>
+            </div>
+        </div>
+
         {{!-- Inventory --}}
         <div class="gatherer-inventory">
             <div class="gatherer-drop-hint">
@@ -80,7 +121,7 @@
             {{else}}
                 <div class="gatherer-empty">
                     <i class="fas fa-box-open fa-2x"></i>
-                    <p>No reagents yet. Use the catalog or drag ingredients here.</p>
+                    <p>No reagents yet. Use the catalog or forage!</p>
                 </div>
             {{/if}}
         </div>
