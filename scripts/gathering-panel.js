@@ -27,25 +27,28 @@ const SKILL_OPTIONS = [
     { value: "ath", label: "Athletics" },
 ];
 
-export function makeGatheringPanel() { return class GatheringPanel extends SidebarTab {
+const { HandlebarsApplicationMixin } = foundry.applications.api;
+const { AbstractSidebarTab } = foundry.applications.sidebar;
 
-    static get tabOptions() {
-        return { icon: "fas fa-shopping-bag", tooltip: "Gathering" };
-    }
+export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTab) {
 
-    static get defaultOptions() {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            id: "af-gathering",
-            title: "Gathering",
+    static tabName = "af-gathering";
+
+    static PARTS = {
+        gathering: {
             template: "modules/artificer-foundry/templates/gathering-panel.hbs",
-            classes: ["sidebar-tab", "af-gathering-tab"],
-        });
-    }
+        }
+    };
+
+    static DEFAULT_OPTIONS = {
+        id: "af-gathering",
+        classes: ["af-gathering-tab"],
+    };
 
     constructor(options = {}) {
         super(options);
         // Environment state
-        this.biome      = game.settings.get(MODULE_ID, "defaultBiome") || "forest";
+        this.biome      = game.settings?.get(MODULE_ID, "defaultBiome") || "forest";
         this.abundance  = "medium";
         this.timeAmount = 1;
         this.timeUnit   = "hours";
@@ -76,8 +79,9 @@ export function makeGatheringPanel() { return class GatheringPanel extends Sideb
 
     // ─── Template data ───────────────────────────────────────────────────────────
 
-    getData() {
-        if (!game.user.isGM) return {};
+    async _prepareContext(options) {
+        const context = await super._prepareContext(options);
+        if (!game.user.isGM) return context;
 
         // Collect player-controlled tokens in the active scene
         const scene = game.scenes?.active;
@@ -96,7 +100,7 @@ export function makeGatheringPanel() { return class GatheringPanel extends Sideb
         const autoDC    = this._computeAutoDC();
         const displayDC = this.manualDC !== null ? this.manualDC : autoDC;
 
-        return {
+        Object.assign(context, {
             sceneActors,
             biomes:     Object.entries(BIOMES).map(([k, v])             => ({ value: k, ...v })),
             abundances: Object.entries(ABUNDANCE_MODIFIERS).map(([k, v]) => ({ value: k, ...v })),
@@ -116,16 +120,18 @@ export function makeGatheringPanel() { return class GatheringPanel extends Sideb
             autoDC,
             displayDC,
             isManualDC: this.manualDC !== null,
-        };
+        });
+
+        return context;
     }
 
     // ─── Listeners ───────────────────────────────────────────────────────────────
 
-    activateListeners(html) {
-        super.activateListeners(html);
+    _onRender(context, options) {
+        super._onRender(context, options);
         if (!game.user.isGM) return;
 
-        const el = html instanceof jQuery ? html[0] : html;
+        const el = this.element;
 
         // Player checkboxes
         el.querySelectorAll('.gathering-player-check').forEach(cb => {
@@ -306,4 +312,4 @@ export function makeGatheringPanel() { return class GatheringPanel extends Sideb
         delete active[requestId];
         await game.settings.set(MODULE_ID, "activeGatherRequests", active);
     }
-}; }
+}

@@ -1,11 +1,10 @@
 import { CraftingApp } from "./crafting-app.js";
 import { GathererApp } from "./gatherer-app.js";
-import { makeGatheringPanel } from "./gathering-panel.js";
+import { GatheringPanel } from "./gathering-panel.js";
 import { GatheringRollDialog } from "./gathering-roll-dialog.js";
 import { RecipeManager } from "./recipe-manager.js";
 import { TYPE_LABELS } from "./ingredient-data.js";
 
-let gatheringPanelInstance;
 const MODULE    = "Artificer Foundry";
 const MODULE_ID = "artificer-foundry";
 
@@ -68,28 +67,14 @@ Hooks.once('init', function () {
     });
     Handlebars.registerHelper('gt', (a, b) => a > b);
     Handlebars.registerHelper('join', (arr, sep) => (arr || []).join(sep || ", "));
-});
 
-Hooks.on('renderSidebarTab', (app, html) => {
-    if (app.tabName === 'af-gathering') {
-        const GatheringPanel = makeGatheringPanel();
-        gatheringPanelInstance = new GatheringPanel();
-        const body = html.find('.content');
-        body.empty();
-        gatheringPanelInstance.render(true).then(renderedHTML => {
-            body.append(renderedHTML);
-        });
-    }
-});
-
-Hooks.on("getSidebarTabs", (tabs) => {
-    if (game.user.isGM) {
-        tabs.push({
-            name: "af-gathering",
-            label: "Gathering",
-            icon: "fas fa-shopping-bag",
-        });
-    }
+    // Register the Gathering sidebar tab for v13+/v14
+    CONFIG.ui.sidebar.TABS["af-gathering"] = {
+        icon: "fas fa-shopping-bag",
+        tooltip: "Gathering",
+        gmOnly: true,
+    };
+    CONFIG.ui["af-gathering"] = GatheringPanel;
 });
 // ─────────────────────────────────────────────────────────────────────────────
 // READY
@@ -102,18 +87,15 @@ Hooks.once('ready', function () {
         recipeManager: new RecipeManager(),
         showCraftingApp: (actor) => new CraftingApp(actor ?? null).render(true),
         showGatheringPanel: () => {
-            if (ui.sidebar.tabs.af-gathering) {
-                ui.sidebar.activateTab('af-gathering');
-            }
+            const tab = ui.sidebar?.tabInstances?.["af-gathering"] ?? ui.sidebar?.tabs?.["af-gathering"];
+            if (tab) tab.activate();
         }
     };
 
     // ── Module socket handler ─────────────────────────────────────────────────
     game.socket.on(`module.${MODULE_ID}`, async (msg) => {
         if (msg.type === 'gatherRollResult' && game.user.isGM) {
-            if (gatheringPanelInstance) {
-                await gatheringPanelInstance.constructor.handleRollResult(msg);
-            }
+            await GatheringPanel.handleRollResult(msg);
         }
     });
 
