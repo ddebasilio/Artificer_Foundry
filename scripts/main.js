@@ -61,10 +61,6 @@ Hooks.once('init', function () {
         default: {}
     });
 
-    // Register the Gathering sidebar tab (GM-only)
-    GatheringPanel = makeGatheringPanel();
-    CONFIG.ui['af-gathering'] = GatheringPanel;
-
     Handlebars.registerHelper('eq', (a, b) => a === b);
     Handlebars.registerHelper('typeLabel', (typeCode) => TYPE_LABELS[typeCode] || typeCode);
     Handlebars.registerHelper('rarityLabel', (rarity) => {
@@ -73,6 +69,14 @@ Hooks.once('init', function () {
     });
     Handlebars.registerHelper('gt', (a, b) => a > b);
     Handlebars.registerHelper('join', (arr, sep) => (arr || []).join(sep || ", "));
+
+    // Register the Gathering sidebar tab (GM-only)
+    try {
+        GatheringPanel = makeGatheringPanel();
+        CONFIG.ui['af-gathering'] = GatheringPanel;
+    } catch (err) {
+        console.error(`${MODULE} | Failed to register GatheringPanel sidebar tab:`, err);
+    }
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
