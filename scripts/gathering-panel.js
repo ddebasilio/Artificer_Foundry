@@ -7,8 +7,8 @@ const WEATHER_MODIFIERS = [
     { value: "0",  label: "Clear",       dcMod: 0 },
     { value: "1",  label: "Overcast",    dcMod: 1 },
     { value: "2",  label: "Light Rain",  dcMod: 2 },
-    { value: "4",  label: "Heavy Rain",  dcMod: 4 },
-    { value: "6",  label: "Storm",       dcMod: 6 },
+    { value: "4",  label: "Heavy Rain",  dcMod: 3 },
+    { value: "6",  label: "Storm",       dcMod: 4 },
 ];
 
 // Season modifier options
@@ -16,7 +16,7 @@ const SEASON_MODIFIERS = [
     { value: "-1", label: "Spring", dcMod: -1 },
     { value: "0",  label: "Summer", dcMod: 0  },
     { value: "1",  label: "Autumn", dcMod: 1  },
-    { value: "3",  label: "Winter", dcMod: 3  },
+    { value: "3",  label: "Winter", dcMod: 2  },
 ];
 
 // Skill options for the roll
@@ -24,7 +24,7 @@ const SKILL_OPTIONS = [
     { value: "sur", label: "Survival" },
     { value: "nat", label: "Nature"   },
     { value: "prc", label: "Perception" },
-    { value: "ath", label: "Athletics" },
+    { value: "inv", label: "Investigation" },
 ];
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
