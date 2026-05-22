@@ -70,17 +70,25 @@ Hooks.once('init', function () {
     Handlebars.registerHelper('join', (arr, sep) => (arr || []).join(sep || ", "));
 });
 
-Hooks.on("getSidebarTabs", (tabs) => {
-    if (game.user.isGM) {
+Hooks.on('renderSidebarTab', (app, html) => {
+    if (app.tabName === 'af-gathering') {
         const GatheringPanel = makeGatheringPanel();
         gatheringPanelInstance = new GatheringPanel();
-        let tab = {
+        const body = html.find('.content');
+        body.empty();
+        gatheringPanelInstance.render(true).then(renderedHTML => {
+            body.append(renderedHTML);
+        });
+    }
+});
+
+Hooks.on("getSidebarTabs", (tabs) => {
+    if (game.user.isGM) {
+        tabs.push({
             name: "af-gathering",
             label: "Gathering",
             icon: "fas fa-shopping-bag",
-            content: () => gatheringPanelInstance.render(true)
-        };
-        tabs.push(tab);
+        });
     }
 });
 // ─────────────────────────────────────────────────────────────────────────────
@@ -92,7 +100,12 @@ Hooks.once('ready', function () {
 
     window.ArtificerFoundry = {
         recipeManager: new RecipeManager(),
-        showCraftingApp: (actor) => new CraftingApp(actor ?? null).render(true)
+        showCraftingApp: (actor) => new CraftingApp(actor ?? null).render(true),
+        showGatheringPanel: () => {
+            if (ui.sidebar.tabs.af-gathering) {
+                ui.sidebar.activateTab('af-gathering');
+            }
+        }
     };
 
     // ── Module socket handler ─────────────────────────────────────────────────
