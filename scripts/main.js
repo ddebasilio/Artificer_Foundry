@@ -5,8 +5,7 @@ import { GatheringRollDialog } from "./gathering-roll-dialog.js";
 import { RecipeManager } from "./recipe-manager.js";
 import { TYPE_LABELS } from "./ingredient-data.js";
 
-let GatheringPanel;
-
+let gatheringPanelInstance;
 const MODULE    = "Artificer Foundry";
 const MODULE_ID = "artificer-foundry";
 
@@ -69,16 +68,21 @@ Hooks.once('init', function () {
     });
     Handlebars.registerHelper('gt', (a, b) => a > b);
     Handlebars.registerHelper('join', (arr, sep) => (arr || []).join(sep || ", "));
-
-    // Register the Gathering sidebar tab (GM-only)
-    try {
-        GatheringPanel = makeGatheringPanel();
-        CONFIG.ui['af-gathering'] = GatheringPanel;
-    } catch (err) {
-        console.error(`${MODULE} | Failed to register GatheringPanel sidebar tab:`, err);
-    }
 });
 
+Hooks.on("getSidebarTabs", (tabs) => {
+    if (game.user.isGM) {
+        const GatheringPanel = makeGatheringPanel();
+        gatheringPanelInstance = new GatheringPanel();
+        let tab = {
+            name: "af-gathering",
+            label: "Gathering",
+            icon: "fas fa-shopping-bag",
+            content: () => gatheringPanelInstance.render(true)
+        };
+        tabs.push(tab);
+    }
+});
 // ─────────────────────────────────────────────────────────────────────────────
 // READY
 // ─────────────────────────────────────────────────────────────────────────────
@@ -94,7 +98,9 @@ Hooks.once('ready', function () {
     // ── Module socket handler ─────────────────────────────────────────────────
     game.socket.on(`module.${MODULE_ID}`, async (msg) => {
         if (msg.type === 'gatherRollResult' && game.user.isGM) {
-            await GatheringPanel.handleRollResult(msg);
+            if (gatheringPanelInstance) {
+                await gatheringPanelInstance.constructor.handleRollResult(msg);
+            }
         }
     });
 
