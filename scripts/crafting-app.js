@@ -9,7 +9,7 @@ export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
         this.selectedRecipeId = null;
         this.providedIngredients = {};
         this.filterRarity = "all";
-        this.filterLearned = "all";
+        this.filterLearned = "known";
         this.searchQuery = "";
         this._crafting = false;
     }

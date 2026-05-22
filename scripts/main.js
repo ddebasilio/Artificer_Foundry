@@ -8,6 +8,26 @@ import { TYPE_LABELS } from "./ingredient-data.js";
 const MODULE    = "Artificer Foundry";
 const MODULE_ID = "artificer-foundry";
 
+// Track open app instances per actor to avoid duplicates
+const _craftingApps = new Map();
+const _gathererApps = new Map();
+
+function openCraftingApp(actor) {
+    const existing = _craftingApps.get(actor.id);
+    if (existing?.element?.isConnected) { existing.bringToFront(); return; }
+    const app = new CraftingApp(actor);
+    _craftingApps.set(actor.id, app);
+    app.render(true);
+}
+
+function openGathererApp(actor) {
+    const existing = _gathererApps.get(actor.id);
+    if (existing?.element?.isConnected) { existing.bringToFront(); return; }
+    const app = new GathererApp(actor);
+    _gathererApps.set(actor.id, app);
+    app.render(true);
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // INIT
 // ─────────────────────────────────────────────────────────────────────────────
@@ -132,11 +152,11 @@ Hooks.once('ready', function () {
         }
         if (navItem.classList.contains('af-crafting-nav-item')) {
             console.log(`${MODULE} | Crafting tab clicked — actor:`, actor.name);
-            try { new CraftingApp(actor).render(true); }
+            try { openCraftingApp(actor); }
             catch (err) { console.error(`${MODULE} | Failed to open CraftingApp:`, err); }
         } else {
             console.log(`${MODULE} | Gatherer tab clicked — actor:`, actor.name);
-            try { new GathererApp(actor).render(true); }
+            try { openGathererApp(actor); }
             catch (err) { console.error(`${MODULE} | Failed to open GathererApp:`, err); }
         }
     }, true);
@@ -302,7 +322,7 @@ Hooks.on('getActorSheetHeaderButtons', (app, buttons) => {
         class: 'artificer-foundry-btn',
         icon: 'fas fa-flask',
         label: 'Crafting',
-        onclick: () => new CraftingApp(actor).render()
+        onclick: () => openCraftingApp(actor)
     });
 });
 
@@ -319,7 +339,7 @@ Hooks.on('getActorSheetHeaderButtons', (app, buttons) => {
             action: MODULE_ID,
             icon: 'fas fa-flask',
             label: 'Crafting',
-            onClick: () => new CraftingApp(actor).render()
+            onClick: () => openCraftingApp(actor)
         });
     });
 });
