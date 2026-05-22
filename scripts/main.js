@@ -1,9 +1,11 @@
 import { CraftingApp } from "./crafting-app.js";
 import { GathererApp } from "./gatherer-app.js";
-import { GatheringPanel } from "./gathering-panel.js";
+import { makeGatheringPanel } from "./gathering-panel.js";
 import { GatheringRollDialog } from "./gathering-roll-dialog.js";
 import { RecipeManager } from "./recipe-manager.js";
 import { TYPE_LABELS } from "./ingredient-data.js";
+
+let GatheringPanel;
 
 const MODULE    = "Artificer Foundry";
 const MODULE_ID = "artificer-foundry";
@@ -60,6 +62,7 @@ Hooks.once('init', function () {
     });
 
     // Register the Gathering sidebar tab (GM-only)
+    GatheringPanel = makeGatheringPanel();
     CONFIG.ui['af-gathering'] = GatheringPanel;
 
     Handlebars.registerHelper('eq', (a, b) => a === b);

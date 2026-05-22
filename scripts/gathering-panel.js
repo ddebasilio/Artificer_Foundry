@@ -27,7 +27,7 @@ const SKILL_OPTIONS = [
     { value: "ath", label: "Athletics" },
 ];
 
-export class GatheringPanel extends SidebarTab {
+export function makeGatheringPanel() { return class GatheringPanel extends SidebarTab {
 
     static get tabOptions() {
         return { icon: "fas fa-shopping-bag", tooltip: "Gathering" };
@@ -306,4 +306,4 @@ export class GatheringPanel extends SidebarTab {
         delete active[requestId];
         await game.settings.set(MODULE_ID, "activeGatherRequests", active);
     }
-}
+}; }
