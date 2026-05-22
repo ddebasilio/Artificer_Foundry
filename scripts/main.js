@@ -6,6 +6,26 @@ import { TYPE_LABELS } from "./ingredient-data.js";
 const MODULE    = "Artificer Foundry";
 const MODULE_ID = "artificer-foundry";
 
+// Track open app instances per actor to avoid duplicates
+const _craftingApps = new Map();
+const _gathererApps = new Map();
+
+function openCraftingApp(actor) {
+    const existing = _craftingApps.get(actor.id);
+    if (existing?.element?.isConnected) { existing.bringToFront(); return; }
+    const app = new CraftingApp(actor);
+    _craftingApps.set(actor.id, app);
+    app.render(true);
+}
+
+function openGathererApp(actor) {
+    const existing = _gathererApps.get(actor.id);
+    if (existing?.element?.isConnected) { existing.bringToFront(); return; }
+    const app = new GathererApp(actor);
+    _gathererApps.set(actor.id, app);
+    app.render(true);
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // INIT
 // ─────────────────────────────────────────────────────────────────────────────
@@ -49,6 +69,14 @@ Hooks.once('init', function () {
         default: "forest"
     });
 
+    game.settings.register(MODULE_ID, "activeGatherRequests", {
+        name: "Active Gather Requests",
+        scope: "world",
+        config: false,
+        type: Object,
+        default: {}
+    });
+
     Handlebars.registerHelper('eq', (a, b) => a === b);
     Handlebars.registerHelper('typeLabel', (typeCode) => TYPE_LABELS[typeCode] || typeCode);
     Handlebars.registerHelper('rarityLabel', (rarity) => {
@@ -57,8 +85,15 @@ Hooks.once('init', function () {
     });
     Handlebars.registerHelper('gt', (a, b) => a > b);
     Handlebars.registerHelper('join', (arr, sep) => (arr || []).join(sep || ", "));
-});
 
+    // Register the Gathering sidebar tab for v13+/v14
+    CONFIG.ui.sidebar.TABS["af-gathering"] = {
+        icon: "fas fa-shopping-bag",
+        tooltip: "Gathering",
+        gmOnly: true,
+    };
+    CONFIG.ui["af-gathering"] = GatheringPanel;
+});
 // ─────────────────────────────────────────────────────────────────────────────
 // READY
 // ─────────────────────────────────────────────────────────────────────────────
@@ -68,7 +103,11 @@ Hooks.once('ready', function () {
 
     window.ArtificerFoundry = {
         recipeManager: new RecipeManager(),
-        showCraftingApp: (actor) => new CraftingApp(actor ?? null).render(true)
+        showCraftingApp: (actor) => new CraftingApp(actor ?? null).render(true),
+        showGatheringPanel: () => {
+            const tab = ui.sidebar?.tabInstances?.["af-gathering"] ?? ui.sidebar?.tabs?.["af-gathering"];
+            if (tab) tab.activate();
+        }
     };
 
     // Document-level capture handler for the injected crafting/gatherer nav buttons.
@@ -87,11 +126,11 @@ Hooks.once('ready', function () {
         }
         if (navItem.classList.contains('af-crafting-nav-item')) {
             console.log(`${MODULE} | Crafting tab clicked — actor:`, actor.name);
-            try { new CraftingApp(actor).render(true); }
+            try { openCraftingApp(actor); }
             catch (err) { console.error(`${MODULE} | Failed to open CraftingApp:`, err); }
         } else {
             console.log(`${MODULE} | Gatherer tab clicked — actor:`, actor.name);
-            try { new GathererApp(actor).render(true); }
+            try { openGathererApp(actor); }
             catch (err) { console.error(`${MODULE} | Failed to open GathererApp:`, err); }
         }
     }, true);
@@ -257,7 +296,7 @@ Hooks.on('getActorSheetHeaderButtons', (app, buttons) => {
         class: 'artificer-foundry-btn',
         icon: 'fas fa-flask',
         label: 'Crafting',
-        onclick: () => new CraftingApp(actor).render()
+        onclick: () => openCraftingApp(actor)
     });
 });
 
@@ -274,7 +313,7 @@ Hooks.on('getActorSheetHeaderButtons', (app, buttons) => {
             action: MODULE_ID,
             icon: 'fas fa-flask',
             label: 'Crafting',
-            onClick: () => new CraftingApp(actor).render()
+            onClick: () => openCraftingApp(actor)
         });
     });
 });

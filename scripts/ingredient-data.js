@@ -242,22 +242,22 @@ export function formatCraftingTime(days) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const BIOMES = {
-    forest:    { name: "Forest",    baseDC: 8,  icon: "fas fa-tree" },
-    swamp:     { name: "Swamp",     baseDC: 10, icon: "fas fa-water" },
-    mountain:  { name: "Mountain",  baseDC: 12, icon: "fas fa-mountain" },
-    coast:     { name: "Coast",     baseDC: 9,  icon: "fas fa-umbrella-beach" },
-    desert:    { name: "Desert",    baseDC: 16, icon: "fas fa-sun" },
-    arctic:    { name: "Arctic",    baseDC: 15, icon: "fas fa-snowflake" },
-    underdark: { name: "Underdark",  baseDC: 14, icon: "fas fa-dungeon" },
-    plains:    { name: "Plains",    baseDC: 10, icon: "fas fa-wind" },
-    urban:     { name: "Urban",     baseDC: 13, icon: "fas fa-city" },
+    forest:    { name: "Forest",    baseDC: 1,  icon: "fas fa-tree" },
+    swamp:     { name: "Swamp",     baseDC: 3, icon: "fas fa-water" },
+    mountain:  { name: "Mountain",  baseDC: 4, icon: "fas fa-mountain" },
+    coast:     { name: "Coast",     baseDC: 2,  icon: "fas fa-umbrella-beach" },
+    desert:    { name: "Desert",    baseDC: 8, icon: "fas fa-sun" },
+    arctic:    { name: "Arctic",    baseDC: 7, icon: "fas fa-snowflake" },
+    underdark: { name: "Underdark",  baseDC: 6, icon: "fas fa-dungeon" },
+    plains:    { name: "Plains",    baseDC: 3, icon: "fas fa-wind" },
+    urban:     { name: "Urban",     baseDC: 5, icon: "fas fa-city" },
 };
 
 export const ABUNDANCE_MODIFIERS = {
-    plentiful: { name: "Plentiful", dcMod: -4, qtyMul: 2.0 },
+    plentiful: { name: "Plentiful", dcMod: -3, qtyMul: 2.0 },
     medium:    { name: "Medium",    dcMod: 0,  qtyMul: 1.0 },
-    scarce:    { name: "Scarce",    dcMod: +4, qtyMul: 0.5 },
-    barren:    { name: "Barren",    dcMod: +8, qtyMul: 0.25 },
+    scarce:    { name: "Scarce",    dcMod: +3, qtyMul: 0.5 },
+    barren:    { name: "Barren",    dcMod: +6, qtyMul: 0.25 },
 };
 
 export const TIME_UNITS = {

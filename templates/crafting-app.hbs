@@ -35,9 +35,9 @@
                         <div class="recipe-actions">
                             {{#if this.isLearned}}
                                 <i class="fas fa-check-circle known-badge" title="Known"></i>
-                                {{#if ../isGM}}<a class="forget-recipe-btn" data-recipe-id="{{this.id}}" title="Forget"><i class="fas fa-trash-alt"></i></a>{{/if}}
+                                <a class="forget-recipe-btn" data-recipe-id="{{this.id}}" title="Forget"><i class="fas fa-trash-alt"></i></a>
                             {{else}}
-                                {{#if ../isGM}}<a class="learn-recipe-btn" data-recipe-id="{{this.id}}" title="Teach"><i class="fas fa-graduation-cap"></i></a>{{/if}}
+                                <a class="learn-recipe-btn" data-recipe-id="{{this.id}}" title="Teach"><i class="fas fa-graduation-cap"></i></a>
                             {{/if}}
                         </div>
                     </div>
