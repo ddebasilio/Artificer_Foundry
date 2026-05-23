@@ -1,7 +1,10 @@
 import { CraftingApp } from "./crafting-app.js";
 import { GathererApp } from "./gatherer-app.js";
+import { ForgeApp } from "./forge-app.js";
 import { RecipeManager } from "./recipe-manager.js";
+import { ForgeRecipeManager } from "./forge-recipe-manager.js";
 import { TYPE_LABELS } from "./ingredient-data.js";
+import { FORGE_TYPE_LABELS } from "./forge-data.js";
 
 const MODULE    = "Artificer Foundry";
 const MODULE_ID = "artificer-foundry";
@@ -9,6 +12,7 @@ const MODULE_ID = "artificer-foundry";
 // Track open app instances per actor to avoid duplicates
 const _craftingApps = new Map();
 const _gathererApps = new Map();
+const _forgeApps = new Map();
 
 function openCraftingApp(actor) {
     const existing = _craftingApps.get(actor.id);
@@ -23,6 +27,14 @@ function openGathererApp(actor) {
     if (existing?.element?.isConnected) { existing.bringToFront(); return; }
     const app = new GathererApp(actor);
     _gathererApps.set(actor.id, app);
+    app.render(true);
+}
+
+function openForgeApp(actor) {
+    const existing = _forgeApps.get(actor.id);
+    if (existing?.element?.isConnected) { existing.bringToFront(); return; }
+    const app = new ForgeApp(actor);
+    _forgeApps.set(actor.id, app);
     app.render(true);
 }
 
@@ -77,8 +89,17 @@ Hooks.once('init', function () {
         default: {}
     });
 
+    game.settings.register(MODULE_ID, "forgeRecipeData", {
+        name: "Forge Recipe Data",
+        hint: "Stores forge blueprints learned by each character.",
+        scope: "world",
+        config: false,
+        type: Object,
+        default: {}
+    });
+
     Handlebars.registerHelper('eq', (a, b) => a === b);
-    Handlebars.registerHelper('typeLabel', (typeCode) => TYPE_LABELS[typeCode] || typeCode);
+    Handlebars.registerHelper('typeLabel', (typeCode) => TYPE_LABELS[typeCode] || FORGE_TYPE_LABELS[typeCode] || typeCode);
     Handlebars.registerHelper('rarityLabel', (rarity) => {
         const labels = { common: "Common", uncommon: "Uncommon", rare: "Rare", very_rare: "Very rare", legendary: "Legendary" };
         return labels[rarity] || rarity;
@@ -103,7 +124,9 @@ Hooks.once('ready', function () {
 
     window.ArtificerFoundry = {
         recipeManager: new RecipeManager(),
+        forgeRecipeManager: new ForgeRecipeManager(),
         showCraftingApp: (actor) => new CraftingApp(actor ?? null).render(true),
+        showForgeApp: (actor) => new ForgeApp(actor ?? null).render(true),
         showGatheringPanel: () => {
             const tab = ui.sidebar?.tabInstances?.["af-gathering"] ?? ui.sidebar?.tabs?.["af-gathering"];
             if (tab) tab.activate();
@@ -114,7 +137,7 @@ Hooks.once('ready', function () {
     // Using capture phase (third arg = true) ensures this fires before dnd5e's
     // own tab-nav click delegation, which can otherwise swallow the event.
     document.addEventListener('click', (e) => {
-        const navItem = e.target.closest?.('.af-crafting-nav-item, .af-gatherer-nav-item');
+        const navItem = e.target.closest?.('.af-crafting-nav-item, .af-gatherer-nav-item, .af-forge-nav-item');
         if (!navItem) return;
         e.stopImmediatePropagation();
         e.stopPropagation();
@@ -128,6 +151,10 @@ Hooks.once('ready', function () {
             console.log(`${MODULE} | Crafting tab clicked — actor:`, actor.name);
             try { openCraftingApp(actor); }
             catch (err) { console.error(`${MODULE} | Failed to open CraftingApp:`, err); }
+        } else if (navItem.classList.contains('af-forge-nav-item')) {
+            console.log(`${MODULE} | Forge tab clicked — actor:`, actor.name);
+            try { openForgeApp(actor); }
+            catch (err) { console.error(`${MODULE} | Failed to open ForgeApp:`, err); }
         } else {
             console.log(`${MODULE} | Gatherer tab clicked — actor:`, actor.name);
             try { openGathererApp(actor); }
@@ -163,7 +190,7 @@ Hooks.once('ready', function () {
 
 function _tryInjectFromNode(node, attempt) {
     if (!node.isConnected) return;
-    if (node.querySelector('.af-crafting-nav-item')) return; // already done
+    if (node.querySelector('.af-crafting-nav-item') && node.querySelector('.af-forge-nav-item')) return; // already done
 
     if (foundry.applications?.instances) {
         for (const app of foundry.applications.instances.values()) {
@@ -213,7 +240,7 @@ function injectCraftingTab(app, htmlArg) {
         }
 
         // Guard: only inject once per render
-        if (root.querySelector('.af-crafting-nav-item')) return;
+        if (root.querySelector('.af-crafting-nav-item') && root.querySelector('.af-forge-nav-item')) return;
 
         // ── Find the tab nav ──────────────────────────────────────────────────
         const NAV_SELECTORS = [
@@ -257,6 +284,14 @@ function injectCraftingTab(app, htmlArg) {
         gathererItem.innerHTML = `<i class="fas fa-leaf"></i>`;
         gathererItem._af_actor = actor;
         tabsNav.appendChild(gathererItem);
+
+        // Forge tab (anvil icon)
+        const forgeItem = document.createElement('a');
+        forgeItem.className = 'item af-forge-nav-item';
+        forgeItem.title = 'Item Forge';
+        forgeItem.innerHTML = `<i class="fas fa-hammer"></i>`;
+        forgeItem._af_actor = actor;
+        tabsNav.appendChild(forgeItem);
 
 
     } catch (err) {

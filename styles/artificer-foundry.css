@@ -6,6 +6,7 @@
 /* ── Window ────────────────────────────────────────────────── */
 .artificer-foundry.crafting-app { font-family: var(--font-primary, "Signika", sans-serif); background: var(--color-bg, #1e1e2e); }
 .artificer-foundry.gatherer-app { font-family: var(--font-primary, "Signika", sans-serif); }
+.artificer-foundry.forge-app { font-family: var(--font-primary, "Signika", sans-serif); background: var(--color-bg, #1e1e2e); }
 
 .crafting-panels-layout { display: flex; flex-direction: row; gap: 0; height: 100%; overflow: hidden; }
 
@@ -22,7 +23,7 @@
 
 /* ── Filters ───────────────────────────────────────────────── */
 .artificer-foundry .recipe-filters { display: flex; flex-direction: column; gap: 4px; padding: 6px 8px; background: #12101e; border-bottom: 1px solid #3a2870; flex-shrink: 0; }
-.artificer-foundry .search-input, .artificer-foundry .filter-rarity, .artificer-foundry .filter-learned { width: 100%; background: #0a0814; color: #c0a8e0; border: 1px solid #4a3080; border-radius: 4px; padding: 4px 6px; font-size: 0.9em; }
+.artificer-foundry .search-input, .artificer-foundry .filter-rarity, .artificer-foundry .filter-learned, .artificer-foundry .filter-category { width: 100%; background: #0a0814; color: #c0a8e0; border: 1px solid #4a3080; border-radius: 4px; padding: 4px 6px; font-size: 0.9em; }
 .artificer-foundry .search-input::placeholder { color: #5a4080; }
 
 /* ── Recipe List ───────────────────────────────────────────── */
@@ -46,7 +47,8 @@
 .artificer-foundry .recipe-item-meta { display: flex; gap: 5px; margin-top: 4px; align-items: center; flex-wrap: wrap; }
 
 /* ── Badges ────────────────────────────────────────────────── */
-.artificer-foundry .rarity-badge, .artificer-foundry .time-badge, .artificer-foundry .cost-badge, .artificer-foundry .unknown-badge, .artificer-foundry .ingredient-type-badge { display: inline-block; font-size: 0.8em; padding: 1px 6px; border-radius: 10px; font-weight: bold; white-space: nowrap; }
+.artificer-foundry .rarity-badge, .artificer-foundry .time-badge, .artificer-foundry .cost-badge, .artificer-foundry .unknown-badge, .artificer-foundry .ingredient-type-badge, .artificer-foundry .category-badge { display: inline-block; font-size: 0.8em; padding: 1px 6px; border-radius: 10px; font-weight: bold; white-space: nowrap; }
+.artificer-foundry .category-badge { background: rgba(100,80,140,0.3); color: #b090d0; border: 1px solid #5a4080; text-transform: capitalize; }
 .artificer-foundry .time-badge { background: rgba(100,100,140,0.3); color: #aab; border: 1px solid #555; }
 .artificer-foundry .cost-badge { background: rgba(180,150,50,0.2); color: #d4b030; border: 1px solid #7a6020; }
 .artificer-foundry .unknown-badge { background: rgba(150,80,30,0.3); color: #c08040; border: 1px solid #7a4010; }
@@ -77,6 +79,19 @@
 .artificer-foundry .type-rare_monster_part { background: rgba(120,30,100,0.25); color: #e050c0; border: 1px solid #702080; }
 .artificer-foundry .type-very_rare_component { background: rgba(140,40,160,0.30); color: #d060e0; border: 1px solid #802090; }
 .artificer-foundry .type-legendary_component { background: rgba(180,130,0,0.35); color: #f0c030; border: 1px solid #a08000; }
+
+/* Forge material type badges */
+.artificer-foundry .type-metal { background: rgba(120,120,140,0.25); color: #b0b0c0; border: 1px solid #606070; }
+.artificer-foundry .type-rare_metal { background: rgba(80,120,180,0.25); color: #80b0e0; border: 1px solid #406090; }
+.artificer-foundry .type-very_rare_metal { background: rgba(180,60,60,0.25); color: #e08080; border: 1px solid #903030; }
+.artificer-foundry .type-crafting_supply { background: rgba(140,120,80,0.25); color: #c0a870; border: 1px solid #706040; }
+.artificer-foundry .type-essence { background: rgba(40,140,140,0.25); color: #60c0c0; border: 1px solid #207070; }
+.artificer-foundry .type-rare_essence { background: rgba(100,40,160,0.25); color: #b070e0; border: 1px solid #603090; }
+.artificer-foundry .type-very_rare_essence { background: rgba(160,40,40,0.25); color: #e06060; border: 1px solid #902020; }
+.artificer-foundry .type-legendary_essence { background: rgba(200,100,0,0.30); color: #f0a030; border: 1px solid #a06000; }
+.artificer-foundry .type-gem { background: rgba(140,140,160,0.25); color: #c0c0d0; border: 1px solid #707080; }
+.artificer-foundry .type-rare_gem { background: rgba(180,40,40,0.25); color: #e06060; border: 1px solid #902020; }
+.artificer-foundry .type-legendary_gem { background: rgba(200,200,220,0.30); color: #e0e0f0; border: 1px solid #a0a0b0; }
 
 /* ══════════════════════════════════════════════════════════════
    CENTER — Crafting Station + Rune Circle

@@ -7,6 +7,12 @@
     "CraftItem": "Craft Item",
     "Learned": "Learned",
     "Unlearned": "Unlearned",
-    "SelectRecipe": "Select a recipe to view details and required ingredients."
+    "SelectRecipe": "Select a recipe to view details and required ingredients.",
+    "ForgeTitle": "Item Forge",
+    "Blueprints": "Blueprints",
+    "ForgeStation": "Forge Station",
+    "ForgeDragDrop": "Drag and drop materials here",
+    "ForgeItem": "Forge Item",
+    "SelectBlueprint": "Select a blueprint to view details and required materials."
   }
 }
