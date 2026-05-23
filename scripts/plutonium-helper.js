@@ -5,11 +5,12 @@
 
 export class PlutoniumHelper {
 
-    /**
-     * Check if Plutonium module is active and available.
-     */
+    static _getApi() {
+        return game.modules.get("plutonium")?.api;
+    }
+
     static isAvailable() {
-        return !!(game.modules.get("plutonium")?.active && game.plutonium?.importer);
+        return !!(game.modules.get("plutonium")?.active && this._getApi()?.importer && globalThis.DataLoader);
     }
 
     /**
@@ -23,6 +24,8 @@ export class PlutoniumHelper {
         if (!this.isAvailable()) return false;
 
         try {
+            const api = this._getApi();
+
             const allItems = await DataLoader.pCacheAndGetAllSite("item");
             if (!allItems?.length) {
                 console.warn("Artificer Foundry | Plutonium DataLoader returned no items");
@@ -36,18 +39,15 @@ export class PlutoniumHelper {
                 return false;
             }
 
-            const importer = await game.plutonium.importer.pGetImporter({page: "items.html"});
+            const importer = await api.importer.pGetImporter({page: "items.html"});
             if (!importer) {
                 console.warn("Artificer Foundry | Failed to get Plutonium item importer");
                 return false;
             }
 
-            const ImportOpts = game.plutonium.importer.ImportOpts;
-            const importOpts = new ImportOpts({actor});
-
+            const importOpts = new api.importer.ImportOpts({actor});
             await importer.pImportEntry(ent, importOpts);
 
-            // Set quantity if needed
             if (quantity > 1) {
                 const created = actor.items.contents.find(i => i.name.toLowerCase() === target);
                 if (created?.system?.quantity !== undefined) {
