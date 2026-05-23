@@ -119,6 +119,16 @@ export class ForgeApp extends HandlebarsApplicationMixin(ApplicationV2) {
             });
         });
 
+        // Restore search field focus after re-render
+        if (this._restoreSearchFocus) {
+            const searchInput = el.querySelector('.search-input');
+            if (searchInput) {
+                searchInput.focus();
+                searchInput.selectionStart = searchInput.selectionEnd = this._searchCursorPos ?? searchInput.value.length;
+            }
+            this._restoreSearchFocus = false;
+        }
+
         el.querySelectorAll('.quick-add-btn').forEach(btn => btn.addEventListener('click', this._onQuickAdd.bind(this)));
         el.querySelectorAll('.remove-ingredient-btn').forEach(btn => btn.addEventListener('click', this._onRemoveIngredient.bind(this)));
         el.querySelector('.craft-btn')?.addEventListener('click', this._onCraftItem.bind(this));
@@ -158,7 +168,12 @@ export class ForgeApp extends HandlebarsApplicationMixin(ApplicationV2) {
         this.render();
     }
 
-    _onSearchChange(event) { this.searchQuery = event.currentTarget.value; this.render(); }
+    _onSearchChange(event) {
+        this.searchQuery = event.currentTarget.value;
+        this._restoreSearchFocus = true;
+        this._searchCursorPos = event.currentTarget.selectionStart;
+        this.render();
+    }
 
     async _onDropIngredient(event) {
         event.preventDefault();

@@ -14,7 +14,17 @@
     "monster_part": "Monster part",
     "rare_monster_part": "Rare monster part",
     "very_rare_component": "Very rare component",
-    "legendary_component": "Legendary component"
+    "legendary_component": "Legendary component",
+    "arcane": "Arcane component",
+    "cloth": "Cloth",
+    "divine": "Divine component",
+    "elemental": "Elemental component",
+    "hide": "Hide",
+    "natural": "Natural material",
+    "paper": "Paper",
+    "planar": "Planar component",
+    "tool": "Tool",
+    "wood": "Wood"
   },
   "icons": {
     "Iron Ingot": "icons/commodities/metal/ingot-green.webp",
@@ -47,7 +57,23 @@
     "Dragon Blood": "icons/consumables/potions/vial-cork-red.webp",
     "Storm Giant Blood": "icons/commodities/materials/liquid-blue.webp",
     "Unicorn Horn": "icons/commodities/bones/horn-simple-white.webp",
-    "Celestial Feather": "icons/commodities/materials/feather-white.webp"
+    "Celestial Feather": "icons/commodities/materials/feather-white.webp",
+    "Adamantine Ingot": "icons/commodities/metal/ingot-steel.webp",
+    "Arcane Crystal": "icons/commodities/gems/gem-faceted-radiant-blue.webp",
+    "Arcane Dust": "icons/commodities/materials/powder-blue.webp",
+    "Astral Shard": "icons/commodities/gems/gem-rough-pendeloque-blue.webp",
+    "Blank Scroll": "icons/sundries/scrolls/scroll-bound-sealed-brown.webp",
+    "Divine Spark": "icons/magic/light/explosion-star-glow-silhouette.webp",
+    "Dragon Heart": "icons/commodities/biological/organ-heart-red.webp",
+    "Enchanted Ink": "icons/sundries/documents/document-sealed-signatures-red.webp",
+    "Enchanting Dust": "icons/commodities/materials/powder-purple.webp",
+    "Feathers": "icons/commodities/biological/feathers-white.webp",
+    "Giant's Nail": "icons/commodities/biological/nail-claw-grey.webp",
+    "Gold Band": "icons/equipment/finger/ring-band-gold.webp",
+    "Mithral Ingot": "icons/commodities/metal/ingot-silver.webp",
+    "Mystic Wood": "icons/commodities/wood/wood-bundle-brown.webp",
+    "Padding": "icons/commodities/cloth/cloth-bolt-white.webp",
+    "Whetstone": "icons/commodities/stone/stone-rough-grey.webp"
   },
   "typeIcons": {
     "metal": "icons/commodities/metal/ingot-green.webp",
@@ -64,7 +90,17 @@
     "monster_part": "icons/commodities/bones/bone-jaw-teeth-white-grey.webp",
     "rare_monster_part": "icons/commodities/biological/organ-heart-red.webp",
     "very_rare_component": "icons/commodities/gems/gem-rough-cushion-purple.webp",
-    "legendary_component": "icons/commodities/gems/gem-rough-cushion-red.webp"
+    "legendary_component": "icons/commodities/gems/gem-rough-cushion-red.webp",
+    "arcane": "icons/magic/symbols/runes-star-pentagon-blue.webp",
+    "cloth": "icons/commodities/cloth/cloth-bolt-white.webp",
+    "divine": "icons/magic/light/explosion-star-glow-silhouette.webp",
+    "elemental": "icons/magic/fire/flame-burning-yellow-orange.webp",
+    "hide": "icons/commodities/leather/leather-worn-tan.webp",
+    "natural": "icons/commodities/wood/wood-bundle-brown.webp",
+    "paper": "icons/sundries/scrolls/scroll-bound-sealed-brown.webp",
+    "planar": "icons/magic/symbols/runes-star-pentagon-blue.webp",
+    "tool": "icons/tools/smithing/hammer-claw-steel-grey.webp",
+    "wood": "icons/commodities/wood/wood-pole.webp"
   },
   "defaultIcon": "icons/svg/item-bag.svg",
   "craftingTimes": {

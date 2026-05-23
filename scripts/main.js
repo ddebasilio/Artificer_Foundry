@@ -126,7 +126,7 @@ Hooks.once('init', function () {
 
     // Register the Gathering sidebar tab for v13+/v14
     CONFIG.ui.sidebar.TABS["af-gathering"] = {
-        icon: "fas fa-shopping-bag",
+        icon: "fa-solid fa-sack",
         tooltip: "Gathering",
         gmOnly: true,
     };
