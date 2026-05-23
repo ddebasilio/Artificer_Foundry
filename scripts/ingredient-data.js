@@ -1,6 +1,6 @@
 /**
  * Ingredient metadata for the Artificer Foundry module.
- * Loaded from data/ingredients.json and data/biomes.json at runtime.
+ * Loaded from data/potion-ingredients.json and data/biomes.json at runtime.
  */
 
 let _ingredientData = null;
@@ -8,7 +8,7 @@ let _biomeData = null;
 
 export async function loadIngredientData() {
     if (!_ingredientData) {
-        const resp = await fetch("modules/artificer-foundry/data/ingredients.json");
+        const resp = await fetch("modules/artificer-foundry/data/potion-ingredients.json");
         _ingredientData = await resp.json();
     }
     if (!_biomeData) {

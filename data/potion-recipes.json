@@ -25,59 +25,6 @@
     "description": "This potion is a magic item. As a Bonus Action, you can drink it or administer it to another creature within 5 feet of yourself. The creature that drinks the magical red fluid in this vial regains 2d4 + 2 Hit Points. The potion's red liquid glimmers when agitated."
   },
   {
-    "id": "antitoxin",
-    "name": "Antitoxin",
-    "rarity": "common",
-    "learned": true,
-    "ingredients": [
-      {
-        "name": "Silverleaf",
-        "quantity": 2,
-        "type": "common_herb"
-      },
-      {
-        "name": "Charcoal Powder",
-        "quantity": 1,
-        "type": "common_component"
-      }
-    ],
-    "output": {
-      "name": "Antitoxin",
-      "img": "icons/consumables/potions/bottle-corked-green.webp",
-      "type": "consumable",
-      "quantity": 1
-    }
-  },
-  {
-    "id": "alchemists-fire",
-    "name": "Alchemist's Fire",
-    "rarity": "common",
-    "learned": true,
-    "ingredients": [
-      {
-        "name": "Naphtha Oil",
-        "quantity": 1,
-        "type": "liquid"
-      },
-      {
-        "name": "Sulphur",
-        "quantity": 1,
-        "type": "common_component"
-      },
-      {
-        "name": "Rendered Fat",
-        "quantity": 1,
-        "type": "common_component"
-      }
-    ],
-    "output": {
-      "name": "Alchemist's Fire",
-      "img": "icons/consumables/potions/bottle-round-corked-orange.webp",
-      "type": "consumable",
-      "quantity": 1
-    }
-  },
-  {
     "id": "potion-climbing",
     "name": "Potion of Climbing",
     "rarity": "common",
@@ -533,35 +480,6 @@
     "description": "When you drink this potion, you gain the effect of the Detect Thoughts spell (save DC 13) for 10 minutes (no Concentration required).\n\nThis potion's dense, purple liquid has an ovoid cloud of pink floating in it."
   },
   {
-    "id": "elixir-stone-giant-strength",
-    "name": "Elixir of Stone Giant Strength",
-    "rarity": "rare",
-    "learned": false,
-    "ingredients": [
-      {
-        "name": "Stone Giant Knuckle",
-        "quantity": 1,
-        "type": "rare_monster_part"
-      },
-      {
-        "name": "Mandrake Root",
-        "quantity": 3,
-        "type": "uncommon_herb"
-      },
-      {
-        "name": "Gargoyle Dust",
-        "quantity": 2,
-        "type": "rare_monster_part"
-      }
-    ],
-    "output": {
-      "name": "Elixir of Stone Giant Strength",
-      "img": "icons/consumables/potions/bottle-corked-empty.webp",
-      "type": "consumable",
-      "quantity": 1
-    }
-  },
-  {
     "id": "elixir-health",
     "name": "Elixir of Health",
     "rarity": "rare",
@@ -590,64 +508,6 @@
       "quantity": 1
     },
     "description": "When you drink this potion, you are cured of all magical contagions. In addition, the following conditions end on you: Blinded, Deafened, Paralyzed, and Poisoned.\n\nThe clear, red liquid has tiny bubbles of light in it."
-  },
-  {
-    "id": "elixir-frost-giant-strength",
-    "name": "Elixir of Frost Giant Strength",
-    "rarity": "rare",
-    "learned": false,
-    "ingredients": [
-      {
-        "name": "Frost Giant Knuckle",
-        "quantity": 1,
-        "type": "rare_monster_part"
-      },
-      {
-        "name": "Mandrake Root",
-        "quantity": 3,
-        "type": "uncommon_herb"
-      },
-      {
-        "name": "Troll Blood",
-        "quantity": 2,
-        "type": "monster_part"
-      }
-    ],
-    "output": {
-      "name": "Elixir of Frost Giant Strength",
-      "img": "icons/consumables/potions/bottle-conical-corked-cyan.webp",
-      "type": "consumable",
-      "quantity": 1
-    }
-  },
-  {
-    "id": "elixir-fire-giant-strength",
-    "name": "Elixir of Fire Giant Strength",
-    "rarity": "rare",
-    "learned": false,
-    "ingredients": [
-      {
-        "name": "Fire Giant Heartstring",
-        "quantity": 1,
-        "type": "rare_monster_part"
-      },
-      {
-        "name": "Mandrake Root",
-        "quantity": 3,
-        "type": "uncommon_herb"
-      },
-      {
-        "name": "Salamander Scale",
-        "quantity": 2,
-        "type": "monster_part"
-      }
-    ],
-    "output": {
-      "name": "Elixir of Fire Giant Strength",
-      "img": "icons/consumables/potions/bottle-round-corked-orange.webp",
-      "type": "consumable",
-      "quantity": 1
-    }
   },
   {
     "id": "potion-maximum-power",
@@ -834,35 +694,6 @@
     "description": "This potion's container looks empty but feels as though it holds liquid. When you drink the potion, you have the Invisible condition for 1 hour. The effect ends early if you make an attack roll, deal damage, or cast a spell."
   },
   {
-    "id": "elixir-cloud-giant-strength",
-    "name": "Elixir of Cloud Giant Strength",
-    "rarity": "very_rare",
-    "learned": false,
-    "ingredients": [
-      {
-        "name": "Cloud Giant Heartstring",
-        "quantity": 1,
-        "type": "very_rare_component"
-      },
-      {
-        "name": "Mandrake Root",
-        "quantity": 6,
-        "type": "uncommon_herb"
-      },
-      {
-        "name": "Storm Eagle Talon",
-        "quantity": 2,
-        "type": "rare_monster_part"
-      }
-    ],
-    "output": {
-      "name": "Elixir of Cloud Giant Strength",
-      "img": "icons/consumables/potions/bottle-corked-empty.webp",
-      "type": "consumable",
-      "quantity": 1
-    }
-  },
-  {
     "id": "potion-gaseous-form",
     "name": "Potion of Gaseous Form",
     "rarity": "very_rare",
@@ -980,64 +811,6 @@
       "quantity": 1
     },
     "description": "One vial of this oil can coat one Melee weapon or twenty pieces of ammunition, but only ammunition and Melee weapons that are nonmagical and deal Slashing or Piercing damage are affected. Applying the oil takes 1 minute, after which the oil magically seeps into whatever it coats, turning the coated weapon into a +3 Weapon or the coated ammunition into +3 Ammunition.\n\nThis clear, gelatinous oil sparkles with tiny, ultrathin silver shards."
-  },
-  {
-    "id": "elixir-storm-giant-strength",
-    "name": "Elixir of Storm Giant Strength",
-    "rarity": "legendary",
-    "learned": false,
-    "ingredients": [
-      {
-        "name": "Storm Giant Blood",
-        "quantity": 3,
-        "type": "legendary_component"
-      },
-      {
-        "name": "Lightning-Struck Wood",
-        "quantity": 2,
-        "type": "very_rare_component"
-      },
-      {
-        "name": "Cloud Giant Heartstring",
-        "quantity": 1,
-        "type": "very_rare_component"
-      }
-    ],
-    "output": {
-      "name": "Elixir of Storm Giant Strength",
-      "img": "icons/consumables/potions/bottle-corked-empty.webp",
-      "type": "consumable",
-      "quantity": 1
-    }
-  },
-  {
-    "id": "potion-dragon-strength",
-    "name": "Potion of Dragon Strength",
-    "rarity": "legendary",
-    "learned": false,
-    "ingredients": [
-      {
-        "name": "Dragon Blood",
-        "quantity": 2,
-        "type": "legendary_component"
-      },
-      {
-        "name": "Storm Giant Blood",
-        "quantity": 1,
-        "type": "legendary_component"
-      },
-      {
-        "name": "Unicorn Horn",
-        "quantity": 1,
-        "type": "legendary_component"
-      }
-    ],
-    "output": {
-      "name": "Potion of Dragon Strength",
-      "img": "icons/consumables/potions/bottle-corked-red.webp",
-      "type": "consumable",
-      "quantity": 1
-    }
   },
   {
     "id": "potion-giant-size",

@@ -1,6 +1,6 @@
 /**
  * Recipe manager for the Artificer Foundry alchemy system.
- * Loads recipes from data/recipes.json at runtime.
+ * Loads recipes from data/potion-recipes.json at runtime.
  */
 
 export class RecipeManager {
@@ -11,7 +11,7 @@ export class RecipeManager {
 
     async loadRecipes() {
         if (this._loaded) return;
-        const resp = await fetch("modules/artificer-foundry/data/recipes.json");
+        const resp = await fetch("modules/artificer-foundry/data/potion-recipes.json");
         this.recipes = await resp.json();
         this._loaded = true;
     }
