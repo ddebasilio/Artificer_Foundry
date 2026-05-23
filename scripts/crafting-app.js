@@ -1,5 +1,6 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 import { getTypeLabels, getIngredientIcon, canSubstitute, getSubstitutes, getCraftingTime, formatCraftingTime, getCraftingTimes } from "./ingredient-data.js";
+import { PlutoniumHelper } from "./plutonium-helper.js";
 
 export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
@@ -250,37 +251,41 @@ export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
             }
         }
 
-        // Create output
+        // Create output via Plutonium if available, otherwise fall back to compendium
         const output = recipe.output;
-        const compendiumItem = await this._findInCompendiums(output.name);
+        const plutoniumImported = await PlutoniumHelper.pImportItem(this.actor, output.name, output.quantity ?? 1);
 
-        let itemData;
-        if (compendiumItem) {
-            // Clone full compendium item data to preserve all mechanical properties
-            itemData = compendiumItem.toObject();
-            itemData.name = output.name;
-            if (output.img) itemData.img = output.img;
-            if (output.quantity && itemData.system) itemData.system.quantity = output.quantity;
-            delete itemData._id;
-        } else {
-            itemData = {
-                name: output.name,
-                type: "loot",
-                img: output.img || "icons/svg/item-bag.svg",
-                system: {
-                    quantity: output.quantity ?? 1,
-                    description: { value: "" }
-                }
-            };
+        if (!plutoniumImported) {
+            const compendiumItem = await this._findInCompendiums(output.name);
+
+            let itemData;
+            if (compendiumItem) {
+                itemData = compendiumItem.toObject();
+                itemData.name = output.name;
+                if (output.img) itemData.img = output.img;
+                if (output.quantity && itemData.system) itemData.system.quantity = output.quantity;
+                delete itemData._id;
+            } else {
+                itemData = {
+                    name: output.name,
+                    type: "loot",
+                    img: output.img || "icons/svg/item-bag.svg",
+                    system: {
+                        quantity: output.quantity ?? 1,
+                        description: { value: "" }
+                    }
+                };
+            }
+
+            try {
+                await this.actor.createEmbeddedDocuments("Item", [itemData]);
+            } catch (error) {
+                console.error(`Artificer Foundry | Failed to create item ${output.name}. Error:`, error);
+                ui.notifications.error(`Failed to craft ${output.name}. See console.`);
+            }
         }
 
-        try {
-            await this.actor.createEmbeddedDocuments("Item", [itemData]);
-            ui.notifications.info(`\u2713 ${this.actor.name} crafted ${output.name}!`);
-        } catch (error) {
-            console.error(`Artificer Foundry | Failed to create item ${output.name}. Error:`, error);
-            ui.notifications.error(`Failed to craft ${output.name}. See console.`);
-        }
+        ui.notifications.info(`\u2713 ${this.actor.name} crafted ${output.name}!`);
 
         this.providedIngredients = {};
         this._crafting = false;
