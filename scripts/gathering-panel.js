@@ -1,31 +1,11 @@
-import { BIOMES, ABUNDANCE_MODIFIERS, TIME_UNITS, resolveForagingByDC, addIngredientToActor } from "./ingredient-data.js";
+import {
+    getBiomes, getAbundanceModifiers, getTimeUnits,
+    getWeatherModifiers, getSeasonModifiers, getSkillOptions,
+    resolveForagingByDC, addIngredientToActor
+} from "./ingredient-data.js";
+import { addForgeMaterialToActor } from "./forge-data.js";
 
 const MODULE_ID = "artificer-foundry";
-
-// Weather modifier options
-const WEATHER_MODIFIERS = [
-    { value: "0",  label: "Clear",       dcMod: 0 },
-    { value: "1",  label: "Overcast",    dcMod: 1 },
-    { value: "2",  label: "Light Rain",  dcMod: 2 },
-    { value: "4",  label: "Heavy Rain",  dcMod: 3 },
-    { value: "6",  label: "Storm",       dcMod: 4 },
-];
-
-// Season modifier options
-const SEASON_MODIFIERS = [
-    { value: "-1", label: "Spring", dcMod: -1 },
-    { value: "0",  label: "Summer", dcMod: 0  },
-    { value: "1",  label: "Autumn", dcMod: 1  },
-    { value: "3",  label: "Winter", dcMod: 2  },
-];
-
-// Skill options for the roll
-const SKILL_OPTIONS = [
-    { value: "sur", label: "Survival" },
-    { value: "nat", label: "Nature"   },
-    { value: "prc", label: "Perception" },
-    { value: "inv", label: "Investigation" },
-];
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { AbstractSidebarTab } = foundry.applications.sidebar;
@@ -47,25 +27,27 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
 
     constructor(options = {}) {
         super(options);
-        // Environment state
         this.biome      = game.settings?.get(MODULE_ID, "defaultBiome") || "forest";
         this.abundance  = "medium";
         this.timeAmount = 1;
         this.timeUnit   = "hours";
         this.weatherMod = 0;
         this.seasonMod  = 0;
-        this.manualDC   = null; // null = auto-computed
+        this.manualDC   = null;
         this.skillKey   = "sur";
-        // Player selection
+        this.gatherMode = "ingredients"; // "ingredients" or "materials"
         this.selectedActorIds = new Set();
     }
 
     // ─── Computed DC ────────────────────────────────────────────────────────────
 
     _computeAutoDC() {
-        const biome     = BIOMES[this.biome]              ?? { baseDC: 10 };
-        const abundance = ABUNDANCE_MODIFIERS[this.abundance] ?? { dcMod: 0 };
-        const hours     = this.timeAmount * (TIME_UNITS[this.timeUnit]?.hours ?? 1);
+        const biomes    = getBiomes();
+        const abundance = getAbundanceModifiers();
+        const timeUnits = getTimeUnits();
+        const biome     = biomes[this.biome]              ?? { baseDC: 10 };
+        const abund     = abundance[this.abundance]        ?? { dcMod: 0 };
+        const hours     = this.timeAmount * (timeUnits[this.timeUnit]?.hours ?? 1);
 
         let timeMod = 0;
         if      (hours <= 1/600) timeMod = +6;
@@ -74,7 +56,10 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
         else if (hours <= 1)     timeMod = 0;
         else timeMod = -Math.min(4, Math.floor(Math.floor(hours) / 2));
 
-        return Math.max(1, biome.baseDC + abundance.dcMod + timeMod + this.weatherMod + this.seasonMod);
+        // Materials are harder to find
+        const modeDCMod = this.gatherMode === "materials" ? 3 : 0;
+
+        return Math.max(1, biome.baseDC + abund.dcMod + timeMod + this.weatherMod + this.seasonMod + modeDCMod);
     }
 
     // ─── Template data ───────────────────────────────────────────────────────────
@@ -83,7 +68,6 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
         const context = await super._prepareContext(options);
         if (!game.user.isGM) return context;
 
-        // Collect player-controlled tokens in the active scene
         const scene = game.scenes?.active;
         const sceneActors = [];
         if (scene) {
@@ -100,15 +84,18 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
         const autoDC    = this._computeAutoDC();
         const displayDC = this.manualDC !== null ? this.manualDC : autoDC;
 
+        const biomes = getBiomes();
+        const abundanceMods = getAbundanceModifiers();
+        const timeUnits = getTimeUnits();
+
         Object.assign(context, {
             sceneActors,
-            biomes:     Object.entries(BIOMES).map(([k, v])             => ({ value: k, ...v })),
-            abundances: Object.entries(ABUNDANCE_MODIFIERS).map(([k, v]) => ({ value: k, ...v })),
-            timeUnits:  Object.entries(TIME_UNITS).map(([k, v])          => ({ value: k, ...v })),
-            weatherOptions: WEATHER_MODIFIERS,
-            seasonOptions:  SEASON_MODIFIERS,
-            skillOptions:   SKILL_OPTIONS,
-            // Current selections
+            biomes:     Object.entries(biomes).map(([k, v])             => ({ value: k, ...v })),
+            abundances: Object.entries(abundanceMods).map(([k, v]) => ({ value: k, ...v })),
+            timeUnits:  Object.entries(timeUnits).map(([k, v])          => ({ value: k, ...v })),
+            weatherOptions: getWeatherModifiers(),
+            seasonOptions:  getSeasonModifiers(),
+            skillOptions:   getSkillOptions(),
             biome:      this.biome,
             abundance:  this.abundance,
             timeAmount: this.timeAmount,
@@ -116,7 +103,7 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
             weatherMod: String(this.weatherMod),
             seasonMod:  String(this.seasonMod),
             skillKey:   this.skillKey,
-            // DC
+            gatherMode: this.gatherMode,
             autoDC,
             displayDC,
             isManualDC: this.manualDC !== null,
@@ -175,12 +162,22 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
             updateDC();
         });
 
+        // Gather mode toggle (ingredients vs materials)
+        el.querySelectorAll('.gather-mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                el.querySelectorAll('.gather-mode-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                this.gatherMode = btn.dataset.mode;
+                updateDC();
+            });
+        });
+
         // Manual DC override
         el.querySelector('.dc-display')?.addEventListener('change', e => {
             const val = parseInt(e.target.value);
             this.manualDC = isNaN(val) ? null : val;
             const autoLabel = el.querySelector('.dc-auto-label');
-            if (autoLabel) autoLabel.textContent = this.manualDC !== null ? `Auto: ${this._computeAutoDC()}` : `Auto: ${this._computeAutoDC()}`;
+            if (autoLabel) autoLabel.textContent = `Auto: ${this._computeAutoDC()}`;
             const resetBtn = el.querySelector('.dc-reset-btn');
             if (resetBtn) resetBtn.style.display = this.manualDC !== null ? '' : 'none';
         });
@@ -225,12 +222,14 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
         const dc      = this.manualDC !== null ? this.manualDC : this._computeAutoDC();
         const reqId   = foundry.utils.randomID();
         const actorIds = [...this.selectedActorIds];
-        const skillOpt = SKILL_OPTIONS.find(s => s.value === this.skillKey);
+        const skillOptions = getSkillOptions();
+        const skillOpt = skillOptions.find(s => s.value === this.skillKey);
         const skillLabel = skillOpt?.label ?? "Survival";
+        const modeLabel = this.gatherMode === "materials" ? "Forge Materials" : "Ingredients";
 
         // Persist request so players can roll even after page reload
         const active = game.settings.get(MODULE_ID, "activeGatherRequests");
-        active[reqId] = { dc, biomeKey: this.biome, actorIds, skillKey: this.skillKey };
+        active[reqId] = { dc, biomeKey: this.biome, actorIds, skillKey: this.skillKey, gatherMode: this.gatherMode };
         await game.settings.set(MODULE_ID, "activeGatherRequests", active);
 
         // Build whisper list from actor owners
@@ -256,10 +255,11 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
             </div>`;
         }).join('');
 
+        const modeIcon = this.gatherMode === "materials" ? "fa-hammer" : "fa-leaf";
         const content = `
             <div class="af-gather-request-msg">
-                <p><i class="fas fa-shopping-bag"></i> <strong>Gathering Roll Requested</strong></p>
-                <p>The DM has asked you to roll <strong>${skillLabel}</strong> to gather ingredients.</p>
+                <p><i class="fas ${modeIcon}"></i> <strong>${modeLabel} Gathering Roll Requested</strong></p>
+                <p>The DM has asked you to roll <strong>${skillLabel}</strong> to gather ${modeLabel.toLowerCase()}.</p>
                 ${btnHtml}
             </div>`;
 
@@ -269,7 +269,7 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
             speaker: { alias: "Artificer Foundry" },
         });
 
-        ui.notifications.info(`Gathering roll requested from ${actorIds.length} player(s).`);
+        ui.notifications.info(`${modeLabel} gathering roll requested from ${actorIds.length} player(s).`);
     }
 
     // ─── Socket: handle incoming roll result (called from main.js) ───────────────
@@ -287,6 +287,7 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
         const actor = game.actors.get(actorId);
         if (!actor) return;
 
+        const gatherMode = req.gatherMode ?? "ingredients";
         const result = resolveForagingByDC(req.dc, req.biomeKey, rollTotal);
 
         let msgContent;
@@ -295,9 +296,14 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
         } else if (!result.success) {
             msgContent = `<p><strong>Failed.</strong> ${actor.name} didn't find anything useful. <em>(DC was ${result.dc})</em></p>`;
         } else {
-            msgContent = `<strong>${actor.name} found:</strong><ul>`;
+            const modeLabel = gatherMode === "materials" ? "forge materials" : "ingredients";
+            msgContent = `<strong>${actor.name} found ${modeLabel}:</strong><ul>`;
             for (const item of result.items) {
-                await addIngredientToActor(actor, item.name, item.type, item.qty);
+                if (gatherMode === "materials") {
+                    await addForgeMaterialToActor(actor, item.name, item.type, item.qty);
+                } else {
+                    await addIngredientToActor(actor, item.name, item.type, item.qty);
+                }
                 msgContent += `<li>${item.qty}× ${item.name}</li>`;
             }
             msgContent += `</ul><em>(DC was ${result.dc})</em>`;
@@ -308,7 +314,6 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
             speaker: { alias: "Artificer Foundry" },
         });
 
-        // Clean up completed request
         delete active[requestId];
         await game.settings.set(MODULE_ID, "activeGatherRequests", active);
     }

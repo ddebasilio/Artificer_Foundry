@@ -1,0 +1,8497 @@
+[
+  {
+    "name": "+1 All-Purpose Tool",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "+1 Ammunition",
+    "type": "Ammunition, Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "+1 Amulet of the Devout",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "+1 Arcane Grimoire",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "+1 Armor",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "+1 Bloodwell Vial",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "+1 Dragonhide Belt",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "+1 Fate Dealer's Deck",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "+1 Moon Sickle",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "+1 Rhythm-Maker's Drum",
+    "type": "Wondrous Item, Instrument",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "+1 Rod of the Pact Keeper",
+    "type": "Rod",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "+1 Shield (*)",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "+1 Tools of the Master",
+    "type": "Artisan's Tools",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "+1 Wand of the War Mage",
+    "type": "Wand",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "+1 Weapon",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "+1 Weapon (no damage)",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "+1 Wraps of Unarmed Power",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "+2 All-Purpose Tool",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "+2 Ammunition",
+    "type": "Ammunition, Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "+2 Amulet of the Devout",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "+2 Arcane Grimoire",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "+2 Armor",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "+2 Bloodwell Vial",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "+2 Dragonhide Belt",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "+2 Fate Dealer's Deck",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "+2 Moon Sickle",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "+2 Rhythm-Maker's Drum",
+    "type": "Wondrous Item, Instrument",
+    "rarity": "rare"
+  },
+  {
+    "name": "+2 Rod of the Pact Keeper",
+    "type": "Rod",
+    "rarity": "rare"
+  },
+  {
+    "name": "+2 Shield (*)",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "+2 Tools of the Master",
+    "type": "Artisan's Tools",
+    "rarity": "rare"
+  },
+  {
+    "name": "+2 Wand of the War Mage",
+    "type": "Wand",
+    "rarity": "rare"
+  },
+  {
+    "name": "+2 Weapon",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "+2 Weapon (no damage)",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "+2 Wraps of Unarmed Power",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "+3 All-Purpose Tool",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "+3 Ammunition",
+    "type": "Ammunition, Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "+3 Amulet of the Devout",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "+3 Arcane Grimoire",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "+3 Armor",
+    "type": "Generic Variant",
+    "rarity": "legendary"
+  },
+  {
+    "name": "+3 Bloodwell Vial",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "+3 Dragonhide Belt",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "+3 Fate Dealer's Deck",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "+3 Moon Sickle",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "+3 Rhythm-Maker's Drum",
+    "type": "Wondrous Item, Instrument",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "+3 Rod of the Pact Keeper",
+    "type": "Rod",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "+3 Shield (*)",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "+3 Tools of the Master",
+    "type": "Artisan's Tools",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "+3 Wand of the War Mage",
+    "type": "Wand",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "+3 Weapon",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "+3 Weapon (no damage)",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "+3 Wraps of Unarmed Power",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Abracadabrus",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Absorbing Tattoo",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Acheron Blade",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Acid Absorbing Tattoo",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Adamantine Armor",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Adamantine Weapon",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Adventurer's Ring",
+    "type": "Ring",
+    "rarity": "common"
+  },
+  {
+    "name": "Adze of Annam",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Aereni Mask",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Akmon, Hammer of Purphoros",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Alchemical Compendium",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "Alchemy Jug",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Alchemy Jug (Blue)",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Alchemy Jug (Orange)",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Amethyst Lodestone",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Ammunition of Slaying",
+    "type": "Ammunition, Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Amulet of Health",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Amulet of Proof against Detection and Location",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Amulet of Protection from Turning",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Amulet of the Black Skull",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Amulet of the Drunkard",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Amulet of the Planes",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Animated Shield",
+    "type": "Shield",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Antimagic Armor",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Apparatus of Kwalish",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Arcanaloth's Music Box",
+    "type": "Other",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Arcane Battery",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Arcane Cannon",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Arcane Propulsion Arm",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Arm of the Grey Knight",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Arm of the Grey Knight (rare)",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Arm of the Grey Knight (uncommon)",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Armblade",
+    "type": "Generic Variant",
+    "rarity": "common"
+  },
+  {
+    "name": "Armor of Acid Resistance",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Armor of Cold Resistance",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Armor of Fire Resistance",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Armor of Force Resistance",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Armor of Fungal Spores",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Armor of Gleaming",
+    "type": "Generic Variant",
+    "rarity": "common"
+  },
+  {
+    "name": "Armor of Invulnerability",
+    "type": "Heavy Armor",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Armor of Lightning Resistance",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Armor of Necrotic Resistance",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Armor of Poison Resistance",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Armor of Psychic Resistance",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Armor of Radiant Resistance",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Armor of Resistance",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Armor of Safeguarding",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Armor of the Fallen",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Armor of Thunder Resistance",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Armor of Vulnerability",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Armor of Vulnerability (Bludgeoning)",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Armor of Vulnerability (Piercing)",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Armor of Vulnerability (Slashing)",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Armor of Weightlessness",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Arrow-Catching Shield",
+    "type": "Shield",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ascendant Dragon Vessel",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Ascendant Dragon's Wrath Weapon",
+    "type": "Generic Variant",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Ascendant Dragon-Touched Focus",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Ascendant Scaled Ornament",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Astral Luggage",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Astral Luggage (uncommon)",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Astral Luggage (very rare)",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Astral Shard",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "Astromancy Archive",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "Atlas of Endless Horizons",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "Axe of the Dwarvish Lords",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Azorius Guild Signet",
+    "type": "Ring",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Azorius Keyrune",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Azuredge",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Baba Yaga's Dancing Broom",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Baba Yaga's Mortar and Pestle",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Baba Yaga's Pestle",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Badge of the Watch",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Bag of Beans",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Bag of Devouring",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Bag of Holding",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Bag of Tricks",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Bag of Tricks, Gray",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Bag of Tricks, Rust",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Bag of Tricks, Tan",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Balance Card",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Balance of Harmony",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Baleful Talon",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Balloon Pack",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Bane Weapon",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Banner of the Krig Rune",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Barghest Collar",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Barrier Tattoo (Large)",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Barrier Tattoo (Medium)",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "rare"
+  },
+  {
+    "name": "Barrier Tattoo (Small)",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Battering Shield",
+    "type": "Shield",
+    "rarity": "rare"
+  },
+  {
+    "name": "Battle Rod",
+    "type": "Rod",
+    "rarity": "common"
+  },
+  {
+    "name": "Battle Standard of Infernal Power",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Bead of Force",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Bead of Nourishment",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Bead of Refreshment",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Beggar's Wisdom",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Belashyrra's Beholder Crown",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Bell Branch",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "Belt of Cloud Giant Strength",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Belt of Dwarvenkind",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Belt of Fire Giant Strength",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Belt of Frost Giant Strength",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Belt of Giant Strength",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Belt of Hill Giant Strength",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Belt of Stone Giant Strength",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Belt of Storm Giant Strength",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Berserker Axe",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Bigby's Beneficent Bracelet",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Black Chromatic Rose",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Black Crystal Tablet",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Black Dragon Mask",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Black Dragon Scale Mail",
+    "type": "Medium Armor",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Blackrazor",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Blackstaff",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Blade of Avernus",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Blade of Broken Mirrors",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Blade of Broken Mirrors (Awakened)",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Blade of Broken Mirrors (Dormant)",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Blade of Broken Mirrors (Exalted)",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Blast Disk",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Blast Disk (Common)",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Blast Disk (Rare)",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Blast Disk (Uncommon)",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Blast Scepter",
+    "type": "Rod",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Blasted Goggles",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Blod Stone",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Blood Fury Tattoo",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Blood Spear",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Bloodaxe",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Bloodrage Greataxe",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Bloodseeker Ammunition",
+    "type": "Ammunition, Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Bloodshed Blade",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Blue Chromatic Rose",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Blue Dragon Mask",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Blue Dragon Scale Mail",
+    "type": "Medium Armor",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Bob",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Bobbing Lily Pad",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Bomboozler",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Bomboozler (rare)",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Bomboozler (very rare)",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Bonecounter",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Bonze's Bokken, Wind Ripper",
+    "type": "Generic Variant",
+    "rarity": "varies"
+  },
+  {
+    "name": "Bonze's Bokken, Wind Ripper (legendary)",
+    "type": "Generic Variant",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Bonze's Bokken, Wind Ripper (rare)",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Bonze's Bokken, Wind Ripper (uncommon)",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Bonze's Bokken, Wind Ripper (very rare)",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Book of Exalted Deeds",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Book of Vile Darkness",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Book of Vile Darkness (Variant)",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Bookmark",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Boomerang Shield",
+    "type": "Shield",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Boots of Elvenkind",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Boots of False Tracks",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Boots of Levitation",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Boots of Speed",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Boots of Striding and Springing",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Boots of the Winding Path",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Boots of the Winterlands",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Boros Guild Signet",
+    "type": "Ring",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Boros Keyrune",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Bottle of Boundless Coffee",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Bottled Breath",
+    "type": "Potion",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Bow of Conflagration",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Bow of Melodies",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Bowl of Commanding Water Elementals",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Bracelet of Rock Magic",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Bracer of Flying Daggers",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Bracers of Archery",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Bracers of Celerity",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Bracers of Defense",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Brand of Tyranny",
+    "type": "Rod",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Brass Dragon Scale Mail",
+    "type": "Medium Armor",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Brazier of Commanding Fire Elementals",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Breastplank",
+    "type": "Medium Armor",
+    "rarity": "varies"
+  },
+  {
+    "name": "Breastplank (rare)",
+    "type": "Medium Armor",
+    "rarity": "rare"
+  },
+  {
+    "name": "Breastplank (uncommon)",
+    "type": "Medium Armor",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Breastplank (very rare)",
+    "type": "Medium Armor",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Breastplate of Balance",
+    "type": "Medium Armor",
+    "rarity": "rare"
+  },
+  {
+    "name": "Breastplate of Kamvuul Norek",
+    "type": "Medium Armor",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Breath of Siberys",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Breathing Bubble",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Bronze Dragon Scale Mail",
+    "type": "Medium Armor",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Brooch of Living Essence",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Brooch of Shielding",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Brooch of the Elements",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Broodmother's Embrace",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Broodmother's Embrace (legendary)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Broodmother's Embrace (rare)",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Broodmother's Embrace (very rare)",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Broodmother's Eye",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Broodslinger",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Broodslinger (rare)",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Broodslinger (uncommon)",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Broodslinger (very rare)",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Broom of Flying",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Butcher's Bib",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Calimemnon Crystal",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Caltrooze",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Candle Mace",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Candle of Invocation",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Candle of the Deep",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Cannith's Marvelous Miniatures",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Cap of Vanishing",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Cap of Water Breathing",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Cape of Enlargement",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Cape of the Mountebank",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Card Sharp's Deck",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Carpet of Flying",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Carpet of Flying, 3 ft. \u00d7 5 ft.",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Carpet of Flying, 4 ft. \u00d7 6 ft.",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Carpet of Flying, 5 ft. \u00d7 7 ft.",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Carpet of Flying, 6 ft. \u00d7 9 ft.",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Cartographer's Map Case",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Cast-Off Armor",
+    "type": "Generic Variant",
+    "rarity": "common"
+  },
+  {
+    "name": "Cauldron of Plenty",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Cauldron of Rebirth",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Cazhaak Eyeblinders",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Censer of Controlling Air Elementals",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Channeling Wand",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Charlatan's Die",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Charlatan's Gloves",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Charm of Plant Command",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Charred Wand of Magic Missiles",
+    "type": "Wand",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Chest of Preserving",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Chime of Exile",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Chime of Opening",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Chromatic Rose",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Chronolometer",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Circlet of Blasting",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Circlet of Human Perfection",
+    "type": "Other",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Claw of the Wyrm Rune",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Claws of Corruption",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "varies"
+  },
+  {
+    "name": "Claws of Corruption (uncommon)",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Claws of Corruption (very rare)",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Claws of the Umber Hulk",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Cleansing Stone",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Cloak of Arachnida",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Cloak of Billowing",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Cloak of Displacement",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Cloak of Elvenkind",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Cloak of Invisibility",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Cloak of Many Fashions",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Cloak of Passage",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Cloak of Protection",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Cloak of Shadows",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Cloak of the Bat",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Cloak of the Manta Ray",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Clockwork Amulet",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Clockwork Armor",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Clockwork Dog",
+    "type": "Other",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Clothes of Mending",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Coat of Many Eyes",
+    "type": "Light Armor",
+    "rarity": "varies"
+  },
+  {
+    "name": "Coat of Many Eyes (Rare)",
+    "type": "Light Armor",
+    "rarity": "rare"
+  },
+  {
+    "name": "Coat of Many Eyes (Uncommon)",
+    "type": "Light Armor",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Coat of Many Eyes (Very Rare)",
+    "type": "Light Armor",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Coconut of Alacrity",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Coiling Grasp Tattoo",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Coin of Decisionry",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Coin of Delving",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Cold Absorbing Tattoo",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Collar of the Cat",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Comet Card",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Command Amulet",
+    "type": "Other",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Common Glamerweave",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Concertina",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Conch of Teleportation",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Constantori's Portrait",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Copper Dragon Scale Mail",
+    "type": "Medium Armor",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Corpse Slayer",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Cracked Driftglobe",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Crawling Gauntlet",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Crawly &amp; Rolly Turrit",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Crawly &amp; Rolly Turrit (Crawly Turrit)",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Crawly &amp; Rolly Turrit (Rolly Turrit)",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Crook of Rao",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Crossbow Silencer",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Crown of Horns",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Crown of Lies",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Crown of the Wrath Bringer",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Crown of Whirling Comets",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Crusader's Shortsword",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Crystal Ball",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Crystal Ball (Legendary Version)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Crystal Ball of Mind Reading",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Crystal Ball of Telepathy",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Crystal Ball of True Seeing",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Crystal Blade",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Crystalline Chronicle",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Cube of Force",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Cube of Summoning",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Cubic Gate",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Cuddly Strixhaven Mascot",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Cursed Luckstone",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Daern's Instant Fortress",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Daff's Wonderful Draught",
+    "type": "Potion",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Dagger of Blindsight",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Dagger of Guitar Solos",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Dagger of Venom",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Dancing Monkey Fruit",
+    "type": "Other",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Dancing Sword",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Danoth's Visor",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Danoth's Visor (Awakened)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Danoth's Visor (Dormant)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Danoth's Visor (Exalted)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Daoud's Wondrous Lanthorn",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Dark Shard Amulet",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "common"
+  },
+  {
+    "name": "Dawnbringer",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Dazzling Weapon",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Decanter of Endless Water",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Deck of Dimensions",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Deck of Illusions",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Deck of Many More Things",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Deck of Many Things",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Deck of Miscellany",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Deck of Oracles",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Deck of Wild Cards",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Deck of Wonder",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Defender",
+    "type": "Generic Variant",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Dekella, Bident of Thassa",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Delver's Claws",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Demon Armor",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Demon Skin",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Demonglass Weapon",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Demonomicon of Iggwilv",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Deni Shield",
+    "type": "Shield",
+    "rarity": "common"
+  },
+  {
+    "name": "Detection Channeling Wand",
+    "type": "Wand",
+    "rarity": "rare"
+  },
+  {
+    "name": "Detection Dragonmark Channel",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Detection Dragonmark Reservoir",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Devastation Orb",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Devastation Orb of Air",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Devastation Orb of Earth",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Devastation Orb of Fire",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Devastation Orb of Water",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Devlin's Staff of Striking",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Devotee's Censer",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Dimensional Doorknob",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Dimensional Loop",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Dimensional Shackles",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Dimir Guild Signet",
+    "type": "Ring",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Dimir Keyrune",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Dispelling Stone",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Docent",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Documancy Satchel",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Dodecahedron of Doom",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Donjon Card",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Donjon's Sundering Sphere",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Draakhorn",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Draconic Longsword",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Dragon Scale Mail",
+    "type": "Medium Armor",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Dragon Sensing Longsword",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Dragon Slayer",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Dragon Thighbone Club",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Dragon Vessel",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Dragon Wing Bow",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Dragon's Wrath Weapon",
+    "type": "Generic Variant",
+    "rarity": "varies"
+  },
+  {
+    "name": "Dragon-Touched Focus",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "varies"
+  },
+  {
+    "name": "Dragongleam",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Dragonguard",
+    "type": "Medium Armor",
+    "rarity": "rare"
+  },
+  {
+    "name": "Dragonlance",
+    "type": "Generic Variant",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Dragonmark Channel",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Dragonmark Reservoir",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Dragonmaw Shield",
+    "type": "Shield",
+    "rarity": "rare"
+  },
+  {
+    "name": "Dragonstaff of Ahghairon",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Dragontooth Dagger",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Dread Helm",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Dreamy the Lucid",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Dried Leech",
+    "type": "Ammunition, Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Driftglobe",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Drow +1 Armor",
+    "type": "Generic Variant",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Drow +1 Weapon",
+    "type": "Generic Variant",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Drow +2 Armor",
+    "type": "Generic Variant",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Drow +2 Weapon",
+    "type": "Generic Variant",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Drow +3 Armor",
+    "type": "Generic Variant",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Drow +3 Weapon",
+    "type": "Generic Variant",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Drown",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Dry Spell",
+    "type": "Scroll",
+    "rarity": "rare"
+  },
+  {
+    "name": "Drybrooch",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Duelist's Scorecard",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Duplicitous Manuscript",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "Duskcrusher",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Dust of Corrosion",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Dust of Deliciousness",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Dust of Disappearance",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Dust of Dryness",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Dust of Sneezing and Choking",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Duster",
+    "type": "Wand",
+    "rarity": "common"
+  },
+  {
+    "name": "Dwarven Plate",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Dwarven Thrower",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Dyrrn's Tentacle Whip",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Eagle Whistle",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ear Horn of Hearing",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Earring of Message",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Earworm",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Efreeti Bottle",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Efreeti Chain",
+    "type": "Generic Variant",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Elder Cartographer's Glossography",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Eldritch Claw Tattoo",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Eldritch Staff",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Elemental Essence Shard",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Elemental Essence Shard (Air)",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "Elemental Essence Shard (Earth)",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "Elemental Essence Shard (Fire)",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "Elemental Essence Shard (Water)",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "Elemental Gem",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Elemental Gem, Blue Sapphire",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Elemental Gem, Emerald",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Elemental Gem, Red Corundum",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Elemental Gem, Yellow Diamond",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Elixir of Health",
+    "type": "Potion",
+    "rarity": "rare"
+  },
+  {
+    "name": "Elven Chain",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Elven Thrower",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Emerald Pen",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Enduring Spellbook",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Energy Bow",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Enspelled Armor",
+    "type": "Generic Variant",
+    "rarity": "varies"
+  },
+  {
+    "name": "Enspelled Armor (Cantrip)",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Enspelled Armor (Level 1)",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Enspelled Armor (Level 2)",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Enspelled Armor (Level 3)",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Enspelled Armor (Level 4)",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Enspelled Armor (Level 5)",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Enspelled Armor (Level 6)",
+    "type": "Generic Variant",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Enspelled Armor (Level 7)",
+    "type": "Generic Variant",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Enspelled Armor (Level 8)",
+    "type": "Generic Variant",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Enspelled Staff",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "varies"
+  },
+  {
+    "name": "Enspelled Staff (Cantrip)",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Enspelled Staff (Level 1)",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Enspelled Staff (Level 2)",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Enspelled Staff (Level 3)",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Enspelled Staff (Level 4)",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Enspelled Staff (Level 5)",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Enspelled Staff (Level 6)",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Enspelled Staff (Level 7)",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Enspelled Staff (Level 8)",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Enspelled Weapon",
+    "type": "Generic Variant",
+    "rarity": "varies"
+  },
+  {
+    "name": "Enspelled Weapon (Cantrip)",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Enspelled Weapon (Level 1)",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Enspelled Weapon (Level 2)",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Enspelled Weapon (Level 3)",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Enspelled Weapon (Level 4)",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Enspelled Weapon (Level 5)",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Enspelled Weapon (Level 6)",
+    "type": "Generic Variant",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Enspelled Weapon (Level 7)",
+    "type": "Generic Variant",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Enspelled Weapon (Level 8)",
+    "type": "Generic Variant",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Ephixis, Bow of Nylea",
+    "type": "Simple Weapon, Ranged Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Ersatz Eye",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Euryale Card",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Euryale's Aegis",
+    "type": "Shield",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Everbright Lantern",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Eversmoking Bottle",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Executioner's Axe",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Eye and Hand of Vecna",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Eye of the Tiger",
+    "type": "Ring",
+    "rarity": "varies"
+  },
+  {
+    "name": "Eye of the Tiger (uncommon)",
+    "type": "Ring",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Eye of the Tiger (very rare)",
+    "type": "Ring",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Eye of Vecna",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Eyes of Charming",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Eyes of Googly",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Eyes of Minute Seeing",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Eyes of the Dragonne",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Eyes of the Eagle",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Fabulist Gem",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Faerie Dust",
+    "type": "Other",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Failed Experiment Wand",
+    "type": "Wand",
+    "rarity": "rare"
+  },
+  {
+    "name": "Falkir's Helm of Pigheadedness",
+    "type": "Other",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Fane-Eater",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Far Gear",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Far Realm Shard",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "Fate Cutter Shears",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Fates Card",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Feather of Diatryma Summoning",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Feather Token",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Feline's Fury",
+    "type": "Ranged Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Felinobelix",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Felinobelix (legendary)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Felinobelix (rare)",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Feywild Shard",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Feywrought Armor",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Figurine of Wondrous Power",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Figurine of Wondrous Power, Bronze Griffon",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Figurine of Wondrous Power, Byeshk Worg Pack",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Figurine of Wondrous Power, Ebony Fly",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Figurine of Wondrous Power, Golden Lions",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Figurine of Wondrous Power, Ivory Goats",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Figurine of Wondrous Power, Marble Elephant",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Figurine of Wondrous Power, Obsidian Steed",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Figurine of Wondrous Power, Onyx Dog",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Figurine of Wondrous Power, Serpentine Owl",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Figurine of Wondrous Power, Silver Raven",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Final Messenger",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Finder's Goggles",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Finding Channeling Wand",
+    "type": "Wand",
+    "rarity": "rare"
+  },
+  {
+    "name": "Finding Dragonmark Channel",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Finding Dragonmark Reservoir",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Fire Absorbing Tattoo",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Fish Suit",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Flail of Tiamat",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Flame Tongue",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Flame Tongue Shortsword of Greed",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Flames Card",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Flashdraw Wand",
+    "type": "Wand",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Flayer Slayer",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Flooze",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "varies"
+  },
+  {
+    "name": "Flooze (uncommon)",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Flooze (very rare)",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Flying Chariot",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Flying Citadel Helm",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Folding Boat",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Fool Card",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Fool's Blade",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Force Absorbing Tattoo",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Forcebreaker Weapon",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Fork of Eddy Summoning",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Frost Brand",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Fulminating Treatise",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "Gauntlets of Flaming Fury",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Gauntlets of Ogre Power",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Gavel of the Venn Rune",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Gem Card",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Gem of Brightness",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Gem of Seeing",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ghaal'duur, the Mighty Dirge",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Ghallan Jug",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Ghallanda Cauldron",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Ghost Lantern",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ghost Step Tattoo",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Giant Slayer",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Glamerweave",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Glamoured Studded Leather",
+    "type": "Light Armor",
+    "rarity": "rare"
+  },
+  {
+    "name": "Glimmering Moonbow",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Gloomwrought Armor",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Gloves of Missile Snaring",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Gloves of Soul Catching",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Gloves of Storing",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Gloves of Swimming and Climbing",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Gloves of Thievery",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Glowrune Pigment",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Gnomengarde Grenade",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Goggles of Night",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Goggles of Object Reading",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Gold Canary Figurine of Wondrous Power",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Gold Dragon Scale Mail",
+    "type": "Medium Armor",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Golgari Guild Signet",
+    "type": "Ring",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Golgari Keyrune",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Goo Luck Dice",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Grasping Whip",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Gravenhollow Compass Ring",
+    "type": "Other",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Greater Silver Sword",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Green Chromatic Rose",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Green Copper Ewer",
+    "type": "Other",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Green Dragon Mask",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Green Dragon Scale Mail",
+    "type": "Medium Armor",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Grieving Tree",
+    "type": "Eldritch Machine",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Grill of Barbecuing",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Grimoire Infinitus",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Grimoire Infinitus (Awakened)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Grimoire Infinitus (Dormant)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Grimoire Infinitus (Exalted)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Grist Cakes",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Grovelthrash",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Grovelthrash (Awakened)",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Grovelthrash (Dormant)",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Grovelthrash (Exalted)",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Gruul Guild Signet",
+    "type": "Ring",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Gruul Keyrune",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Guardian Emblem",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Guild Keyrune",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Guild Signet",
+    "type": "Ring",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Gulthias Staff",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Gunnspier",
+    "type": "Potion",
+    "rarity": "varies"
+  },
+  {
+    "name": "Gunnspier (rare)",
+    "type": "Potion",
+    "rarity": "rare"
+  },
+  {
+    "name": "Gunnspier (very rare)",
+    "type": "Potion",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Gurt's Greataxe",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Haemscale",
+    "type": "Generic Variant",
+    "rarity": "varies"
+  },
+  {
+    "name": "Haemscale (legendary)",
+    "type": "Generic Variant",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Haemscale (rare)",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Haemscale (uncommon)",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Haemstrike",
+    "type": "Melee Weapon",
+    "rarity": "varies"
+  },
+  {
+    "name": "Haemstrike (rare)",
+    "type": "Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Haemstrike (uncommon)",
+    "type": "Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Haemstrike (very rare)",
+    "type": "Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Hag Eye",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Hammer of Runic Focus",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Hammer of Thunderbolts",
+    "type": "Generic Variant",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Hammer Time",
+    "type": "Melee Weapon",
+    "rarity": "varies"
+  },
+  {
+    "name": "Hammer Time (uncommon)",
+    "type": "Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Hammer Time (very rare)",
+    "type": "Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Hammock of Worlds",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Hand of Vecna",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Handling Channeling Wand",
+    "type": "Wand",
+    "rarity": "rare"
+  },
+  {
+    "name": "Handling Dragonmark Channel",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Handling Dragonmark Reservoir",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Harkon's Bite",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Harp of Gilded Plenty",
+    "type": "Wondrous Item, Instrument",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Harper Pin",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Hat of Disguise",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Hat of Many Spells",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Hat of Vermin",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Hat of Vortexes",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Hat of Wizardry",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "common"
+  },
+  {
+    "name": "Hazirawn",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Headband of Intellect",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Headbanger Lute",
+    "type": "Melee Weapon",
+    "rarity": "varies"
+  },
+  {
+    "name": "Headbanger Lute (uncommon)",
+    "type": "Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Headbanger Lute (very rare)",
+    "type": "Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Healing Channeling Wand",
+    "type": "Wand",
+    "rarity": "rare"
+  },
+  {
+    "name": "Healing Dragonmark Channel",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Healing Dragonmark Reservoir",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Heart Weaver's Primer",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "Heartstone",
+    "type": "Other",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Heliana's Guide to Monster Hunting",
+    "type": "Wondrous Item, Simple Weapon",
+    "rarity": "varies"
+  },
+  {
+    "name": "Heliana's Guide to Monster Hunting (uncommon)",
+    "type": "Wondrous Item, Simple Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Heliana's Guide to Monster Hunting (very rare)",
+    "type": "Wondrous Item, Simple Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Hell Hound Cloak",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Hellfire Weapon",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Helm of Awareness",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Helm of Brilliance",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Helm of Comprehending Languages",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Helm of Devil Command",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Helm of Perfect Potential",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Helm of Telepathy",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Helm of Teleportation",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Helm of the Gods",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Helm of the Scavenger",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Helm of the Sentinel",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Helm of Underwater Action",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Heretic",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Hew",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Heward's Handy Haversack",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Heward's Handy Spice Pouch",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Hide of the Feral Guardian",
+    "type": "Light Armor",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Hide of the Feral Guardian (Awakened)",
+    "type": "Light Armor",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Hide of the Feral Guardian (Dormant)",
+    "type": "Light Armor",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Hide of the Feral Guardian (Exalted)",
+    "type": "Light Armor",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Holly's Handy Haversack",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Holy Avenger",
+    "type": "Generic Variant",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Holy Symbol of Ravenkind",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Hook of Fisher's Delight",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Horizon Puzzle Cube",
+    "type": "Wondrous Item",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Horn of Blasting",
+    "type": "Wondrous Item, Instrument",
+    "rarity": "rare"
+  },
+  {
+    "name": "Horn of Silent Alarm",
+    "type": "Wondrous Item, Instrument",
+    "rarity": "common"
+  },
+  {
+    "name": "Horn of the Endless Maze",
+    "type": "Wondrous Item, Instrument",
+    "rarity": "rare"
+  },
+  {
+    "name": "Horn of Valhalla",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Horn of Valhalla, Brass",
+    "type": "Wondrous Item, Instrument",
+    "rarity": "rare"
+  },
+  {
+    "name": "Horn of Valhalla, Bronze",
+    "type": "Wondrous Item, Instrument",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Horn of Valhalla, Iron",
+    "type": "Wondrous Item, Instrument",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Horn of Valhalla, Silver",
+    "type": "Wondrous Item, Instrument",
+    "rarity": "rare"
+  },
+  {
+    "name": "Horned Ring",
+    "type": "Ring",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Horseshoes of a Zephyr",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Horseshoes of Speed",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Hospitality Channeling Wand",
+    "type": "Wand",
+    "rarity": "rare"
+  },
+  {
+    "name": "Hospitality Dragonmark Channel",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Hospitality Dragonmark Reservoir",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "House of Cards",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Houseward",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Houseward (Legendary)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Houseward (Rare)",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Houseward (Uncommon)",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Hungry Weapon",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Hunter's Coat",
+    "type": "Light Armor",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Icon of Ravenloft",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Iggwilv's Cauldron",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Iggwilv's Horn",
+    "type": "Wondrous Item, Instrument",
+    "rarity": "rare"
+  },
+  {
+    "name": "Illuminator's Tattoo",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "common"
+  },
+  {
+    "name": "Illusionist's Bracers",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Imbued Wood (Fernian Ash)",
+    "type": "Wondrous Item, Generic Variant",
+    "rarity": "common"
+  },
+  {
+    "name": "Imbued Wood (Irian Rosewood)",
+    "type": "Wondrous Item, Generic Variant",
+    "rarity": "common"
+  },
+  {
+    "name": "Imbued Wood (Kythrian Manchineel)",
+    "type": "Wondrous Item, Generic Variant",
+    "rarity": "common"
+  },
+  {
+    "name": "Imbued Wood (Lamannian Oak)",
+    "type": "Wondrous Item, Generic Variant",
+    "rarity": "common"
+  },
+  {
+    "name": "Imbued Wood (Mabaran Ebony)",
+    "type": "Wondrous Item, Generic Variant",
+    "rarity": "common"
+  },
+  {
+    "name": "Imbued Wood (Risian Pine)",
+    "type": "Wondrous Item, Generic Variant",
+    "rarity": "common"
+  },
+  {
+    "name": "Imbued Wood (Shavarran Birch)",
+    "type": "Wondrous Item, Generic Variant",
+    "rarity": "common"
+  },
+  {
+    "name": "Imbued Wood (Xorian Wenge)",
+    "type": "Wondrous Item, Generic Variant",
+    "rarity": "common"
+  },
+  {
+    "name": "Imbued Wood Focus",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "common"
+  },
+  {
+    "name": "Immovable Rod",
+    "type": "Rod",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Infernal Puzzle Box",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Infernal Tack",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Infested Cultist's Skull",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Infested Cultist's Skull (uncommon)",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Infested Cultist's Skull (very rare)",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Infiltrator's Key",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Infiltrator's Key (Awakened)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Infiltrator's Key (Dormant)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Infiltrator's Key (Exalted)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Ingot of the Skold Rune",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Ink's Aide",
+    "type": "Wondrous Item, Symbiont",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Insignia of Claws",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Instrument of Illusions",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Instrument of Scribing",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Instrument of the Bards",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Instrument of the Bards, Anstruth Harp",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Instrument of the Bards, Canaith Mandolin",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Instrument of the Bards, Cli Lyre",
+    "type": "Wondrous Item, Instrument",
+    "rarity": "rare"
+  },
+  {
+    "name": "Instrument of the Bards, Doss Lute",
+    "type": "Wondrous Item, Instrument",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Instrument of the Bards, Fochlucan Bandore",
+    "type": "Wondrous Item, Instrument",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Instrument of the Bards, Mac-Fuirmidh Cittern",
+    "type": "Wondrous Item, Instrument",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Instrument of the Bards, Ollamh Harp",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Integrated Tool",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Ioun Stone",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Ioun Stone, Absorption",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Ioun Stone, Agility",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Ioun Stone, Awareness",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ioun Stone, Fortitude",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Ioun Stone, Greater Absorption",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Ioun Stone, Insight",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Ioun Stone, Intellect",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Ioun Stone, Leadership",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Ioun Stone, Mastery",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Ioun Stone, Protection",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ioun Stone, Regeneration",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Ioun Stone, Reserve",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ioun Stone, Strength",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Ioun Stone, Sustenance",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Iron Bands of Bilarro",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Iron Flask",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Ironfang",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Izzet Guild Signet",
+    "type": "Ring",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Izzet Keyrune",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Jade Serpent Staff",
+    "type": "Other",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Jakarion's Staff of Frost",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Javelin of Backbiting",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Javelin of Lightning",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Jaw Breakers",
+    "type": "Melee Weapon",
+    "rarity": "varies"
+  },
+  {
+    "name": "Jaw Breakers (rare)",
+    "type": "Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Jaw Breakers (very rare)",
+    "type": "Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Jester Card",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Jester's Mask",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Jewel of Three Prayers",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Jewel of Three Prayers (Awakened)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Jewel of Three Prayers (Dormant)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Jewel of Three Prayers (Exalted)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Jora Charm",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Junky +1 Dagger",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Jury's Squeaky Wheel",
+    "type": "Shield",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Kagonesti Forest Shroud",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Keeper's Fang",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Keoghtom's Ointment",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Key Card",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Keycharm",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Kharash's Promise",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Khrusor, Spear of Heliod",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Knave's Eye Patch",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Knight Card",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Kobbold Flaymefrower",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Kobbold Flaymefrower (uncommon)",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Kobbold Flaymefrower (very rare)",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Kobold Wristbow",
+    "type": "Martial Weapon, Ranged Weapon",
+    "rarity": "common"
+  },
+  {
+    "name": "Korolnor Scepter",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Kundar Chains",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Kyrzin's Ooze",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "L'Arsene's Quadnoculars",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Lady's Veil",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Lamplighter",
+    "type": "Wand",
+    "rarity": "common"
+  },
+  {
+    "name": "Lantern of Revealing",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Lantern of Tracking",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Lash of Immolation",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Lash of Shadows",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Lash of Shadows (Awakened)",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Lash of Shadows (Dormant)",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Lash of Shadows (Exalted)",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Last Stand Armor",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Lesser Hammock of Worlds",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Lharvion Lens",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Libram of Souls and Flesh",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "Lifewell Tattoo",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Lightbringer",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Lightning Absorbing Tattoo",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Lightning Runner",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Living Armor",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Living Gloves",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Living Loot Satchel",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Living Stoneskin",
+    "type": "Heavy Armor, Symbiont",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Loadstone",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Lock of Trickery",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Longbow of the Healing Hearth",
+    "type": "Martial Weapon, Ranged Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Longspike",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "varies"
+  },
+  {
+    "name": "Longspike (uncommon)",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Longspike (very rare)",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Lord's Ensemble",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Lorehold Primer",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Lost Crown of Besilmer",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Luba's Tarokka of Souls",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Luck Blade",
+    "type": "Generic Variant",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Luminous War Pick",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Lustrous Harpy Feather",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Lute of Thunderous Thumping",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Luxon Beacon",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Lyre of Building",
+    "type": "Wondrous Item, Instrument",
+    "rarity": "rare"
+  },
+  {
+    "name": "Mace of Disruption",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Mace of Smiting",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Mace of Terror",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Mace of the Black Crown",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Mace of the Black Crown (Awakened)",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Mace of the Black Crown (Dormant)",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Mace of the Black Crown (Exalted)",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Macuahuitl",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Maddgoth's Helm",
+    "type": "Other",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Magen Handbell",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Magik Oil",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Magnetite Horn",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Making Channeling Wand",
+    "type": "Wand",
+    "rarity": "rare"
+  },
+  {
+    "name": "Making Dragonmark Channel",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Making Dragonmark Reservoir",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Manifold Tool",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Manor Key",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Mantle of Spell Resistance",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Manual of Bodily Health",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Manual of Clay Golems",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Manual of Flesh Golems",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Manual of Gainful Exercise",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Manual of Golems",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Manual of Iron Golems",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Manual of Quickness of Action",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Manual of Stone Golems",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Mariner's Armor",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Mask of Changed Appearance",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Mask of the Beast",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Mask of the Dragon Queen",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Mask of the Wielder",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Masque Charm",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Masquerade Tattoo",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "common"
+  },
+  {
+    "name": "Mastix, Whip of Erebos",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Matalotok",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Mawling Maul",
+    "type": "Melee Weapon",
+    "rarity": "varies"
+  },
+  {
+    "name": "Mawling Maul (rare)",
+    "type": "Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Mawling Maul (uncommon)",
+    "type": "Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Mechanical Wonder",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Mechanical Wonder (Domestic)",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Mechanical Wonder (Flying)",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Mechanical Wonder (Gyrocopter)",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Mechanical Wonder (Mobility)",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Medal of Muscle",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Medal of the Conch",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Medal of the Horizonback",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Medal of the Maze",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Medal of the Meat Pie",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Medal of the Wetlands",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Medal of Wit",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Medallion of Thoughts",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Medani Dowser",
+    "type": "Wand",
+    "rarity": "common"
+  },
+  {
+    "name": "Medi Spectacles",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Mighty Servant of Leuk-o",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Mimickey",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Mimir",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Mind Blade",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Mind Carapace Armor",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Mind Crystal",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Mind Crystal (Careful)",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Mind Crystal (Distant)",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Mind Crystal (Empowered)",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Mind Crystal (Extended)",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Mind Crystal (Heightened)",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Mind Crystal (Quickened)",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Mind Crystal (Subtle)",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Mind Flayer Skull",
+    "type": "Other",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Mind Lash",
+    "type": "Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Mind Sharpener",
+    "type": "Ring",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Mindblasting Cap",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Mindguard Crown",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Minotaur's Map",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Mirror of Life Trapping",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Mirror of Reflected Pasts",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Mirror of the Past",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Misthaven Miscellany",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Mistral Mantle",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Mithral +1 Armor",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Mithral Armor",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Mizzium Apparatus",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Mizzium Armor",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Mizzium Mortar",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Molten Bronze Skin",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Moodmark Paint",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Moon Card",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Moon-Touched Sword",
+    "type": "Generic Variant",
+    "rarity": "common"
+  },
+  {
+    "name": "Moonblade",
+    "type": "Generic Variant",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Mudslick Tower",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Murgaxor's Orb",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Mycelial Cloak",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Mystery Key",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Mythallar Bracelet",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Mythallar Cloak",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Nature's Mantle",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Navigation Orb",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Necklace of Adaptation",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Necklace of Fireballs",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Necklace of Prayer Beads",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Necrotic Absorbing Tattoo",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Needle of Mending",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Nepenthe",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Nether Scroll of Azumar",
+    "type": "Scroll",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Netherese Ring of Protection",
+    "type": "Ring",
+    "rarity": "rare"
+  },
+  {
+    "name": "Night Caller",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Nightfall Pearl",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Nimbus Coronet",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Nine Lives Stealer",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Nolzur's Marvelous Pigments",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Oathbow",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Obsidian Flint Dragon Plate",
+    "type": "Heavy Armor",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Obviator's Lenses",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Occultant Abacus",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Ogre Tines",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Oil of Etherealness",
+    "type": "Potion",
+    "rarity": "rare"
+  },
+  {
+    "name": "Oil of Sharpness",
+    "type": "Potion",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Oil of Slipperiness",
+    "type": "Potion",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Oni Braid",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Oozemat Coat",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Opal of the Ild Rune",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Orb of Damara",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Orb of Direction",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Orb of Dragonkind",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Orb of Gonging",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Orb of Shielding",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "common"
+  },
+  {
+    "name": "Orb of Shielding (Fernian Basalt)",
+    "type": "Wondrous Item, Generic Variant",
+    "rarity": "common"
+  },
+  {
+    "name": "Orb of Shielding (Irian Quartz)",
+    "type": "Wondrous Item, Generic Variant",
+    "rarity": "common"
+  },
+  {
+    "name": "Orb of Shielding (Kythrian Skarn)",
+    "type": "Wondrous Item, Generic Variant",
+    "rarity": "common"
+  },
+  {
+    "name": "Orb of Shielding (Lamannian Flint)",
+    "type": "Wondrous Item, Generic Variant",
+    "rarity": "common"
+  },
+  {
+    "name": "Orb of Shielding (Mabaran Obsidian)",
+    "type": "Wondrous Item, Generic Variant",
+    "rarity": "common"
+  },
+  {
+    "name": "Orb of Shielding (Risian Shale)",
+    "type": "Wondrous Item, Generic Variant",
+    "rarity": "common"
+  },
+  {
+    "name": "Orb of Shielding (Shavarran Chert)",
+    "type": "Wondrous Item, Generic Variant",
+    "rarity": "common"
+  },
+  {
+    "name": "Orb of Shielding (Xorian Marble)",
+    "type": "Wondrous Item, Generic Variant",
+    "rarity": "common"
+  },
+  {
+    "name": "Orb of Skoraeus",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Orb of the Stein Rune",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Orb of the Veil",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Orb of Time",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Orc Stone",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Orcsplitter",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Orcus Figurine",
+    "type": "Wondrous Item",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Ori Boots",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Orlassk's Reach",
+    "type": "Wondrous Item, Symbiont",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Ornithopter of Flying",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Orrery of the Wanderer",
+    "type": "Wondrous Item, Other",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Orzhov Guild Signet",
+    "type": "Ring",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Orzhov Keyrune",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Osseous Spike",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "varies"
+  },
+  {
+    "name": "Osseous Spike (rare)",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Osseous Spike (very rare)",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Outer Essence Shard",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "Outer Essence Shard (Chaotic)",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "Outer Essence Shard (Evil)",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "Outer Essence Shard (Good)",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "Outer Essence Shard (Lawful)",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "Overgrown Barkshield",
+    "type": "Shield",
+    "rarity": "varies"
+  },
+  {
+    "name": "Overgrown Barkshield (rare)",
+    "type": "Shield",
+    "rarity": "rare"
+  },
+  {
+    "name": "Overgrown Barkshield (uncommon)",
+    "type": "Shield",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Overgrown Barkshield (very rare)",
+    "type": "Shield",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Painblinder Mycaxe",
+    "type": "Melee Weapon",
+    "rarity": "varies"
+  },
+  {
+    "name": "Painblinder Mycaxe (rare)",
+    "type": "Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Painblinder Mycaxe (uncommon)",
+    "type": "Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Paper Bird",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Pariah's Shield",
+    "type": "Shield",
+    "rarity": "rare"
+  },
+  {
+    "name": "Passage Channeling Wand",
+    "type": "Wand",
+    "rarity": "rare"
+  },
+  {
+    "name": "Passage Dragonmark Channel",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Passage Dragonmark Reservoir",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Pathfinder's Greataxe",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Pearl of Power",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Pearl of Undead Detection",
+    "type": "Other",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Pennant of the Vind Rune",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Peregrine Mask",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Perfume of Bewitching",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Periapt of Health",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Periapt of Proof against Poison",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Periapt of Wound Closure",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Petrified Grung Egg",
+    "type": "Other",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Philter of Love",
+    "type": "Potion",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Piercer",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Pipe of Remembrance",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Pipe of Smoke Monsters",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Pipes of Haunting",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Pipes of Pestilence",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Pipes of the Sewers",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Piwafwi (Cloak of Elvenkind)",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Piwafwi of Fire Resistance",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Pixie Dust",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Planecaller's Codex",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "Plate Armor of Etherealness (*)",
+    "type": "Generic Variant",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Plate of Knight's Fellowship",
+    "type": "Heavy Armor",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Platinum Scarf",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Pneuma Blade",
+    "type": "Melee Weapon",
+    "rarity": "varies"
+  },
+  {
+    "name": "Pneuma Blade (rare)",
+    "type": "Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Pneuma Blade (very rare)",
+    "type": "Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Poison Absorbing Tattoo",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Poison Soaked Kukri",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Pole of Angling",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Pole of Collapsing",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Portable Hole",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Portal Compass",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Portfolio Keeper",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Pot of Awakening",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Potion of Acid Resistance",
+    "type": "Potion",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Potion of Advantage",
+    "type": "Potion",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Potion of Animal Friendship",
+    "type": "Potion",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Potion of Aqueous Form",
+    "type": "Potion",
+    "rarity": "rare"
+  },
+  {
+    "name": "Potion of Clairvoyance",
+    "type": "Potion",
+    "rarity": "rare"
+  },
+  {
+    "name": "Potion of Climbing",
+    "type": "Potion",
+    "rarity": "common"
+  },
+  {
+    "name": "Potion of Cloud Giant Strength",
+    "type": "Potion",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Potion of Cold Resistance",
+    "type": "Potion",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Potion of Comprehension",
+    "type": "Potion",
+    "rarity": "common"
+  },
+  {
+    "name": "Potion of Diminution",
+    "type": "Potion",
+    "rarity": "rare"
+  },
+  {
+    "name": "Potion of Dragon's Majesty",
+    "type": "Potion",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Potion of Fire Breath",
+    "type": "Potion",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Potion of Fire Giant Strength",
+    "type": "Potion",
+    "rarity": "rare"
+  },
+  {
+    "name": "Potion of Fire Resistance",
+    "type": "Potion",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Potion of Flying",
+    "type": "Potion",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Potion of Force Resistance",
+    "type": "Potion",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Potion of Frost Giant Strength",
+    "type": "Potion",
+    "rarity": "rare"
+  },
+  {
+    "name": "Potion of Gaseous Form",
+    "type": "Potion",
+    "rarity": "rare"
+  },
+  {
+    "name": "Potion of Giant Size",
+    "type": "Potion",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Potion of Giant Strength",
+    "type": "Potion",
+    "rarity": "varies"
+  },
+  {
+    "name": "Potion of Greater Healing",
+    "type": "Potion",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Potion of Greater Invisibility",
+    "type": "Potion",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Potion of Growth",
+    "type": "Potion",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Potion of Healing",
+    "type": "Potion",
+    "rarity": "common"
+  },
+  {
+    "name": "Potion of Healing (*)",
+    "type": "Potion",
+    "rarity": "varies"
+  },
+  {
+    "name": "Potion of Heroism",
+    "type": "Potion",
+    "rarity": "rare"
+  },
+  {
+    "name": "Potion of Hill Giant Strength",
+    "type": "Potion",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Potion of Invisibility",
+    "type": "Potion",
+    "rarity": "rare"
+  },
+  {
+    "name": "Potion of Invulnerability",
+    "type": "Potion",
+    "rarity": "rare"
+  },
+  {
+    "name": "Potion of Lightning Resistance",
+    "type": "Potion",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Potion of Longevity",
+    "type": "Potion",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Potion of Maximum Power",
+    "type": "Potion",
+    "rarity": "rare"
+  },
+  {
+    "name": "Potion of Mind Control",
+    "type": "Potion",
+    "rarity": "varies"
+  },
+  {
+    "name": "Potion of Mind Control (beast)",
+    "type": "Potion",
+    "rarity": "rare"
+  },
+  {
+    "name": "Potion of Mind Control (humanoid)",
+    "type": "Potion",
+    "rarity": "rare"
+  },
+  {
+    "name": "Potion of Mind Control (monster)",
+    "type": "Potion",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Potion of Mind Reading",
+    "type": "Potion",
+    "rarity": "rare"
+  },
+  {
+    "name": "Potion of Necrotic Resistance",
+    "type": "Potion",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Potion of Poison",
+    "type": "Potion",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Potion of Poison Resistance",
+    "type": "Potion",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Potion of Polychromy",
+    "type": "Potion",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Potion of Possibility",
+    "type": "Potion",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Potion of Psionic Fortitude",
+    "type": "Potion",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Potion of Psychic Resistance",
+    "type": "Potion",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Potion of Pugilism",
+    "type": "Potion",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Potion of Radiant Resistance",
+    "type": "Potion",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Potion of Resistance",
+    "type": "Potion",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Potion of Speed",
+    "type": "Potion",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Potion of Stone Giant Strength",
+    "type": "Potion",
+    "rarity": "rare"
+  },
+  {
+    "name": "Potion of Storm Giant Strength",
+    "type": "Potion",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Potion of Superior Healing",
+    "type": "Potion",
+    "rarity": "rare"
+  },
+  {
+    "name": "Potion of Supreme Healing",
+    "type": "Potion",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Potion of Thunder Resistance",
+    "type": "Potion",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Potion of Vitality",
+    "type": "Potion",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Potion of Watchful Rest",
+    "type": "Potion",
+    "rarity": "common"
+  },
+  {
+    "name": "Potion of Water Breathing",
+    "type": "Potion",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Potions of Healing",
+    "type": "Potion",
+    "rarity": "varies"
+  },
+  {
+    "name": "Prehistoric Figurine of Wondrous Power",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Prehistoric Figurine of Wondrous Power, Carnelian Triceratops",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Prehistoric Figurine of Wondrous Power, Jasper Tyrannosaurus Rex",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Prehistoric Figurine of Wondrous Power, Kyanite Pteranodon",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Prehistoric Figurine of Wondrous Power, Pyrite Plesiosaurus",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Pressure Capsule",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Prismari Primer",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Professor Orb",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Professor Skant",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Propeller Helm",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Prospector's Wand",
+    "type": "Wand",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Prosthetic Limb",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Protective Verses",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "Psi Crystal",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Psychic Absorbing Tattoo",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Puzzle Card",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Pyroconverger",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Pyxis of Pandemonium",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Quaal's Feather Token",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Quaal's Feather Token, Anchor",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Quaal's Feather Token, Bird",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Quaal's Feather Token, Fan",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Quaal's Feather Token, Swan Boat",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Quaal's Feather Token, Tree",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Quaal's Feather Token, Whip",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Quandrix Primer",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Quarterstaff of the Acrobat",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Quickstone Boomstick",
+    "type": "Rod",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Quickstone Whisperer",
+    "type": "Wondrous Item, Symbiont",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Quiver of Ehlonna",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Quiver of Energy",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Radiance",
+    "type": "Wand",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Radiant Absorbing Tattoo",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Rakdos Guild Signet",
+    "type": "Ring",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Rakdos Keyrune",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Rakdos Riteknife",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Reaper's Scream",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Red Chromatic Rose",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Red Dragon Mask",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Red Dragon Scale Mail",
+    "type": "Medium Armor",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Reincarnation Dust",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Reliquary of Dawn",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Reliquary of Twilight",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Repeating Shot",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Repulsion Shield",
+    "type": "Shield",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Resistance Breaker",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Reszur",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Returning Weapon",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Reveler's Concertina",
+    "type": "Wondrous Item, Instrument",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ring of Acid Resistance",
+    "type": "Ring",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ring of Amity",
+    "type": "Ring",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Ring of Animal Influence",
+    "type": "Ring",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ring of Birdseye Maple",
+    "type": "Ring",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Ring of Cold Resistance",
+    "type": "Ring",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ring of Djinni Summoning",
+    "type": "Ring",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Ring of Elemental Command",
+    "type": "Ring",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Ring of Elemental Command (Air)",
+    "type": "Ring",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Ring of Elemental Command (Earth)",
+    "type": "Ring",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Ring of Elemental Command (Fire)",
+    "type": "Ring",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Ring of Elemental Command (Water)",
+    "type": "Ring",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Ring of Evasion",
+    "type": "Ring",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ring of Feather Falling",
+    "type": "Ring",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ring of Fire Resistance",
+    "type": "Ring",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ring of Force Resistance",
+    "type": "Ring",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ring of Free Action",
+    "type": "Ring",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ring of Fungal Symbiosis",
+    "type": "Ring",
+    "rarity": "varies"
+  },
+  {
+    "name": "Ring of Fungal Symbiosis (uncommon)",
+    "type": "Ring",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Ring of Fungal Symbiosis (very rare)",
+    "type": "Ring",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Ring of Invisibility",
+    "type": "Ring",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Ring of Jumping",
+    "type": "Ring",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Ring of Lightning Resistance",
+    "type": "Ring",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ring of Mind Shielding",
+    "type": "Ring",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Ring of Necrotic Resistance",
+    "type": "Ring",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ring of Obscuring",
+    "type": "Ring",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Ring of Poison Resistance",
+    "type": "Ring",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ring of Protection",
+    "type": "Ring",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ring of Psychic Resistance",
+    "type": "Ring",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ring of Puzzler's Wit",
+    "type": "Ring",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Ring of Radiant Resistance",
+    "type": "Ring",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ring of Red Fury",
+    "type": "Ring",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Ring of Regeneration",
+    "type": "Ring",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Ring of Resistance",
+    "type": "Ring",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ring of Shooting Stars",
+    "type": "Ring",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Ring of Spell Storing",
+    "type": "Ring",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ring of Spell Turning",
+    "type": "Ring",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Ring of Swimming",
+    "type": "Ring",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Ring of Telekinesis",
+    "type": "Ring",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Ring of Temporal Salvation",
+    "type": "Ring",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ring of the Orator",
+    "type": "Ring",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Ring of the Ram",
+    "type": "Ring",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ring of Three Wishes",
+    "type": "Ring",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Ring of Thunder Resistance",
+    "type": "Ring",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ring of Truth Telling",
+    "type": "Ring",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Ring of Warmth",
+    "type": "Ring",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Ring of Water Walking",
+    "type": "Ring",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Ring of Winter",
+    "type": "Ring",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Ring of X-ray Vision",
+    "type": "Ring",
+    "rarity": "rare"
+  },
+  {
+    "name": "Rival Coin",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Robe of Eyes",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Robe of Scintillating Colors",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Robe of Serpents",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Robe of Stars",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Robe of Summer",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Robe of the Archmagi",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Robe of Useful Items",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Robes of Beaur\u00eave",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Robes of Beaur\u00eave (legendary)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Robes of Beaur\u00eave (rare)",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Robes of the Enchanter",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Robes of the Enchanter (rare)",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Robes of the Enchanter (uncommon)",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Rod of Absorption",
+    "type": "Rod",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Rod of Alertness",
+    "type": "Rod",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Rod of Hellish Flames",
+    "type": "Rod",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Rod of Lordly Might",
+    "type": "Rod",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Rod of Resurrection",
+    "type": "Rod",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Rod of Retribution",
+    "type": "Rod",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Rod of Rulership",
+    "type": "Rod",
+    "rarity": "rare"
+  },
+  {
+    "name": "Rod of Security",
+    "type": "Rod",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Rod of Seven Parts",
+    "type": "Simple Weapon, Rod",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Rod of the Pact Keeper",
+    "type": "Rod",
+    "rarity": "varies"
+  },
+  {
+    "name": "Rod of the Vonindod",
+    "type": "Rod",
+    "rarity": "rare"
+  },
+  {
+    "name": "Rod of Wild Dominion",
+    "type": "Rod",
+    "rarity": "rare"
+  },
+  {
+    "name": "Rogue Card",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Rogue's Mantle",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Rope of Climbing",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Rope of Entanglement",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Rope of Mending",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Rotor of Return",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Ruby of the War Mage",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "common"
+  },
+  {
+    "name": "Ruby Weave Gem",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Ruidium Armor",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Ruidium Shield",
+    "type": "Shield",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Ruidium Weapon",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Ruin Card",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Ruin's Wake",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Ruin's Wake (Awakened)",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Ruin's Wake (Dormant)",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Ruin's Wake (Exalted)",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Ruinous Flail",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ruinstone",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Saddle of the Cavalier",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Sage Card",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Sage's Signet",
+    "type": "Ring",
+    "rarity": "varies"
+  },
+  {
+    "name": "Sage's Signet (Bear)",
+    "type": "Ring",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Sage's Signet (Hart)",
+    "type": "Ring",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Sage's Signet (Lion)",
+    "type": "Ring",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Sage's Signet (Serpent)",
+    "type": "Ring",
+    "rarity": "rare"
+  },
+  {
+    "name": "Sage's Signet (Songbird)",
+    "type": "Ring",
+    "rarity": "rare"
+  },
+  {
+    "name": "Sage's Signet (Wolf)",
+    "type": "Ring",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Saint Markovia's Thighbone",
+    "type": "Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Sanctum Amulet",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Sandstorm Staff",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Sapphire Buckler",
+    "type": "Shield",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Sarkaas' Gladrags",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Scale of Kethelrax",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Scaled Ornament",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Scarab of Protection",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Scimitar of Speed",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Scissors of Shadow Snipping",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Scorpion Armor",
+    "type": "Heavy Armor",
+    "rarity": "rare"
+  },
+  {
+    "name": "Scribe's Pen",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Scribing Channeling Wand",
+    "type": "Wand",
+    "rarity": "rare"
+  },
+  {
+    "name": "Scribing Dragonmark Channel",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Scribing Dragonmark Reservoir",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Scroll of Protection",
+    "type": "Scroll",
+    "rarity": "rare"
+  },
+  {
+    "name": "Scroll of Protection (Aberrations)",
+    "type": "Scroll",
+    "rarity": "rare"
+  },
+  {
+    "name": "Scroll of Protection (Beasts)",
+    "type": "Scroll",
+    "rarity": "rare"
+  },
+  {
+    "name": "Scroll of Protection (Celestials)",
+    "type": "Scroll",
+    "rarity": "rare"
+  },
+  {
+    "name": "Scroll of Protection (Constructs)",
+    "type": "Scroll",
+    "rarity": "rare"
+  },
+  {
+    "name": "Scroll of Protection (Dragons)",
+    "type": "Scroll",
+    "rarity": "rare"
+  },
+  {
+    "name": "Scroll of Protection (Elementals)",
+    "type": "Scroll",
+    "rarity": "rare"
+  },
+  {
+    "name": "Scroll of Protection (Fey)",
+    "type": "Scroll",
+    "rarity": "rare"
+  },
+  {
+    "name": "Scroll of Protection (Fiends)",
+    "type": "Scroll",
+    "rarity": "rare"
+  },
+  {
+    "name": "Scroll of Protection (Giants)",
+    "type": "Scroll",
+    "rarity": "rare"
+  },
+  {
+    "name": "Scroll of Protection (Humanoids)",
+    "type": "Scroll",
+    "rarity": "rare"
+  },
+  {
+    "name": "Scroll of Protection (Monstrosities)",
+    "type": "Scroll",
+    "rarity": "rare"
+  },
+  {
+    "name": "Scroll of Protection (Oozes)",
+    "type": "Scroll",
+    "rarity": "rare"
+  },
+  {
+    "name": "Scroll of Protection (Plants)",
+    "type": "Scroll",
+    "rarity": "rare"
+  },
+  {
+    "name": "Scroll of Protection (Undead)",
+    "type": "Scroll",
+    "rarity": "rare"
+  },
+  {
+    "name": "Scroll of the Comet",
+    "type": "Scroll",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Scroll of Titan Summoning",
+    "type": "Scroll",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Scroll of Titan Summoning (Animal Lord)",
+    "type": "Scroll",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Scroll of Titan Summoning (Blob of Annihilation)",
+    "type": "Scroll",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Scroll of Titan Summoning (Colossus)",
+    "type": "Scroll",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Scroll of Titan Summoning (Elemental Cataclysm)",
+    "type": "Scroll",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Scroll of Titan Summoning (Empyrean)",
+    "type": "Scroll",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Scroll of Titan Summoning (Kraken)",
+    "type": "Scroll",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Scroll of Titan Summoning (Tarrasque)",
+    "type": "Scroll",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Second Chance",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Seeker Dart",
+    "type": "Simple Weapon, Ranged Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Sekolahian Worshiping Statuette",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Selesnya Guild Signet",
+    "type": "Ring",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Selesnya Keyrune",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Sending Stone",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Sending Stones",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Sensory Stone",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Sentinel Channeling Wand",
+    "type": "Wand",
+    "rarity": "rare"
+  },
+  {
+    "name": "Sentinel Dragonmark Channel",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Sentinel Dragonmark Reservoir",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Sentinel Shield",
+    "type": "Shield",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Sentira Shard",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Sentira Shard (Anxiety)",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Sentira Shard (Disgust)",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Sentira Shard (Fear)",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Sentira Shard (Misery)",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Sentira Shard (Tranquility)",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Serpent Scale Armor",
+    "type": "Medium Armor",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Serpent's Fang",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Serpentine Mirror",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Shaarat'doovol, the Blade of Truth",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Shadow Channeling Wand",
+    "type": "Wand",
+    "rarity": "rare"
+  },
+  {
+    "name": "Shadow Dragonmark Channel",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Shadow Dragonmark Reservoir",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Shadow Sibling",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Shadowfell Brand Tattoo",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "rare"
+  },
+  {
+    "name": "Shadowfell Shard",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "Shard Crown",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Shard Crown (legendary)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Shard Crown (rare)",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Shard Crown (very rare)",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Shard of the Ise Rune",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Shard of Xeluan",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Shard Solitaire",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Shard Solitaire (Black Sapphire)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Shard Solitaire (Diamond)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Shard Solitaire (Jacinth)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Shard Solitaire (Rainbow Pearl)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Shard Solitaire (Ruby)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Shatterspike",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Shield Guardian Amulet",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Shield of Expression",
+    "type": "Shield",
+    "rarity": "common"
+  },
+  {
+    "name": "Shield of Far Sight",
+    "type": "Shield",
+    "rarity": "rare"
+  },
+  {
+    "name": "Shield of Missile Attraction",
+    "type": "Shield",
+    "rarity": "rare"
+  },
+  {
+    "name": "Shield of Shouting",
+    "type": "Shield",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Shield of the Blazing Dreadnought",
+    "type": "Shield",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Shield of the Cavalier",
+    "type": "Shield",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Shield of the Hidden Lord",
+    "type": "Shield",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Shield of the Silver Dragon",
+    "type": "Shield",
+    "rarity": "rare"
+  },
+  {
+    "name": "Shield of the Tortoise",
+    "type": "Shield",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Shield of the Uven Rune",
+    "type": "Shield",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Shiftweave",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Shock and Ore",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Shrieking Greaves",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Silent Weapon",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Silken Spite",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Silken Spite (Awakened)",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Silken Spite (Dormant)",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Silken Spite (Exalted)",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Silver Dragon Scale Mail",
+    "type": "Medium Armor",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Silver Sword",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Silvered Weapon",
+    "type": "Generic Variant",
+    "rarity": "common"
+  },
+  {
+    "name": "Silverquill Primer",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Simic Guild Signet",
+    "type": "Ring",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Simic Keyrune",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Siren Song Lyre",
+    "type": "Wondrous Item, Instrument",
+    "rarity": "rare"
+  },
+  {
+    "name": "Skull Card",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Skull Helm",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Skyblinder Staff",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Slime-in-a-Skull",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Slime-in-a-Skull (Saddle Slime)",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Slime-in-a-Skull (Wyrmskull Ooze)",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Sling Bullets of Althemone",
+    "type": "Ammunition",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Sling of Giant Felling",
+    "type": "Simple Weapon, Ranged Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Slippers of Spider Climbing",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Slumbering Dragon Vessel",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Slumbering Dragon's Wrath Weapon",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Slumbering Dragon-Touched Focus",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Slumbering Scaled Ornament",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Smokepowder",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Smoldering Armor",
+    "type": "Generic Variant",
+    "rarity": "common"
+  },
+  {
+    "name": "Snicker-Snack",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Snow Wolf Cowl",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Snow Wolf Cowl (rare)",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Snow Wolf Cowl (uncommon)",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Snow Wolf Cowl (very rare)",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Soarsled",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Somewhat Holy Hand Grenade",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Soul Bag",
+    "type": "Other",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Soul Coin",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Sovereign Glue",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Spark",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Speaking Stone",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Speaking Stones",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Spear of Backbiting",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Spell Bottle",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Spell Gem",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Spell Gem (Amber)",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Spell Gem (Bloodstone)",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Spell Gem (Diamond)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Spell Gem (Jade)",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Spell Gem (Lapis lazuli)",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Spell Gem (Obsidian)",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Spell Gem (Quartz)",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Spell Gem (Ruby)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Spell Gem (Star ruby)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Spell Gem (Topaz)",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Spell Scroll",
+    "type": "Scroll",
+    "rarity": "varies"
+  },
+  {
+    "name": "Spell Scroll (Cantrip)",
+    "type": "Scroll",
+    "rarity": "common"
+  },
+  {
+    "name": "Spell Scroll (Level 1)",
+    "type": "Scroll",
+    "rarity": "common"
+  },
+  {
+    "name": "Spell Scroll (Level 2)",
+    "type": "Scroll",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Spell Scroll (Level 3)",
+    "type": "Scroll",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Spell Scroll (Level 4)",
+    "type": "Scroll",
+    "rarity": "rare"
+  },
+  {
+    "name": "Spell Scroll (Level 5)",
+    "type": "Scroll",
+    "rarity": "rare"
+  },
+  {
+    "name": "Spell Scroll (Level 6)",
+    "type": "Scroll",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Spell Scroll (Level 7)",
+    "type": "Scroll",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Spell Scroll (Level 8)",
+    "type": "Scroll",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Spell Scroll (Level 9)",
+    "type": "Scroll",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Spell-Refueling Ring",
+    "type": "Ring",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Spellbolt",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Spellbolt (1st Level)",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Spellbolt (2nd Level)",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Spellbolt (3rd Level)",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Spellbolt (Cantrip)",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Spellburrow",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Spelleater Tome",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "varies"
+  },
+  {
+    "name": "Spelleater Tome (rare)",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "Spelleater Tome (uncommon)",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Spellguard Shield",
+    "type": "Shield",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Spelljamming Helm",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Spellshard",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Spellwrought Tattoo",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "varies"
+  },
+  {
+    "name": "Spellwrought Tattoo (1st Level)",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "common"
+  },
+  {
+    "name": "Spellwrought Tattoo (2nd Level)",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Spellwrought Tattoo (3rd Level)",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Spellwrought Tattoo (4th Level)",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "rare"
+  },
+  {
+    "name": "Spellwrought Tattoo (5th Level)",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "rare"
+  },
+  {
+    "name": "Spellwrought Tattoo (Cantrip)",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "common"
+  },
+  {
+    "name": "Sphere of Annihilation",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Spider Staff",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Spies' Murmur",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Spiked Shield",
+    "type": "Shield",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Spindle of Fate",
+    "type": "Wand",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Spirit Board",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Splinterspray Tommybow",
+    "type": "Ranged Weapon",
+    "rarity": "varies"
+  },
+  {
+    "name": "Splinterspray Tommybow (rare)",
+    "type": "Ranged Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Splinterspray Tommybow (uncommon)",
+    "type": "Ranged Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Splinterspray Tommybow (very rare)",
+    "type": "Ranged Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Sporespreader",
+    "type": "Generic Variant",
+    "rarity": "varies"
+  },
+  {
+    "name": "Sporespreader (rare)",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Sporespreader (uncommon)",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Spyglass of Clairvoyance",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Staff of Adornment",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "common"
+  },
+  {
+    "name": "Staff of Birdcalls",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "common"
+  },
+  {
+    "name": "Staff of Charming",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Staff of Defense",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Staff of Dunamancy",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Staff of Fate",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Staff of Fire",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Staff of Flowers",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "common"
+  },
+  {
+    "name": "Staff of Frost",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Staff of Healing",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Staff of Power",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Staff of Ruling",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Staff of Striking",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Staff of Swarming Insects",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Staff of the Adder",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Staff of the Forgotten One",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Staff of the Ivory Claw",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Staff of the Magi",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Staff of the Python",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Staff of the Rooted Hills",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Staff of the Woodlands",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Staff of Thunder and Lightning",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Staff of Withering",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Star Card",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Starshot Crossbow",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Statuette of Augury",
+    "type": "Wondrous Item",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Statuette of Saint Markovia",
+    "type": "Other",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Steel",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Stirring Dragon Vessel",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Stirring Dragon's Wrath Weapon",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Stirring Dragon-Touched Focus",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "Stirring Scaled Ornament",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Stone of Controlling Earth Elementals",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Stone of Golorr",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Stone of Good Luck",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Stone of Ill Luck",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Stonebane Weapon",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Stonebreaker's Breastplate",
+    "type": "Medium Armor",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Stonemaker War Pick",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Stonespeaker Crystal",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Stonky's ring",
+    "type": "Ring",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Storm Boomerang",
+    "type": "Simple Weapon, Ranged Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Storm Channeling Wand",
+    "type": "Wand",
+    "rarity": "rare"
+  },
+  {
+    "name": "Storm Dragonmark Channel",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Storm Dragonmark Reservoir",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Storm's Embrace",
+    "type": "Ring",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Stormgirdle",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Stormgirdle (Awakened)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Stormgirdle (Dormant)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Stormgirdle (Exalted)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Strixhaven Pennant",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Sun Blade",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Sun Card",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Sun Staff",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Suncatcher",
+    "type": "Generic Variant",
+    "rarity": "varies"
+  },
+  {
+    "name": "Suncatcher (rare)",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Suncatcher (uncommon)",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Suncatcher (very rare)",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Suneater Featherfrond",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Sunfeather Shroud",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Sunfeather Shroud (rare)",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Sunfeather Shroud (uncommon)",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Sunfeather Shroud (very rare)",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Sunforger",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Sunsword",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Sunwing Bow",
+    "type": "Ranged Weapon",
+    "rarity": "varies"
+  },
+  {
+    "name": "Sunwing Bow (rare)",
+    "type": "Ranged Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Sunwing Bow (uncommon)",
+    "type": "Ranged Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Sunwing Bow (very rare)",
+    "type": "Ranged Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Sword of Answering",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Sword of Kas",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Sword of Life Stealing",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Sword of Sharpness",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Sword of the Paruns",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Sword of the Planes",
+    "type": "Generic Variant",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Sword of Vengeance",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Sword of Wounding",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Sword of Zariel",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Sylvan Talon",
+    "type": "Generic Variant",
+    "rarity": "common"
+  },
+  {
+    "name": "Tail's End",
+    "type": "Melee Weapon",
+    "rarity": "varies"
+  },
+  {
+    "name": "Tail's End (rare)",
+    "type": "Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Tail's End (very rare)",
+    "type": "Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Talarith",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Talisman of Pure Good",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Talisman of the Sphere",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Talisman of Ultimate Evil",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Talking Doll",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Talking Wand",
+    "type": "Wand",
+    "rarity": "common"
+  },
+  {
+    "name": "Talons Card",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Tankard of Plenty",
+    "type": "Other",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Tankard of Sobriety",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Tarrobe",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Tarrobe (legendary)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Tarrobe (rare)",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Tasha's Creeping Keelboat",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Tearulai",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Teeth of Dahlver-Nar",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Teleportation Tablet",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Teleporter Ring",
+    "type": "Ring",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Telescopic Transporter",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Tentacle Rod",
+    "type": "Rod",
+    "rarity": "rare"
+  },
+  {
+    "name": "Terrorasque",
+    "type": "Melee Weapon",
+    "rarity": "varies"
+  },
+  {
+    "name": "Terrorasque (rare)",
+    "type": "Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Terrorasque (very rare)",
+    "type": "Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Thayan Spell Tattoo",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "The Bloody End",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "The Bloody End (Awakened)",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "The Bloody End (Dormant)",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "The Bloody End (Exalted)",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "The Codicil of White",
+    "type": "Wondrous Item",
+    "rarity": "unknown"
+  },
+  {
+    "name": "The Sword in the Stone",
+    "type": "Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "The Sword in/out of the Stone",
+    "type": "Melee Weapon",
+    "rarity": "varies"
+  },
+  {
+    "name": "The Sword out of the Stone",
+    "type": "Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Thermal Cube",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Three-Faced Coin",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Throne Card",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Throwing Scarab",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Thunder Absorbing Tattoo",
+    "type": "Wondrous Item, Tattoo",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Thunder Coach",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Thunderous Greatclub",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Thuranni Cloak",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Thurimbar Rod",
+    "type": "Instrument",
+    "rarity": "common"
+  },
+  {
+    "name": "Tidecaller Trident",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Time Splitter",
+    "type": "Melee Weapon",
+    "rarity": "varies"
+  },
+  {
+    "name": "Time Splitter (rare)",
+    "type": "Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Time Splitter (uncommon)",
+    "type": "Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Timepiece of Travel",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Tinderstrike",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Tinytar",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Tloques' Berserker Battleaxe",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Tome of Clear Thought",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Tome of Leadership and Influence",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Tome of Living Memories",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "varies"
+  },
+  {
+    "name": "Tome of Living Memories (rare)",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "rare"
+  },
+  {
+    "name": "Tome of Living Memories (uncommon)",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Tome of Living Memories (very rare)",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Tome of the Dragon",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Tome of the Stilled Tongue",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Tome of Understanding",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Tongueworm",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Tools of the Master",
+    "type": "Artisan's Tools",
+    "rarity": "varies"
+  },
+  {
+    "name": "Topaz Annihilator",
+    "type": "Ranged Weapon, Firearm",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Trapper's Teeth",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Travel Alchemical Kit",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Trident of Fish Command",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Trollgut Rope",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Two-Birds Sling",
+    "type": "Simple Weapon, Ranged Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Unbreakable Arrow",
+    "type": "Ammunition",
+    "rarity": "common"
+  },
+  {
+    "name": "Uncommon Glamerweave",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Universal Solvent",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Uul'kur (Dream Key)",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Vadalis Band",
+    "type": "Ring",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Vanrak's Mithral Shirt",
+    "type": "Medium Armor",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Ventilating Lungs",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Ventilation Unit D-20",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Verminshroud",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Verminshroud (Awakened)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Verminshroud (Dormant)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Verminshroud (Exalted)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Veteran's Cane",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Vicious +1 Weapon",
+    "type": "Generic Variant",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Vicious Weapon",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Viscous Symbiote",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Viscous Symbiote (legendary)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Viscous Symbiote (rare)",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Viscous Symbiote (very rare)",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Void Card",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Voidwalker Armor",
+    "type": "Light Armor",
+    "rarity": "rare"
+  },
+  {
+    "name": "Vola'khesh",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Vorpal Sword",
+    "type": "Generic Variant",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Voting Kit",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Vox Seeker",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Voyager Staff",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Wakened Dragon Vessel",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Wakened Dragon's Wrath Weapon",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Wakened Dragon-Touched Focus",
+    "type": "Wondrous Item, Spellcasting Focus",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Wakened Scaled Ornament",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Walloping Ammunition",
+    "type": "Ammunition, Generic Variant",
+    "rarity": "common"
+  },
+  {
+    "name": "Wand of Binding",
+    "type": "Wand",
+    "rarity": "rare"
+  },
+  {
+    "name": "Wand of Conducting",
+    "type": "Wand",
+    "rarity": "common"
+  },
+  {
+    "name": "Wand of Enemy Detection",
+    "type": "Wand",
+    "rarity": "rare"
+  },
+  {
+    "name": "Wand of Entangle",
+    "type": "Wand",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Wand of Fear",
+    "type": "Wand",
+    "rarity": "rare"
+  },
+  {
+    "name": "Wand of Fireballs",
+    "type": "Wand",
+    "rarity": "rare"
+  },
+  {
+    "name": "Wand of Lightning Bolts",
+    "type": "Wand",
+    "rarity": "rare"
+  },
+  {
+    "name": "Wand of Magic Detection",
+    "type": "Wand",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Wand of Magic Missiles",
+    "type": "Wand",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Wand of Orcus",
+    "type": "Simple Weapon, Wand, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Wand of Paralysis",
+    "type": "Wand",
+    "rarity": "rare"
+  },
+  {
+    "name": "Wand of Polymorph",
+    "type": "Wand",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Wand of Pyrotechnics",
+    "type": "Wand",
+    "rarity": "common"
+  },
+  {
+    "name": "Wand of Scowls",
+    "type": "Wand",
+    "rarity": "common"
+  },
+  {
+    "name": "Wand of Secrets",
+    "type": "Wand",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Wand of Smiles",
+    "type": "Wand",
+    "rarity": "common"
+  },
+  {
+    "name": "Wand of the War Mage",
+    "type": "Wand",
+    "rarity": "varies"
+  },
+  {
+    "name": "Wand of Viscid Globs",
+    "type": "Wand",
+    "rarity": "rare"
+  },
+  {
+    "name": "Wand of Web",
+    "type": "Wand",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Wand of Winter",
+    "type": "Wand",
+    "rarity": "rare"
+  },
+  {
+    "name": "Wand of Wonder",
+    "type": "Wand",
+    "rarity": "rare"
+  },
+  {
+    "name": "Wand Sheath",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Wandering Eye",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "War Horn of Valor",
+    "type": "Wondrous Item, Instrument",
+    "rarity": "rare"
+  },
+  {
+    "name": "War Staff",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "common"
+  },
+  {
+    "name": "Warding Brooch",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Warding Channeling Wand",
+    "type": "Wand",
+    "rarity": "rare"
+  },
+  {
+    "name": "Warding Dragonmark Channel",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Warding Dragonmark Reservoir",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Warrior's Passkey",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Watchful Helm",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Wave",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Wayfarer's Boots",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Waythe",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Weapon of Certain Death",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  },
+  {
+    "name": "Weapon of Throne's Command",
+    "type": "Generic Variant",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Weapon of Warning",
+    "type": "Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Weird Tank",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Well of Many Worlds",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Wheel of Stars",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Wheel of Wind and Water",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Whelm",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Whisper Jar",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "White Chromatic Rose",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "White Dragon Cape",
+    "type": "Other",
+    "rarity": "unknown"
+  },
+  {
+    "name": "White Dragon Mask",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "White Dragon Scale Mail",
+    "type": "Medium Armor",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Wildspace Orrery",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Will of the Talon",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Will of the Talon (Awakened)",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Will of the Talon (Dormant)",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Will of the Talon (Exalted)",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Wind Fan",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Wind Stones",
+    "type": "Wondrous Item",
+    "rarity": "common"
+  },
+  {
+    "name": "Windskiff",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Windvane",
+    "type": "Simple Weapon, Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Winged Ammunition",
+    "type": "Ammunition, Generic Variant",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Winged Boots",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Wings of Flying",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Wingwear",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Winter's Dark Bite",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Witchlight Vane",
+    "type": "Melee Weapon",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Witchlight Watch",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Witherbloom Primer",
+    "type": "Wondrous Item",
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Woodcutter's Axe",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "rare"
+  },
+  {
+    "name": "Wraps of Unarmed Power",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Wreath of the Prism",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Wreath of the Prism (Awakened)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Wreath of the Prism (Dormant)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Wreath of the Prism (Exalted)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Wyllow's Staff of Flowers",
+    "type": "Staff, Simple Weapon, Melee Weapon",
+    "rarity": "common"
+  },
+  {
+    "name": "Wyrm's Breath Grenade",
+    "type": "Wondrous Item",
+    "rarity": "varies"
+  },
+  {
+    "name": "Wyrm's Breath Grenade (Brass)",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Wyrm's Breath Grenade (Bronze)",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Wyrm's Breath Grenade (Copper)",
+    "type": "Wondrous Item",
+    "rarity": "rare"
+  },
+  {
+    "name": "Wyrm's Breath Grenade (Gold)",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Wyrm's Breath Grenade (Silver)",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Wyrmreaver Gauntlets",
+    "type": "Wondrous Item",
+    "rarity": "very_rare"
+  },
+  {
+    "name": "Wyrmskull Throne",
+    "type": "Wondrous Item",
+    "rarity": "artifact"
+  },
+  {
+    "name": "Yester Hill Axe",
+    "type": "Martial Weapon, Melee Weapon",
+    "rarity": "unknown"
+  },
+  {
+    "name": "Ythryn Mythallar",
+    "type": "Wondrous Item",
+    "rarity": "legendary"
+  },
+  {
+    "name": "Zephyr Armor",
+    "type": "Generic Variant",
+    "rarity": "rare"
+  }
+]

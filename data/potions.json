@@ -1,0 +1,705 @@
+{
+  "aqua delerium": {
+    "rarity": "rare",
+    "price": 2500,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "aqua expurgo": {
+    "rarity": "rare",
+    "price": 2500,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "bath potion": {
+    "rarity": "common",
+    "price": 50,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "bottled abyss": {
+    "rarity": "very_rare",
+    "price": 25000,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "bottled breath": {
+    "rarity": "uncommon",
+    "price": 250,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [
+      "gust of wind"
+    ],
+    "bonusWeapon": null
+  },
+  "elixir of health": {
+    "rarity": "rare",
+    "price": 2500,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "essence of rage": {
+    "rarity": "rare",
+    "price": 2500,
+    "resist": [
+      "bludgeoning",
+      "piercing",
+      "slashing"
+    ],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "greater rejuvenation potion": {
+    "rarity": "legendary",
+    "price": 50000,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "gunnspier (rare)": {
+    "rarity": "rare",
+    "price": 2500,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "gunnspier (very rare)": {
+    "rarity": "very_rare",
+    "price": 25000,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "oil of etherealness": {
+    "rarity": "rare",
+    "price": 2500,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [
+      "etherealness"
+    ],
+    "bonusWeapon": null
+  },
+  "oil of sharpness": {
+    "rarity": "very_rare",
+    "price": 25000,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": "+3"
+  },
+  "oil of slipperiness": {
+    "rarity": "uncommon",
+    "price": 250,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [
+      "freedom of movement",
+      "grease"
+    ],
+    "bonusWeapon": null
+  },
+  "philter of love": {
+    "rarity": "uncommon",
+    "price": 250,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of acid resistance": {
+    "rarity": "uncommon",
+    "price": 250,
+    "resist": [
+      "acid"
+    ],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of advantage": {
+    "rarity": "uncommon",
+    "price": 250,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of animal friendship": {
+    "rarity": "uncommon",
+    "price": 250,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [
+      "animal friendship"
+    ],
+    "bonusWeapon": null
+  },
+  "potion of aqueous form": {
+    "rarity": "rare",
+    "price": 2500,
+    "resist": [
+      "bludgeoning",
+      "piercing",
+      "slashing"
+    ],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of clairvoyance": {
+    "rarity": "rare",
+    "price": 2500,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [
+      "clairvoyance"
+    ],
+    "bonusWeapon": null
+  },
+  "potion of climbing": {
+    "rarity": "common",
+    "price": 50,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of cloud giant strength": {
+    "rarity": "very_rare",
+    "price": 25000,
+    "resist": [],
+    "ability": {
+      "static": {
+        "str": 27
+      }
+    },
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of cold resistance": {
+    "rarity": "uncommon",
+    "price": 250,
+    "resist": [
+      "cold"
+    ],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of comprehension": {
+    "rarity": "common",
+    "price": 50,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [
+      "comprehend languages"
+    ],
+    "bonusWeapon": null
+  },
+  "potion of controlled mutation": {
+    "rarity": "uncommon",
+    "price": 250,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of diminution": {
+    "rarity": "rare",
+    "price": 2500,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [
+      "enlarge/reduce"
+    ],
+    "bonusWeapon": null
+  },
+  "potion of dragon's breath (uncommon)": {
+    "rarity": "uncommon",
+    "price": 250,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of dragon's breath (rare)": {
+    "rarity": "rare",
+    "price": 2500,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of dragon's breath (very rare)": {
+    "rarity": "very_rare",
+    "price": 25000,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of dragon's majesty": {
+    "rarity": "legendary",
+    "price": 50000,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of fire breath": {
+    "rarity": "uncommon",
+    "price": 250,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of fire giant strength": {
+    "rarity": "rare",
+    "price": 2500,
+    "resist": [],
+    "ability": {
+      "static": {
+        "str": 25
+      }
+    },
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of fire resistance": {
+    "rarity": "uncommon",
+    "price": 250,
+    "resist": [
+      "fire"
+    ],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of flying": {
+    "rarity": "very_rare",
+    "price": 25000,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of force resistance": {
+    "rarity": "uncommon",
+    "price": 250,
+    "resist": [
+      "force"
+    ],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of frost giant strength": {
+    "rarity": "rare",
+    "price": 2500,
+    "resist": [],
+    "ability": {
+      "static": {
+        "str": 23
+      }
+    },
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of gaseous form": {
+    "rarity": "rare",
+    "price": 2500,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [
+      "gaseous form"
+    ],
+    "bonusWeapon": null
+  },
+  "potion of giant size": {
+    "rarity": "legendary",
+    "price": 50000,
+    "resist": [],
+    "ability": {
+      "static": {
+        "str": 25
+      }
+    },
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of greater healing": {
+    "rarity": "uncommon",
+    "price": 150,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of greater invisibility": {
+    "rarity": "very_rare",
+    "price": 25000,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of growth": {
+    "rarity": "uncommon",
+    "price": 250,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [
+      "enlarge/reduce"
+    ],
+    "bonusWeapon": null
+  },
+  "potion of healing": {
+    "rarity": "common",
+    "price": 50,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of heroism": {
+    "rarity": "rare",
+    "price": 2500,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [
+      "bless"
+    ],
+    "bonusWeapon": null
+  },
+  "potion of hill giant strength": {
+    "rarity": "uncommon",
+    "price": 250,
+    "resist": [],
+    "ability": {
+      "static": {
+        "str": 21
+      }
+    },
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of invisibility": {
+    "rarity": "rare",
+    "price": 2500,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of invulnerability": {
+    "rarity": "rare",
+    "price": 2500,
+    "resist": [
+      "acid",
+      "bludgeoning",
+      "cold",
+      "fire",
+      "force",
+      "lightning",
+      "necrotic",
+      "piercing",
+      "poison",
+      "psychic",
+      "radiant",
+      "slashing",
+      "thunder"
+    ],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of lightning resistance": {
+    "rarity": "uncommon",
+    "price": 250,
+    "resist": [
+      "lightning"
+    ],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of longevity": {
+    "rarity": "very_rare",
+    "price": 25000,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of maximum power": {
+    "rarity": "rare",
+    "price": 2500,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of mind control (beast)": {
+    "rarity": "rare",
+    "price": 2500,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [
+      "dominate beast"
+    ],
+    "bonusWeapon": null
+  },
+  "potion of mind control (humanoid)": {
+    "rarity": "rare",
+    "price": 2500,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [
+      "dominate person"
+    ],
+    "bonusWeapon": null
+  },
+  "potion of mind control (monster)": {
+    "rarity": "very_rare",
+    "price": 25000,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [
+      "dominate monster"
+    ],
+    "bonusWeapon": null
+  },
+  "potion of mind reading": {
+    "rarity": "rare",
+    "price": 2500,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [
+      "detect thoughts"
+    ],
+    "bonusWeapon": null
+  },
+  "potion of necrotic resistance": {
+    "rarity": "uncommon",
+    "price": 250,
+    "resist": [
+      "necrotic"
+    ],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of poison": {
+    "rarity": "uncommon",
+    "price": 250,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of poison resistance": {
+    "rarity": "uncommon",
+    "price": 250,
+    "resist": [
+      "poison"
+    ],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of polychromy": {
+    "rarity": "uncommon",
+    "price": 250,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of possibility": {
+    "rarity": "very_rare",
+    "price": 25000,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of psionic fortitude": {
+    "rarity": "uncommon",
+    "price": 250,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of psychic resistance": {
+    "rarity": "uncommon",
+    "price": 250,
+    "resist": [
+      "psychic"
+    ],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of pugilism": {
+    "rarity": "uncommon",
+    "price": 250,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of radiant resistance": {
+    "rarity": "uncommon",
+    "price": 250,
+    "resist": [
+      "radiant"
+    ],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of resistance": {
+    "rarity": "uncommon",
+    "price": 250,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of speed": {
+    "rarity": "very_rare",
+    "price": 25000,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [
+      "haste"
+    ],
+    "bonusWeapon": null
+  },
+  "potion of spell recovery": {
+    "rarity": "rare",
+    "price": 2500,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of stone giant strength": {
+    "rarity": "rare",
+    "price": 2500,
+    "resist": [],
+    "ability": {
+      "static": {
+        "str": 23
+      }
+    },
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of storm giant strength": {
+    "rarity": "legendary",
+    "price": 50000,
+    "resist": [],
+    "ability": {
+      "static": {
+        "str": 29
+      }
+    },
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of superior healing": {
+    "rarity": "rare",
+    "price": 450,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of supreme healing": {
+    "rarity": "very_rare",
+    "price": 1350,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of thunder resistance": {
+    "rarity": "uncommon",
+    "price": 250,
+    "resist": [
+      "thunder"
+    ],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of vitality": {
+    "rarity": "very_rare",
+    "price": 25000,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of watchful rest": {
+    "rarity": "common",
+    "price": 50,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "potion of water breathing": {
+    "rarity": "uncommon",
+    "price": 250,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "rejuvenation potion": {
+    "rarity": "very_rare",
+    "price": 25000,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "trollblood potion": {
+    "rarity": "rare",
+    "price": 2500,
+    "resist": [],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  },
+  "vampire blood potion": {
+    "rarity": "very_rare",
+    "price": 25000,
+    "resist": [
+      "necrotic"
+    ],
+    "ability": null,
+    "attachedSpells": [],
+    "bonusWeapon": null
+  }
+}

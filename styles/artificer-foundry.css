@@ -260,3 +260,34 @@
    ═══════════════════════════════════════════════════════════════ */
 .af-crafting-nav-item i { color: #9a70d0; }
 .af-gatherer-nav-item i { color: #5a9a40; }
+.af-forge-nav-item i { color: #c07030; }
+
+/* ═══════════════════════════════════════════════════════════════
+   GATHERING PANEL — Mode Toggle
+   ═══════════════════════════════════════════════════════════════ */
+.gather-mode-toggle {
+    display: flex;
+    gap: 4px;
+}
+.gather-mode-btn {
+    flex: 1;
+    padding: 4px 8px;
+    border: 1px solid #999;
+    border-radius: 4px;
+    background: #f0f0f0;
+    cursor: pointer;
+    font-size: 12px;
+    text-align: center;
+    transition: background 0.15s, border-color 0.15s;
+}
+.gather-mode-btn:hover {
+    background: #e0e0e0;
+}
+.gather-mode-btn.active {
+    background: #4b6a2e;
+    color: #fff;
+    border-color: #3a5522;
+}
+.gather-mode-btn.active:hover {
+    background: #5a7a3e;
+}

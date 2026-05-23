@@ -25,6 +25,19 @@
         {{/if}}
     </section>
 
+    {{!-- ── Gather Mode Toggle ── --}}
+    <section class="gathering-section gathering-mode-section">
+        <h3 class="gathering-section-title"><i class="fas fa-exchange-alt"></i> Gather Mode</h3>
+        <div class="gather-mode-toggle">
+            <button class="gather-mode-btn {{#if (eq gatherMode 'ingredients')}}active{{/if}}" data-mode="ingredients">
+                <i class="fas fa-leaf"></i> Ingredients
+            </button>
+            <button class="gather-mode-btn {{#if (eq gatherMode 'materials')}}active{{/if}}" data-mode="materials">
+                <i class="fas fa-hammer"></i> Forge Materials
+            </button>
+        </div>
+    </section>
+
     {{!-- ── Environment ── --}}
     <section class="gathering-section gathering-environment">
         <h3 class="gathering-section-title"><i class="fas fa-map"></i> Environment</h3>

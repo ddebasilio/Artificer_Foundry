@@ -3,8 +3,11 @@ import { GathererApp } from "./gatherer-app.js";
 import { ForgeApp } from "./forge-app.js";
 import { RecipeManager } from "./recipe-manager.js";
 import { ForgeRecipeManager } from "./forge-recipe-manager.js";
-import { TYPE_LABELS } from "./ingredient-data.js";
-import { FORGE_TYPE_LABELS } from "./forge-data.js";
+import { loadIngredientData, getTypeLabels } from "./ingredient-data.js";
+import { loadForgeData, getForgeTypeLabels } from "./forge-data.js";
+import { loadPotionData } from "./potion-data.js";
+import { loadItemData } from "./item-data.js";
+import { GatheringPanel } from "./gathering-panel.js";
 
 const MODULE    = "Artificer Foundry";
 const MODULE_ID = "artificer-foundry";
@@ -99,7 +102,11 @@ Hooks.once('init', function () {
     });
 
     Handlebars.registerHelper('eq', (a, b) => a === b);
-    Handlebars.registerHelper('typeLabel', (typeCode) => TYPE_LABELS[typeCode] || FORGE_TYPE_LABELS[typeCode] || typeCode);
+    Handlebars.registerHelper('typeLabel', (typeCode) => {
+        const tl = getTypeLabels();
+        const fl = getForgeTypeLabels();
+        return tl[typeCode] || fl[typeCode] || typeCode;
+    });
     Handlebars.registerHelper('rarityLabel', (rarity) => {
         const labels = { common: "Common", uncommon: "Uncommon", rare: "Rare", very_rare: "Very rare", legendary: "Legendary" };
         return labels[rarity] || rarity;
@@ -115,16 +122,32 @@ Hooks.once('init', function () {
     };
     CONFIG.ui["af-gathering"] = GatheringPanel;
 });
+
 // ─────────────────────────────────────────────────────────────────────────────
 // READY
 // ─────────────────────────────────────────────────────────────────────────────
 
-Hooks.once('ready', function () {
-    console.log(`${MODULE} | Ready`);
+Hooks.once('ready', async function () {
+    console.log(`${MODULE} | Ready — loading data files…`);
+
+    // Load all JSON data files
+    await Promise.all([
+        loadIngredientData(),
+        loadForgeData(),
+        loadPotionData(),
+        loadItemData(),
+    ]);
+
+    const recipeManager = new RecipeManager();
+    const forgeRecipeManager = new ForgeRecipeManager();
+    await recipeManager.loadRecipes();
+    await forgeRecipeManager.loadRecipes();
+
+    console.log(`${MODULE} | Data loaded`);
 
     window.ArtificerFoundry = {
-        recipeManager: new RecipeManager(),
-        forgeRecipeManager: new ForgeRecipeManager(),
+        recipeManager,
+        forgeRecipeManager,
         showCraftingApp: (actor) => new CraftingApp(actor ?? null).render(true),
         showForgeApp: (actor) => new ForgeApp(actor ?? null).render(true),
         showGatheringPanel: () => {
@@ -134,8 +157,6 @@ Hooks.once('ready', function () {
     };
 
     // Document-level capture handler for the injected crafting/gatherer nav buttons.
-    // Using capture phase (third arg = true) ensures this fires before dnd5e's
-    // own tab-nav click delegation, which can otherwise swallow the event.
     document.addEventListener('click', (e) => {
         const navItem = e.target.closest?.('.af-crafting-nav-item, .af-gatherer-nav-item, .af-forge-nav-item');
         if (!navItem) return;
@@ -170,14 +191,11 @@ Hooks.once('ready', function () {
             for (const node of m.addedNodes) {
                 if (node.nodeType !== 1 || !node.classList?.contains('application')) continue;
                 requestAnimationFrame(() => {
-                    // V1 path
                     const appId = parseInt(node.dataset?.appid);
                     if (appId && ui.windows?.[appId]) {
                         injectCraftingTab(ui.windows[appId], node);
                         return;
                     }
-                    // V2 path — app may not yet be in foundry.applications.instances,
-                    // so also try a short retry
                     _tryInjectFromNode(node, 0);
                 });
             }
@@ -190,7 +208,7 @@ Hooks.once('ready', function () {
 
 function _tryInjectFromNode(node, attempt) {
     if (!node.isConnected) return;
-    if (node.querySelector('.af-crafting-nav-item') && node.querySelector('.af-forge-nav-item')) return; // already done
+    if (node.querySelector('.af-crafting-nav-item') && node.querySelector('.af-forge-nav-item')) return;
 
     if (foundry.applications?.instances) {
         for (const app of foundry.applications.instances.values()) {
@@ -216,17 +234,12 @@ function injectCraftingTab(app, htmlArg) {
         const actor = app.document ?? app.object ?? app.actor;
         if (!actor || actor.documentName !== 'Actor') return;
 
-        // ── Resolve the root element ──────────────────────────────────────────
-        // html can be: HTMLElement (full app), jQuery object, or content-area element.
-        // We want the full .application element so the nav search works in all layouts.
         let root = htmlArg instanceof HTMLElement
             ? htmlArg
             : (htmlArg?.length ? htmlArg[0] : null);
 
-        // Walk up to .application in case we received a content-area element
         root = root?.closest?.('.application') ?? root;
 
-        // If that didn't yield a nav, also try app.element
         const appEl = app.element instanceof HTMLElement
             ? app.element
             : (app.element?.length ? app.element[0] : null);
@@ -235,14 +248,10 @@ function injectCraftingTab(app, htmlArg) {
             root = appEl;
         }
 
-        if (!root) {
-            return;
-        }
+        if (!root) return;
 
-        // Guard: only inject once per render
         if (root.querySelector('.af-crafting-nav-item') && root.querySelector('.af-forge-nav-item')) return;
 
-        // ── Find the tab nav ──────────────────────────────────────────────────
         const NAV_SELECTORS = [
             'nav.tabs[data-group="primary"]',
             'nav[data-group="primary"]',
@@ -257,42 +266,34 @@ function injectCraftingTab(app, htmlArg) {
         let tabsNav = null;
         for (const sel of NAV_SELECTORS) {
             tabsNav = root.querySelector(sel);
-            if (tabsNav) {
-                break;
-            }
+            if (tabsNav) break;
         }
 
-        if (!tabsNav) {
-            return;
-        }
+        if (!tabsNav) return;
 
-        // ── Build the nav item ────────────────────────────────────────────────
-        // No data-tab → dnd5e's tab system ignores it; other tabs never go blank.
+        // Alchemy & Crafting tab (flask icon)
         const navItem = document.createElement('a');
         navItem.className = 'item af-crafting-nav-item';
         navItem.title = 'Alchemy & Crafting Station';
         navItem.innerHTML = `<i class="fas fa-flask"></i>`;
-
-        // Store actor reference for the document-level capture click handler
         navItem._af_actor = actor;
         tabsNav.appendChild(navItem);
 
-        // Gatherer tab (leaf icon)
+        // Ingredient Catalog tab (leaf icon)
         const gathererItem = document.createElement('a');
         gathererItem.className = 'item af-gatherer-nav-item';
-        gathererItem.title = 'Ingredient Gatherer';
+        gathererItem.title = 'Ingredient Catalog';
         gathererItem.innerHTML = `<i class="fas fa-leaf"></i>`;
         gathererItem._af_actor = actor;
         tabsNav.appendChild(gathererItem);
 
-        // Forge tab (anvil icon)
+        // Item Forge tab (hammer/anvil icon)
         const forgeItem = document.createElement('a');
         forgeItem.className = 'item af-forge-nav-item';
         forgeItem.title = 'Item Forge';
         forgeItem.innerHTML = `<i class="fas fa-hammer"></i>`;
         forgeItem._af_actor = actor;
         tabsNav.appendChild(forgeItem);
-
 
     } catch (err) {
         console.error(`${MODULE} | injectCraftingTab error:`, err);
@@ -301,9 +302,6 @@ function injectCraftingTab(app, htmlArg) {
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HOOKS — belt-and-suspenders
-// renderApplication  fires for all V1 apps
-// renderApplicationV2 fires for all V2 apps (Foundry v13+)
-// Plus specific dnd5e class hooks as named fallbacks
 // ─────────────────────────────────────────────────────────────────────────────
 
 Hooks.on('renderApplication',   (app, html) => injectCraftingTab(app, html));

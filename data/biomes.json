@@ -1,0 +1,424 @@
+{
+  "biomes": {
+    "forest": {
+      "name": "Forest",
+      "baseDC": 1,
+      "icon": "fas fa-tree"
+    },
+    "swamp": {
+      "name": "Swamp",
+      "baseDC": 3,
+      "icon": "fas fa-water"
+    },
+    "mountain": {
+      "name": "Mountain",
+      "baseDC": 4,
+      "icon": "fas fa-mountain"
+    },
+    "coast": {
+      "name": "Coast",
+      "baseDC": 2,
+      "icon": "fas fa-umbrella-beach"
+    },
+    "desert": {
+      "name": "Desert",
+      "baseDC": 8,
+      "icon": "fas fa-sun"
+    },
+    "arctic": {
+      "name": "Arctic",
+      "baseDC": 7,
+      "icon": "fas fa-snowflake"
+    },
+    "underdark": {
+      "name": "Underdark",
+      "baseDC": 6,
+      "icon": "fas fa-dungeon"
+    },
+    "plains": {
+      "name": "Plains",
+      "baseDC": 3,
+      "icon": "fas fa-wind"
+    },
+    "urban": {
+      "name": "Urban",
+      "baseDC": 5,
+      "icon": "fas fa-city"
+    }
+  },
+  "abundanceModifiers": {
+    "plentiful": {
+      "name": "Plentiful",
+      "dcMod": -3,
+      "qtyMul": 2.0
+    },
+    "medium": {
+      "name": "Medium",
+      "dcMod": 0,
+      "qtyMul": 1.0
+    },
+    "scarce": {
+      "name": "Scarce",
+      "dcMod": 3,
+      "qtyMul": 0.5
+    },
+    "barren": {
+      "name": "Barren",
+      "dcMod": 6,
+      "qtyMul": 0.25
+    }
+  },
+  "timeUnits": {
+    "seconds": {
+      "name": "Seconds",
+      "hours": 0.000277778
+    },
+    "minutes": {
+      "name": "Minutes",
+      "hours": 0.016666667
+    },
+    "hours": {
+      "name": "Hours",
+      "hours": 1
+    },
+    "days": {
+      "name": "Days",
+      "hours": 8
+    }
+  },
+  "biomeIngredients": {
+    "forest": {
+      "common_herb": [
+        "Bloodgrass",
+        "Silverleaf",
+        "Catnip",
+        "Spidergrass"
+      ],
+      "uncommon_herb": [
+        "Mandrake Root",
+        "Dreamfern",
+        "Moonpetal Flower"
+      ],
+      "common_component": [
+        "Pine Resin",
+        "Charcoal Powder"
+      ],
+      "uncommon_component": [
+        "Pixie Dust"
+      ],
+      "monster_part": [
+        "Wolf Fang",
+        "Rabbit Foot"
+      ],
+      "rare_monster_part": [
+        "Basilisk Eye"
+      ],
+      "liquid": [
+        "Pure Water"
+      ]
+    },
+    "swamp": {
+      "common_herb": [
+        "Toadstool",
+        "Bloodgrass",
+        "Spidergrass"
+      ],
+      "uncommon_herb": [
+        "Mandrake Root",
+        "Giant's Ear Mushroom",
+        "Sea Kelp"
+      ],
+      "common_component": [
+        "Rendered Fat",
+        "Charcoal Powder"
+      ],
+      "uncommon_component": [
+        "Magmin Ash"
+      ],
+      "monster_part": [
+        "Troll Blood",
+        "Goblin Teeth"
+      ],
+      "rare_monster_part": [
+        "Aboleth Slime"
+      ],
+      "liquid": [
+        "Pure Water",
+        "Naphtha Oil"
+      ]
+    },
+    "mountain": {
+      "common_herb": [
+        "Silverleaf",
+        "Spidergrass"
+      ],
+      "uncommon_herb": [
+        "Quicksilver Herb",
+        "Skybloom Petal"
+      ],
+      "common_component": [
+        "Sulphur",
+        "Pine Resin"
+      ],
+      "uncommon_component": [
+        "Magmin Ash"
+      ],
+      "monster_part": [
+        "Giant Toenail",
+        "Wolf Fang"
+      ],
+      "rare_monster_part": [
+        "Griffon Feather",
+        "Harpy Feather",
+        "Manticore Spine"
+      ],
+      "liquid": [
+        "Pure Water"
+      ]
+    },
+    "coast": {
+      "common_herb": [
+        "Bloodgrass",
+        "Catnip",
+        "Silverleaf"
+      ],
+      "uncommon_herb": [
+        "Sea Kelp",
+        "Moonpetal Flower"
+      ],
+      "common_component": [
+        "Rendered Fat"
+      ],
+      "uncommon_component": [
+        "Pixie Dust"
+      ],
+      "monster_part": [
+        "Merfolk Scale",
+        "Salamander Scale"
+      ],
+      "rare_monster_part": [
+        "Storm Eagle Talon"
+      ],
+      "liquid": [
+        "Pure Water"
+      ]
+    },
+    "desert": {
+      "common_herb": [
+        "Toadstool",
+        "Catnip"
+      ],
+      "uncommon_herb": [
+        "Firebloom"
+      ],
+      "common_component": [
+        "Sulphur",
+        "Charcoal Powder"
+      ],
+      "uncommon_component": [
+        "Magmin Ash"
+      ],
+      "monster_part": [
+        "Salamander Scale",
+        "Goblin Teeth"
+      ],
+      "rare_monster_part": [
+        "Manticore Spine"
+      ],
+      "liquid": [
+        "Naphtha Oil"
+      ]
+    },
+    "arctic": {
+      "common_herb": [
+        "Silverleaf",
+        "Bloodgrass"
+      ],
+      "uncommon_herb": [
+        "Quicksilver Herb",
+        "Moonpetal Flower"
+      ],
+      "common_component": [
+        "Charcoal Powder",
+        "Rendered Fat"
+      ],
+      "uncommon_component": [],
+      "monster_part": [
+        "Wolf Fang",
+        "Troll Blood"
+      ],
+      "rare_monster_part": [
+        "Frost Giant Knuckle"
+      ],
+      "liquid": [
+        "Pure Water"
+      ]
+    },
+    "underdark": {
+      "common_herb": [
+        "Toadstool",
+        "Spidergrass"
+      ],
+      "uncommon_herb": [
+        "Dreamfern",
+        "Giant's Ear Mushroom",
+        "Mandrake Root"
+      ],
+      "common_component": [
+        "Powdered Charcoal",
+        "Sulphur"
+      ],
+      "uncommon_component": [
+        "Magmin Ash"
+      ],
+      "monster_part": [
+        "Goblin Teeth",
+        "Troll Blood"
+      ],
+      "rare_monster_part": [
+        "Mindflayer Tentacle",
+        "Beholder Eyestalk",
+        "Displacer Beast Tentacle"
+      ],
+      "liquid": [
+        "Naphtha Oil"
+      ]
+    },
+    "plains": {
+      "common_herb": [
+        "Bloodgrass",
+        "Catnip",
+        "Silverleaf",
+        "Spidergrass"
+      ],
+      "uncommon_herb": [
+        "Mandrake Root",
+        "Skybloom Petal"
+      ],
+      "common_component": [
+        "Pine Resin",
+        "Rendered Fat"
+      ],
+      "uncommon_component": [
+        "Pixie Dust"
+      ],
+      "monster_part": [
+        "Rabbit Foot",
+        "Wolf Fang"
+      ],
+      "rare_monster_part": [
+        "Harpy Feather",
+        "Pegasus Hair"
+      ],
+      "liquid": [
+        "Pure Water"
+      ]
+    },
+    "urban": {
+      "common_herb": [
+        "Catnip",
+        "Toadstool"
+      ],
+      "uncommon_herb": [
+        "Mandrake Root"
+      ],
+      "common_component": [
+        "Charcoal Powder",
+        "Sulphur",
+        "Powdered Charcoal",
+        "Rendered Fat"
+      ],
+      "uncommon_component": [
+        "Magmin Ash"
+      ],
+      "monster_part": [
+        "Goblin Teeth",
+        "Rabbit Foot"
+      ],
+      "rare_monster_part": [],
+      "liquid": [
+        "Pure Water",
+        "Naphtha Oil"
+      ]
+    }
+  },
+  "rarityWeights": {
+    "common_herb": 40,
+    "uncommon_herb": 20,
+    "common_component": 20,
+    "uncommon_component": 8,
+    "monster_part": 8,
+    "rare_monster_part": 3,
+    "liquid": 10,
+    "rare_component": 1,
+    "very_rare_component": 0,
+    "legendary_component": 0
+  },
+  "weatherModifiers": [
+    {
+      "value": "0",
+      "label": "Clear",
+      "dcMod": 0
+    },
+    {
+      "value": "1",
+      "label": "Overcast",
+      "dcMod": 1
+    },
+    {
+      "value": "2",
+      "label": "Light Rain",
+      "dcMod": 2
+    },
+    {
+      "value": "4",
+      "label": "Heavy Rain",
+      "dcMod": 3
+    },
+    {
+      "value": "6",
+      "label": "Storm",
+      "dcMod": 4
+    }
+  ],
+  "seasonModifiers": [
+    {
+      "value": "-1",
+      "label": "Spring",
+      "dcMod": -1
+    },
+    {
+      "value": "0",
+      "label": "Summer",
+      "dcMod": 0
+    },
+    {
+      "value": "1",
+      "label": "Autumn",
+      "dcMod": 1
+    },
+    {
+      "value": "3",
+      "label": "Winter",
+      "dcMod": 2
+    }
+  ],
+  "skillOptions": [
+    {
+      "value": "sur",
+      "label": "Survival"
+    },
+    {
+      "value": "nat",
+      "label": "Nature"
+    },
+    {
+      "value": "prc",
+      "label": "Perception"
+    },
+    {
+      "value": "inv",
+      "label": "Investigation"
+    }
+  ]
+}

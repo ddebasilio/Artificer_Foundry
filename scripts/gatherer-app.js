@@ -1,5 +1,5 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
-import { TYPE_LABELS, getIngredientIcon, TYPE_ICONS, INGREDIENT_COSTS, BIOMES, ABUNDANCE_MODIFIERS, TIME_UNITS, resolveForaging } from "./ingredient-data.js";
+import { getTypeLabels, getIngredientIcon, getTypeIcons, getIngredientCosts, getBiomes, getAbundanceModifiers, getTimeUnits, resolveForaging } from "./ingredient-data.js";
 
 const DEFAULT_INGREDIENT_IMG = 'icons/svg/item-bag.svg';
 
@@ -38,8 +38,8 @@ export class GathererApp extends HandlebarsApplicationMixin(ApplicationV2) {
                         name: ing.name,
                         type: ing.type,
                         icon: getIngredientIcon(ing.name, ing.type),
-                        typeLabel: TYPE_LABELS[ing.type] || ing.type,
-                        cost: INGREDIENT_COSTS[ing.name] || 0,
+                        typeLabel: getTypeLabels()[ing.type] || ing.type,
+                        cost: getIngredientCosts()[ing.name] || 0,
                     });
                 }
             }
@@ -47,7 +47,7 @@ export class GathererApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
         const allIngredientNames = new Set([...ingredientMap.keys()].map(n => n.toLowerCase()));
         const allTypes = [...new Set([...ingredientMap.values()].map(i => i.type))].sort();
-        const allTypeLabels = allTypes.map(t => ({ value: t, label: TYPE_LABELS[t] || t }));
+        const allTypeLabels = allTypes.map(t => ({ value: t, label: getTypeLabels()[t] || t }));
 
         let ingredients = [...ingredientMap.values()];
         if (this.sortBy === "type") {
@@ -61,9 +61,9 @@ export class GathererApp extends HandlebarsApplicationMixin(ApplicationV2) {
             .map(item => ({ id: item.id, name: item.name, img: item.img, quantity: item.system?.quantity ?? 1 }))
             .sort((a, b) => a.name.localeCompare(b.name));
 
-        const biomes = Object.entries(BIOMES).map(([k, v]) => ({ value: k, ...v }));
-        const abundances = Object.entries(ABUNDANCE_MODIFIERS).map(([k, v]) => ({ value: k, ...v }));
-        const timeUnits = Object.entries(TIME_UNITS).map(([k, v]) => ({ value: k, ...v }));
+        const biomes = Object.entries(getBiomes()).map(([k, v]) => ({ value: k, ...v }));
+        const abundances = Object.entries(getAbundanceModifiers()).map(([k, v]) => ({ value: k, ...v }));
+        const timeUnits = Object.entries(getTimeUnits()).map(([k, v]) => ({ value: k, ...v }));
 
         return {
             actor: this.actor, ingredients, inventory, allTypes, allTypeLabels,
@@ -252,7 +252,7 @@ export class GathererApp extends HandlebarsApplicationMixin(ApplicationV2) {
         event.preventDefault();
         if (!this.actor) { ui.notifications.warn("No actor associated."); return; }
 
-        const flavorText = `<strong>Foraging Roll</strong> (${BIOMES[this.forageBiome]?.name}, ${ABUNDANCE_MODIFIERS[this.forageAbundance]?.name}, ${this.forageTimeAmount} ${TIME_UNITS[this.forageTimeUnit]?.name.toLowerCase()})`;
+        const flavorText = `<strong>Foraging Roll</strong> (${getBiomes()[this.forageBiome]?.name}, ${getAbundanceModifiers()[this.forageAbundance]?.name}, ${this.forageTimeAmount} ${getTimeUnits()[this.forageTimeUnit]?.name.toLowerCase()})`;
 
         // Roll d20
         const roll = await new Roll("1d20").evaluate();

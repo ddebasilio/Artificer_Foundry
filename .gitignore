@@ -3,3 +3,5 @@ docker-compose.yml
 artificer_foundry
 foundryData
 AGENTS.md
+icons/
+items_list.md

@@ -1,5 +1,5 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
-import { FORGE_TYPE_LABELS, getForgeMaterialIcon, canForgeSubstitute, getForgeSubstitutes, getForgeCraftingTime, formatForgeCraftingTime } from "./forge-data.js";
+import { getForgeTypeLabels, getForgeMaterialIcon, canForgeSubstitute, getForgeSubstitutes, getForgeCraftingTime, formatForgeCraftingTime } from "./forge-data.js";
 
 export class ForgeApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
@@ -64,7 +64,7 @@ export class ForgeApp extends HandlebarsApplicationMixin(ApplicationV2) {
                 mappedIngredients = selectedRecipe.ingredients.map(ing => {
                     const provided = this.providedIngredients[ing.name] || 0;
                     const icon = getForgeMaterialIcon(ing.name, ing.type);
-                    const typeLabel = FORGE_TYPE_LABELS[ing.type] || ing.type;
+                    const typeLabel = getForgeTypeLabels()[ing.type] || ing.type;
                     const subs = getForgeSubstitutes(ing.name, selectedRecipe.rarity);
                     return { ...ing, provided, fulfilled: provided >= ing.quantity, icon, typeLabel, substitutes: subs };
                 });

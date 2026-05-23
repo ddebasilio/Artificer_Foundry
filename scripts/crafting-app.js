@@ -1,5 +1,5 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
-import { TYPE_LABELS, getIngredientIcon, canSubstitute, getSubstitutes, getCraftingTime, formatCraftingTime, CRAFTING_TIMES } from "./ingredient-data.js";
+import { getTypeLabels, getIngredientIcon, canSubstitute, getSubstitutes, getCraftingTime, formatCraftingTime, getCraftingTimes } from "./ingredient-data.js";
 
 export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
@@ -62,7 +62,7 @@ export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
                 mappedIngredients = selectedRecipe.ingredients.map(ing => {
                     const provided = this.providedIngredients[ing.name] || 0;
                     const icon = getIngredientIcon(ing.name, ing.type);
-                    const typeLabel = TYPE_LABELS[ing.type] || ing.type;
+                    const typeLabel = getTypeLabels()[ing.type] || ing.type;
                     const subs = getSubstitutes(ing.name, selectedRecipe.rarity);
                     return { ...ing, provided, fulfilled: provided >= ing.quantity, icon, typeLabel, substitutes: subs };
                 });
