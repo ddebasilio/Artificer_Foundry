@@ -109,7 +109,7 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
 
     /** Refresh the local panel instance */
     static _refreshLocal() {
-        const tab = ui.sidebar?.tabInstances?.["af-party-inventory"] ?? ui.sidebar?.tabs?.["af-party-inventory"];
+        const tab = ui["af-party-inventory"];
         if (tab) tab.render(true);
     }
 
@@ -459,7 +459,8 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
 // ─── Global drop handler: handle party inventory items dropped on actor sheets ──
 Hooks.once('ready', () => {
     // Listen for drops on actor sheets — intercept party inventory items
-    const origDrop = DragDrop.prototype._handleDrop;
+    const DDImpl = foundry.applications.ux.DragDrop.implementation;
+    const origDrop = DDImpl.prototype._handleDrop;
     if (origDrop) {
         const _piHandleDrop = async function(event) {
             let data;
@@ -490,7 +491,7 @@ Hooks.once('ready', () => {
             }
 
             // Import via Plutonium, then compendium, then basic creation
-            const tab = ui.sidebar?.tabInstances?.["af-party-inventory"] ?? ui.sidebar?.tabs?.["af-party-inventory"];
+            const tab = ui["af-party-inventory"];
             if (tab) {
                 await tab._createItemOnActor(actor, item);
             }
@@ -503,7 +504,7 @@ Hooks.once('ready', () => {
             });
         };
 
-        DragDrop.prototype._handleDrop = function(event) {
+        DDImpl.prototype._handleDrop = function(event) {
             let data;
             try {
                 data = JSON.parse(event.dataTransfer.getData("text/plain"));

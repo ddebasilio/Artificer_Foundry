@@ -209,15 +209,15 @@ Hooks.once('ready', async function () {
         showCraftingApp: (actor) => new CraftingApp(actor ?? null).render(true),
         showForgeApp: (actor) => new ForgeApp(actor ?? null).render(true),
         showLootGenerator: () => {
-            const tab = ui.sidebar?.tabInstances?.["af-gathering"] ?? ui.sidebar?.tabs?.["af-gathering"];
+            const tab = ui["af-gathering"];
             if (tab) tab.activate();
         },
         showGatheringPanel: () => {
-            const tab = ui.sidebar?.tabInstances?.["af-gathering"] ?? ui.sidebar?.tabs?.["af-gathering"];
+            const tab = ui["af-gathering"];
             if (tab) tab.activate();
         },
         showPartyInventory: () => {
-            const tab = ui.sidebar?.tabInstances?.["af-party-inventory"] ?? ui.sidebar?.tabs?.["af-party-inventory"];
+            const tab = ui["af-party-inventory"];
             if (tab) tab.activate();
         },
         PartyInventory,
