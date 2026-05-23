@@ -156,7 +156,23 @@
     "Dragon Blood": 8000,
     "Storm Giant Blood": 5000,
     "Unicorn Horn": 12000,
-    "Celestial Feather": 1500
+    "Celestial Feather": 1500,
+    "Adamantine Ingot": 500,
+    "Arcane Crystal": 1000,
+    "Arcane Dust": 25,
+    "Astral Shard": 5000,
+    "Blank Scroll": 5,
+    "Divine Spark": 25000,
+    "Dragon Heart": 10000,
+    "Enchanted Ink": 50,
+    "Enchanting Dust": 25,
+    "Feathers": 1,
+    "Giant's Nail": 100,
+    "Gold Band": 15,
+    "Mithral Ingot": 400,
+    "Mystic Wood": 10,
+    "Padding": 2,
+    "Whetstone": 1
   },
   "substitutionGroups": {
     "basic_metals": {
