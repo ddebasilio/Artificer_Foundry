@@ -1,6 +1,7 @@
 import { CraftingApp } from "./crafting-app.js";
 import { GathererApp } from "./gatherer-app.js";
 import { ForgeApp } from "./forge-app.js";
+import { MaterialsApp } from "./materials-app.js";
 import { RecipeManager } from "./recipe-manager.js";
 import { ForgeRecipeManager } from "./forge-recipe-manager.js";
 import { loadIngredientData, getTypeLabels } from "./ingredient-data.js";
@@ -16,6 +17,7 @@ const MODULE_ID = "artificer-foundry";
 const _craftingApps = new Map();
 const _gathererApps = new Map();
 const _forgeApps = new Map();
+const _materialsApps = new Map();
 
 function openCraftingApp(actor) {
     const existing = _craftingApps.get(actor.id);
@@ -38,6 +40,14 @@ function openForgeApp(actor) {
     if (existing?.element?.isConnected) { existing.bringToFront(); return; }
     const app = new ForgeApp(actor);
     _forgeApps.set(actor.id, app);
+    app.render(true);
+}
+
+function openMaterialsApp(actor) {
+    const existing = _materialsApps.get(actor.id);
+    if (existing?.element?.isConnected) { existing.bringToFront(); return; }
+    const app = new MaterialsApp(actor);
+    _materialsApps.set(actor.id, app);
     app.render(true);
 }
 
@@ -158,7 +168,7 @@ Hooks.once('ready', async function () {
 
     // Document-level capture handler for the injected crafting/gatherer nav buttons.
     document.addEventListener('click', (e) => {
-        const navItem = e.target.closest?.('.af-crafting-nav-item, .af-gatherer-nav-item, .af-forge-nav-item');
+        const navItem = e.target.closest?.('.af-crafting-nav-item, .af-gatherer-nav-item, .af-forge-nav-item, .af-materials-nav-item');
         if (!navItem) return;
         e.stopImmediatePropagation();
         e.stopPropagation();
@@ -176,6 +186,10 @@ Hooks.once('ready', async function () {
             console.log(`${MODULE} | Forge tab clicked — actor:`, actor.name);
             try { openForgeApp(actor); }
             catch (err) { console.error(`${MODULE} | Failed to open ForgeApp:`, err); }
+        } else if (navItem.classList.contains('af-materials-nav-item')) {
+            console.log(`${MODULE} | Materials tab clicked — actor:`, actor.name);
+            try { openMaterialsApp(actor); }
+            catch (err) { console.error(`${MODULE} | Failed to open MaterialsApp:`, err); }
         } else {
             console.log(`${MODULE} | Gatherer tab clicked — actor:`, actor.name);
             try { openGathererApp(actor); }
@@ -204,11 +218,87 @@ Hooks.once('ready', async function () {
 
     observer.observe(interfaceEl, { childList: true, subtree: true });
     console.log(`${MODULE} | MutationObserver active on #${interfaceEl.id || interfaceEl.tagName}`);
+
+    // ── Chat message roll button handler ─────────────────────────────────────
+    Hooks.on('renderChatMessage', (message, html) => {
+        const el = html instanceof HTMLElement ? html : html?.[0] ?? html;
+        if (!el) return;
+        el.querySelectorAll('.af-gather-roll-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const requestId = btn.dataset.requestId;
+                const actorId = btn.dataset.actorId;
+                const actor = game.actors.get(actorId);
+                if (!actor) { ui.notifications.warn("Actor not found."); return; }
+
+                // Check permission
+                if (!actor.isOwner) {
+                    ui.notifications.warn("You don't own this character.");
+                    return;
+                }
+
+                const active = game.settings.get(MODULE_ID, "activeGatherRequests");
+                const req = active[requestId];
+                if (!req) { ui.notifications.warn("This gathering request has expired."); return; }
+
+                const skillKey = req.skillKey ?? "sur";
+                const skillMap = { sur: "sur", nat: "nat", arc: "arc", inv: "inv", per: "prc", med: "med" };
+                const dndSkill = skillMap[skillKey] ?? "sur";
+
+                // Roll the skill check
+                let rollTotal;
+                try {
+                    const roll = await actor.rollSkill(dndSkill);
+                    if (!roll) return; // user cancelled
+                    rollTotal = roll.total;
+                } catch (err) {
+                    // Fallback: manual d20 roll
+                    console.warn(`${MODULE} | rollSkill failed, using manual roll:`, err);
+                    const roll = await new Roll("1d20").evaluate();
+                    await roll.toMessage({ speaker: ChatMessage.getSpeaker({ actor }) });
+                    rollTotal = roll.total;
+                }
+
+                // Disable the button after rolling
+                btn.disabled = true;
+                btn.innerHTML = `<i class="fas fa-check"></i> Rolled: ${rollTotal}`;
+
+                // Send result to GM for processing
+                if (game.user.isGM) {
+                    await GatheringPanel.handleRollResult({ requestId, actorId, rollTotal });
+                } else {
+                    // Use a socket or setting to notify GM
+                    // For simplicity, create a GM-whispered message with the result
+                    const gmUsers = game.users.filter(u => u.isGM).map(u => u.id);
+                    await ChatMessage.create({
+                        content: `<div class="af-gather-result-msg" data-request-id="${requestId}" data-actor-id="${actorId}" data-roll-total="${rollTotal}">
+                            <p><strong>${actor.name}</strong> rolled <strong>${rollTotal}</strong> for gathering.</p>
+                        </div>`,
+                        whisper: gmUsers,
+                        speaker: { alias: "Artificer Foundry" },
+                    });
+                }
+            });
+        });
+
+        // Handle GM-side result processing from player messages
+        if (game.user.isGM) {
+            el.querySelectorAll('.af-gather-result-msg').forEach(msg => {
+                const requestId = msg.dataset.requestId;
+                const actorId = msg.dataset.actorId;
+                const rollTotal = parseInt(msg.dataset.rollTotal);
+                if (requestId && actorId && !isNaN(rollTotal) && !msg.dataset.processed) {
+                    msg.dataset.processed = "true";
+                    GatheringPanel.handleRollResult({ requestId, actorId, rollTotal });
+                }
+            });
+        }
+    });
 });
 
 function _tryInjectFromNode(node, attempt) {
     if (!node.isConnected) return;
-    if (node.querySelector('.af-crafting-nav-item') && node.querySelector('.af-forge-nav-item')) return;
+    if (node.querySelector('.af-crafting-nav-item') && node.querySelector('.af-forge-nav-item') && node.querySelector('.af-materials-nav-item')) return;
 
     if (foundry.applications?.instances) {
         for (const app of foundry.applications.instances.values()) {
@@ -250,7 +340,7 @@ function injectCraftingTab(app, htmlArg) {
 
         if (!root) return;
 
-        if (root.querySelector('.af-crafting-nav-item') && root.querySelector('.af-forge-nav-item')) return;
+        if (root.querySelector('.af-crafting-nav-item') && root.querySelector('.af-forge-nav-item') && root.querySelector('.af-materials-nav-item')) return;
 
         const NAV_SELECTORS = [
             'nav.tabs[data-group="primary"]',
@@ -294,6 +384,14 @@ function injectCraftingTab(app, htmlArg) {
         forgeItem.innerHTML = `<i class="fas fa-hammer"></i>`;
         forgeItem._af_actor = actor;
         tabsNav.appendChild(forgeItem);
+
+        // Materials Catalog tab (cubes icon)
+        const materialsItem = document.createElement('a');
+        materialsItem.className = 'item af-materials-nav-item';
+        materialsItem.title = 'Materials Catalog';
+        materialsItem.innerHTML = `<i class="fas fa-cubes"></i>`;
+        materialsItem._af_actor = actor;
+        tabsNav.appendChild(materialsItem);
 
     } catch (err) {
         console.error(`${MODULE} | injectCraftingTab error:`, err);
