@@ -2,9 +2,13 @@
  * Party Inventory – a sidebar tab that holds shared loot.
  * GM can send loot here from the Loot Generator; players can drag items
  * to their character sheets (removing from party) or add items back.
+ * Uses Plutonium importer when available, same pattern as forge-app.js.
  */
 
+import { PlutoniumHelper } from "./plutonium-helper.js";
+
 const MODULE_ID = "artificer-foundry";
+const SOCKET_NAME = `module.${MODULE_ID}`;
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { AbstractSidebarTab } = foundry.applications.sidebar;
@@ -46,7 +50,7 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
             inv.coins[type] = (inv.coins[type] || 0) + amount;
         }
         await this._setInventory(inv);
-        this._refreshAll();
+        this._broadcastRefresh();
     }
 
     /** Add items to party inventory */
@@ -55,7 +59,7 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
         if (!inv.items) inv.items = [];
         inv.items.push(...items);
         await this._setInventory(inv);
-        this._refreshAll();
+        this._broadcastRefresh();
     }
 
     /** Add full loot result (coins + items) to party inventory */
@@ -72,7 +76,7 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
             inv.items.push(...lootResult.items);
         }
         await this._setInventory(inv);
-        this._refreshAll();
+        this._broadcastRefresh();
     }
 
     /** Remove an item by id from party inventory */
@@ -80,7 +84,7 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
         const inv = this._getInventory();
         inv.items = (inv.items || []).filter(i => i.id !== itemId);
         await this._setInventory(inv);
-        this._refreshAll();
+        this._broadcastRefresh();
     }
 
     /** Remove coins from party inventory */
@@ -91,14 +95,31 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
         inv.coins[coinType] -= amount;
         if (inv.coins[coinType] <= 0) delete inv.coins[coinType];
         await this._setInventory(inv);
-        this._refreshAll();
+        this._broadcastRefresh();
         return true;
     }
 
-    /** Refresh all open instances of this panel */
-    static _refreshAll() {
+    /** Broadcast refresh to all connected clients via socket */
+    static _broadcastRefresh() {
+        // Refresh locally
+        this._refreshLocal();
+        // Notify other clients
+        game.socket.emit(SOCKET_NAME, { action: "refreshPartyInventory" });
+    }
+
+    /** Refresh the local panel instance */
+    static _refreshLocal() {
         const tab = ui.sidebar?.tabInstances?.["af-party-inventory"] ?? ui.sidebar?.tabs?.["af-party-inventory"];
         if (tab) tab.render(true);
+    }
+
+    /** Register socket listener (called from main.js) */
+    static registerSocketListeners() {
+        game.socket.on(SOCKET_NAME, (data) => {
+            if (data.action === "refreshPartyInventory") {
+                this._refreshLocal();
+            }
+        });
     }
 
     // ─── Template data ───────────────────────────────────────────────────────────
@@ -109,14 +130,15 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
 
         const coinOrder = ["pp", "gp", "ep", "sp", "cp"];
         const coinLabels = { cp: "Copper", sp: "Silver", ep: "Electrum", gp: "Gold", pp: "Platinum" };
+        const coinIcons = { cp: "fa-coins", sp: "fa-coins", ep: "fa-coins", gp: "fa-coins", pp: "fa-coins" };
         const coins = coinOrder
             .filter(c => (inv.coins?.[c] || 0) > 0)
-            .map(c => ({ type: c, label: coinLabels[c], amount: inv.coins[c] }));
+            .map(c => ({ type: c, label: coinLabels[c], amount: inv.coins[c], icon: coinIcons[c] }));
 
         const rarityOrder = { common: 0, uncommon: 1, rare: 2, "very rare": 3, legendary: 4, artifact: 5 };
         const items = [...(inv.items || [])].sort((a, b) => (rarityOrder[a.rarity] ?? 9) - (rarityOrder[b.rarity] ?? 9));
 
-        // Determine which actors the current user owns (for the "take" dropdown)
+        // Determine which actors the current user owns
         const ownedActors = game.actors.filter(a => a.isOwner && a.type === "character");
 
         Object.assign(context, {
@@ -138,35 +160,43 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
         super._onRender(context, options);
         const el = this.element;
 
-        // Take item button
-        el.querySelectorAll('.af-pi-take-item').forEach(btn => {
-            btn.addEventListener('click', async (e) => {
-                const itemId = btn.dataset.itemId;
-                const actorSelect = el.querySelector('.af-pi-actor-select');
-                const actorId = actorSelect?.value;
-                if (!actorId) {
-                    ui.notifications.warn("Select a character first.");
-                    return;
-                }
-                await this._takeItem(itemId, actorId);
+        // ── Drag-and-drop: make items draggable ──
+        el.querySelectorAll('.af-pi-item-row[draggable="true"]').forEach(row => {
+            row.addEventListener('dragstart', (e) => {
+                const itemId = row.dataset.itemId;
+                e.dataTransfer.setData("text/plain", JSON.stringify({
+                    type: "af-party-inventory-item",
+                    itemId,
+                }));
+                e.dataTransfer.effectAllowed = "move";
+                row.classList.add('dragging');
+            });
+            row.addEventListener('dragend', () => {
+                row.classList.remove('dragging');
             });
         });
 
-        // Take coins button
-        el.querySelectorAll('.af-pi-take-coins').forEach(btn => {
-            btn.addEventListener('click', async (e) => {
+        // ── Coin take: input + take button ──
+        el.querySelectorAll('.af-pi-coin-take-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
                 const coinType = btn.dataset.coinType;
+                const input = el.querySelector(`.af-pi-coin-input[data-coin-type="${coinType}"]`);
+                const amount = parseInt(input?.value) || 0;
+                if (amount <= 0) {
+                    ui.notifications.warn("Enter an amount to take.");
+                    return;
+                }
                 const actorSelect = el.querySelector('.af-pi-actor-select');
                 const actorId = actorSelect?.value;
                 if (!actorId) {
                     ui.notifications.warn("Select a character first.");
                     return;
                 }
-                await this._takeCoins(coinType, actorId);
+                await this._takeCoins(coinType, amount, actorId);
             });
         });
 
-        // Take all coins
+        // ── Take all coins ──
         el.querySelector('.af-pi-take-all-coins')?.addEventListener('click', async () => {
             const actorSelect = el.querySelector('.af-pi-actor-select');
             const actorId = actorSelect?.value;
@@ -188,7 +218,7 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
             });
             if (confirm) {
                 await PartyInventory._setInventory({ coins: {}, items: [] });
-                PartyInventory._refreshAll();
+                PartyInventory._broadcastRefresh();
             }
         });
 
@@ -199,57 +229,85 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
                 if (desc) desc.classList.toggle('expanded');
             });
         });
+
+        // ── Drop zone: allow dropping items from character sheets onto party inventory ──
+        el.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = "move";
+        });
+        el.addEventListener('drop', async (e) => {
+            e.preventDefault();
+            let data;
+            try {
+                data = JSON.parse(e.dataTransfer.getData("text/plain"));
+            } catch { return; }
+
+            // Handle drops from character sheets (Foundry Item type)
+            if (data.type === "Item" && data.uuid) {
+                await this._handleItemDrop(data);
+            }
+        });
     }
 
     // ─── Actions ─────────────────────────────────────────────────────────────────
 
-    async _takeItem(itemId, actorId) {
-        const inv = PartyInventory._getInventory();
-        const item = inv.items?.find(i => i.id === itemId);
-        if (!item) { ui.notifications.warn("Item not found in party inventory."); return; }
+    /** Handle an item dropped from a character sheet onto party inventory */
+    async _handleItemDrop(data) {
+        const item = await fromUuid(data.uuid);
+        if (!item) return;
 
-        const actor = game.actors.get(actorId);
-        if (!actor) { ui.notifications.warn("Actor not found."); return; }
+        const actor = item.parent;
+        if (!actor || actor.documentName !== "Actor") {
+            ui.notifications.warn("Can only add items from character sheets.");
+            return;
+        }
+        if (!actor.isOwner) {
+            ui.notifications.warn("You don't own this character.");
+            return;
+        }
 
-        // Try to create the item on the actor via Plutonium compendium lookup or basic item creation
-        await this._createItemOnActor(actor, item);
-        await PartyInventory.removeItem(itemId);
+        const transferableTypes = ["loot", "weapon", "equipment", "consumable", "tool", "backpack", "container"];
+        if (!transferableTypes.includes(item.type)) {
+            ui.notifications.warn(`Cannot transfer ${item.type} items to party inventory.`);
+            return;
+        }
 
-        ui.notifications.info(`${actor.name} took ${item.name} from party inventory.`);
+        // Add to party inventory
+        await PartyInventory.addItems([{
+            id: foundry.utils.randomID(),
+            name: item.name,
+            rarity: item.system?.rarity || "common",
+            type: item.type,
+            text: item.system?.description?.value || "",
+            price: item.system?.price?.value || 0,
+            source: "",
+        }]);
+
+        // Remove from character
+        await actor.deleteEmbeddedDocuments("Item", [item.id]);
+        ui.notifications.info(`Moved ${item.name} from ${actor.name} to party inventory.`);
         await ChatMessage.create({
-            content: `<p><strong>${actor.name}</strong> took <strong>${item.name}</strong> from the party inventory.</p>`,
+            content: `<p><strong>${actor.name}</strong> added <strong>${item.name}</strong> to the party inventory.</p>`,
             speaker: { alias: "Party Inventory" },
         });
     }
 
-    async _takeCoins(coinType, actorId) {
+    async _takeCoins(coinType, amount, actorId) {
         const inv = PartyInventory._getInventory();
-        const amount = inv.coins?.[coinType] || 0;
+        const available = inv.coins?.[coinType] || 0;
+        if (amount > available) amount = available;
         if (amount <= 0) return;
 
         const actor = game.actors.get(actorId);
         if (!actor) return;
 
-        // Prompt for amount
-        const html = `<form><div class="form-group"><label>Amount (max ${amount})</label><input type="number" name="amount" value="${amount}" min="1" max="${amount}"></div></form>`;
-        const result = await Dialog.prompt({
-            title: `Take ${coinType.toUpperCase()}`,
-            content: html,
-            callback: (html) => {
-                const form = html instanceof HTMLElement ? html.querySelector('form') : html[0]?.querySelector('form') ?? html.find?.('form')?.[0];
-                return parseInt(form?.querySelector('[name=amount]')?.value) || 0;
-            },
-        });
-        if (!result || result <= 0) return;
-        const takeAmount = Math.min(result, amount);
-
-        // Add to actor's currency
         const currencyPath = `system.currency.${coinType}`;
         const current = foundry.utils.getProperty(actor, currencyPath) || 0;
-        await actor.update({ [currencyPath]: current + takeAmount });
-        await PartyInventory.removeCoins(coinType, takeAmount);
+        await actor.update({ [currencyPath]: current + amount });
+        await PartyInventory.removeCoins(coinType, amount);
 
-        ui.notifications.info(`${actor.name} took ${takeAmount} ${coinType} from party inventory.`);
+        const coinLabels = { cp: "Copper", sp: "Silver", ep: "Electrum", gp: "Gold", pp: "Platinum" };
+        ui.notifications.info(`${actor.name} took ${amount} ${coinLabels[coinType] || coinType}.`);
     }
 
     async _takeAllCoins(actorId) {
@@ -266,12 +324,17 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
         const inv2 = PartyInventory._getInventory();
         inv2.coins = {};
         await PartyInventory._setInventory(inv2);
-        PartyInventory._refreshAll();
+        PartyInventory._broadcastRefresh();
         ui.notifications.info(`${actor.name} took all coins from party inventory.`);
     }
 
+    /** Import item to actor using Plutonium (like forge-app), fallback to compendium */
     async _createItemOnActor(actor, itemData) {
-        // Try to find the item in compendiums first (Plutonium or dnd5e SRD)
+        // Try Plutonium first (same pattern as forge-app.js)
+        const plutoniumImported = await PlutoniumHelper.pImportItem(actor, itemData.name, 1);
+        if (plutoniumImported) return;
+
+        // Fallback: search compendiums
         let compendiumItem = null;
         for (const pack of game.packs) {
             if (pack.documentName !== "Item") continue;
@@ -288,7 +351,7 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
         if (compendiumItem) {
             await actor.createEmbeddedDocuments("Item", [compendiumItem.toObject()]);
         } else {
-            // Fallback: create a basic loot item
+            // Last resort: create a basic loot item
             await actor.createEmbeddedDocuments("Item", [{
                 name: itemData.name,
                 type: "loot",
@@ -304,7 +367,6 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
     }
 
     _onAddItemDialog() {
-        // Simple dialog for GM to add an item back from a character
         const actors = game.actors.filter(a => a.type === "character");
         const actorOptions = actors.map(a => `<option value="${a.id}">${a.name}</option>`).join("");
 
@@ -393,3 +455,65 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
         });
     }
 }
+
+// ─── Global drop handler: handle party inventory items dropped on actor sheets ──
+Hooks.once('ready', () => {
+    // Listen for drops on actor sheets — intercept party inventory items
+    const origDrop = DragDrop.prototype._handleDrop;
+    if (origDrop) {
+        const _piHandleDrop = async function(event) {
+            let data;
+            try {
+                data = JSON.parse(event.dataTransfer.getData("text/plain"));
+            } catch { return origDrop.call(this, event); }
+
+            if (data.type !== "af-party-inventory-item") {
+                return origDrop.call(this, event);
+            }
+
+            // Find the actor sheet this was dropped on
+            const sheet = Object.values(ui.windows).find(w => {
+                const el = w.element instanceof HTMLElement ? w.element : w.element?.[0];
+                return el?.contains(event.target);
+            });
+            const actor = sheet?.document ?? sheet?.object ?? sheet?.actor;
+            if (!actor || actor.documentName !== "Actor") {
+                ui.notifications.warn("Drop items onto a character sheet.");
+                return;
+            }
+
+            const inv = PartyInventory._getInventory();
+            const item = inv.items?.find(i => i.id === data.itemId);
+            if (!item) {
+                ui.notifications.warn("Item no longer in party inventory.");
+                return;
+            }
+
+            // Import via Plutonium, then compendium, then basic creation
+            const tab = ui.sidebar?.tabInstances?.["af-party-inventory"] ?? ui.sidebar?.tabs?.["af-party-inventory"];
+            if (tab) {
+                await tab._createItemOnActor(actor, item);
+            }
+            await PartyInventory.removeItem(data.itemId);
+
+            ui.notifications.info(`${actor.name} took ${item.name} from party inventory.`);
+            await ChatMessage.create({
+                content: `<p><strong>${actor.name}</strong> took <strong>${item.name}</strong> from the party inventory.</p>`,
+                speaker: { alias: "Party Inventory" },
+            });
+        };
+
+        DragDrop.prototype._handleDrop = function(event) {
+            let data;
+            try {
+                data = JSON.parse(event.dataTransfer.getData("text/plain"));
+            } catch { return origDrop.call(this, event); }
+
+            if (data.type === "af-party-inventory-item") {
+                _piHandleDrop.call(this, event);
+                return;
+            }
+            return origDrop.call(this, event);
+        };
+    }
+});

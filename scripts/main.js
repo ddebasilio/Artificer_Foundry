@@ -184,6 +184,9 @@ Hooks.once('ready', async function () {
 
     console.log(`${MODULE} | Data loaded`);
 
+    // Register party inventory socket listeners for live refresh
+    PartyInventory.registerSocketListeners();
+
     // Socket handler — allows players to learn/forget recipes via GM proxy
     const SOCKET_NAME = `module.${MODULE_ID}`;
     game.socket.on(SOCKET_NAME, async (data) => {
@@ -197,6 +200,7 @@ Hooks.once('ready', async function () {
         } else if (data.action === "forgetForgeRecipe") {
             await forgeRecipeManager.forgetRecipe(data.actorId, data.recipeId);
         }
+        // Note: refreshPartyInventory is handled by PartyInventory.registerSocketListeners()
     });
 
     window.ArtificerFoundry = {
