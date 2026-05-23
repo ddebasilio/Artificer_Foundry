@@ -12,7 +12,7 @@
                                class="gathering-player-check"
                                data-actor-id="{{this.id}}"
                                {{#if this.selected}}checked{{/if}}>
-                        <span class="gathering-actor-name">{{this.name}}</span>
+                        <span class="gathering-actor-name">{{this.name}} <span class="gathering-player-label">({{this.playerName}})</span></span>
                     </label>
                 {{/each}}
             </div>

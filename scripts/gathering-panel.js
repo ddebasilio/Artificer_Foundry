@@ -75,7 +75,8 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
                 if (!token.actor) continue;
                 if (token.actor.hasPlayerOwner && token.actor.type !== "npc") {
                     if (!sceneActors.find(a => a.id === token.actor.id)) {
-                        sceneActors.push({ id: token.actor.id, name: token.actor.name, selected: this.selectedActorIds.has(token.actor.id) });
+                        const ownerUser = game.users.find(u => !u.isGM && token.actor.testUserPermission(u, "OWNER"));
+                        sceneActors.push({ id: token.actor.id, name: token.actor.name, playerName: ownerUser?.name ?? "Unknown", selected: this.selectedActorIds.has(token.actor.id) });
                     }
                 }
             }

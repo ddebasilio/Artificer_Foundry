@@ -269,7 +269,7 @@
 .af-gathering-panel {
     padding: 8px;
     font-size: 13px;
-    color: var(--color-text-primary, #191813);
+    color: inherit;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -284,14 +284,14 @@
     margin: 0 0 6px;
     font-size: 12px;
     font-weight: bold;
-    color: var(--color-text-dark-primary, #191813);
+    color: inherit;
     border-bottom: 1px solid var(--color-border-light-2, #b5b3a4);
     padding-bottom: 4px;
 }
 .af-gathering-panel .gathering-actor-list {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 6px;
 }
 .af-gathering-panel .gathering-actor-row {
     display: flex;
@@ -299,6 +299,10 @@
     gap: 6px;
     font-size: 12px;
     cursor: pointer;
+    padding: 4px 6px;
+    border: 1px solid var(--color-border-light-2, #b5b3a4);
+    border-radius: 3px;
+    background: var(--color-cool-5, rgba(0,0,0,0.04));
 }
 .af-gathering-panel .gathering-actor-row input[type="checkbox"] {
     margin: 0;
@@ -330,7 +334,7 @@
     font-size: 11px;
     font-weight: bold;
     min-width: 65px;
-    color: var(--color-text-dark-primary, #191813);
+    color: inherit;
 }
 .af-gathering-panel .gather-row select,
 .af-gathering-panel .gather-row input[type="number"] {
@@ -340,7 +344,7 @@
     border: 1px solid var(--color-border-light-2, #b5b3a4);
     border-radius: 3px;
     background: var(--color-bg-option, #fff);
-    color: var(--color-text-primary, #191813);
+    color: var(--color-text-dark-primary, #191813);
     min-width: 0;
     height: auto;
     line-height: normal;
@@ -369,7 +373,7 @@
     border: 1px solid var(--color-border-light-2, #b5b3a4);
     border-radius: 3px;
     background: var(--color-bg-option, #fff);
-    color: var(--color-text-primary, #191813);
+    color: var(--color-text-dark-primary, #191813);
     text-align: center;
 }
 .af-gathering-panel .dc-auto-label {
@@ -399,6 +403,11 @@
     color: var(--color-text-dark-primary, #191813);
     transition: background 0.15s;
 }
+.af-gathering-panel .gathering-player-label {
+    font-size: 10px;
+    opacity: 0.7;
+    font-style: italic;
+}
 .af-gathering-panel .request-roll-btn:hover {
     background: var(--color-bg-btn-hover, #b8b6a8);
 }
@@ -417,7 +426,7 @@
     cursor: pointer;
     font-size: 11px;
     text-align: center;
-    color: var(--color-text-primary, #191813);
+    color: inherit;
     transition: background 0.15s, border-color 0.15s;
 }
 .gather-mode-btn:hover {
