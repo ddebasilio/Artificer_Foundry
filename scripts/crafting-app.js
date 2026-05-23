@@ -145,7 +145,12 @@ export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
     async _onLearnRecipe(event) {
         event.preventDefault(); event.stopPropagation();
         if (!this.actor) { ui.notifications.warn("No actor associated."); return; }
-        await window.ArtificerFoundry.recipeManager.learnRecipe(this.actor.id, event.currentTarget.dataset.recipeId);
+        const recipeId = event.currentTarget.dataset.recipeId;
+        if (game.user.isGM) {
+            await window.ArtificerFoundry.recipeManager.learnRecipe(this.actor.id, recipeId);
+        } else {
+            game.socket.emit("module.artificer-foundry", { action: "learnRecipe", actorId: this.actor.id, recipeId });
+        }
         ui.notifications.info(`${this.actor.name} has learned a new recipe!`);
         this.render();
     }
@@ -153,7 +158,12 @@ export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
     async _onForgetRecipe(event) {
         event.preventDefault(); event.stopPropagation();
         if (!this.actor) return;
-        await window.ArtificerFoundry.recipeManager.forgetRecipe(this.actor.id, event.currentTarget.dataset.recipeId);
+        const recipeId = event.currentTarget.dataset.recipeId;
+        if (game.user.isGM) {
+            await window.ArtificerFoundry.recipeManager.forgetRecipe(this.actor.id, recipeId);
+        } else {
+            game.socket.emit("module.artificer-foundry", { action: "forgetRecipe", actorId: this.actor.id, recipeId });
+        }
         ui.notifications.info(`${this.actor.name} has forgotten a recipe.`);
         this.render();
     }

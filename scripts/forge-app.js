@@ -148,7 +148,12 @@ export class ForgeApp extends HandlebarsApplicationMixin(ApplicationV2) {
     async _onLearnRecipe(event) {
         event.preventDefault(); event.stopPropagation();
         if (!this.actor) { ui.notifications.warn("No actor associated."); return; }
-        await window.ArtificerFoundry.forgeRecipeManager.learnRecipe(this.actor.id, event.currentTarget.dataset.recipeId);
+        const recipeId = event.currentTarget.dataset.recipeId;
+        if (game.user.isGM) {
+            await window.ArtificerFoundry.forgeRecipeManager.learnRecipe(this.actor.id, recipeId);
+        } else {
+            game.socket.emit("module.artificer-foundry", { action: "learnForgeRecipe", actorId: this.actor.id, recipeId });
+        }
         ui.notifications.info(`${this.actor.name} has learned a new blueprint!`);
         this.render();
     }
@@ -156,7 +161,12 @@ export class ForgeApp extends HandlebarsApplicationMixin(ApplicationV2) {
     async _onForgetRecipe(event) {
         event.preventDefault(); event.stopPropagation();
         if (!this.actor) return;
-        await window.ArtificerFoundry.forgeRecipeManager.forgetRecipe(this.actor.id, event.currentTarget.dataset.recipeId);
+        const recipeId = event.currentTarget.dataset.recipeId;
+        if (game.user.isGM) {
+            await window.ArtificerFoundry.forgeRecipeManager.forgetRecipe(this.actor.id, recipeId);
+        } else {
+            game.socket.emit("module.artificer-foundry", { action: "forgetForgeRecipe", actorId: this.actor.id, recipeId });
+        }
         ui.notifications.info(`${this.actor.name} has forgotten a blueprint.`);
         this.render();
     }

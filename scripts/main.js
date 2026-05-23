@@ -67,10 +67,19 @@ Hooks.once('init', function () {
         default: {}
     });
 
-    game.settings.register(MODULE_ID, "showCraftingButton", {
-        name: "Show Crafting Button",
-        hint: "Display a 'Crafting' tab button on actor sheets.",
-        scope: "world",
+    game.settings.register(MODULE_ID, "showAlchemyButton", {
+        name: "Show Alchemy & Ingredients Tabs",
+        hint: "Display the Alchemy and Ingredient Catalog tabs on actor sheets.",
+        scope: "client",
+        config: true,
+        type: Boolean,
+        default: true
+    });
+
+    game.settings.register(MODULE_ID, "showForgeButton", {
+        name: "Show Forge & Materials Tabs",
+        hint: "Display the Item Forge and Materials Catalog tabs on actor sheets.",
+        scope: "client",
         config: true,
         type: Boolean,
         default: true
@@ -154,6 +163,21 @@ Hooks.once('ready', async function () {
     await forgeRecipeManager.loadRecipes();
 
     console.log(`${MODULE} | Data loaded`);
+
+    // Socket handler — allows players to learn/forget recipes via GM proxy
+    const SOCKET_NAME = `module.${MODULE_ID}`;
+    game.socket.on(SOCKET_NAME, async (data) => {
+        if (!game.user.isGM) return;
+        if (data.action === "learnRecipe") {
+            await recipeManager.learnRecipe(data.actorId, data.recipeId);
+        } else if (data.action === "forgetRecipe") {
+            await recipeManager.forgetRecipe(data.actorId, data.recipeId);
+        } else if (data.action === "learnForgeRecipe") {
+            await forgeRecipeManager.learnRecipe(data.actorId, data.recipeId);
+        } else if (data.action === "forgetForgeRecipe") {
+            await forgeRecipeManager.forgetRecipe(data.actorId, data.recipeId);
+        }
+    });
 
     window.ArtificerFoundry = {
         recipeManager,
@@ -319,7 +343,9 @@ function _tryInjectFromNode(node, attempt) {
 
 function injectCraftingTab(app, htmlArg) {
     try {
-        if (!game.settings.get(MODULE_ID, "showCraftingButton")) return;
+        const showAlchemy = game.settings.get(MODULE_ID, "showAlchemyButton");
+        const showForge = game.settings.get(MODULE_ID, "showForgeButton");
+        if (!showAlchemy && !showForge) return;
 
         const actor = app.document ?? app.object ?? app.actor;
         if (!actor || actor.documentName !== 'Actor') return;
@@ -340,7 +366,7 @@ function injectCraftingTab(app, htmlArg) {
 
         if (!root) return;
 
-        if (root.querySelector('.af-crafting-nav-item') && root.querySelector('.af-forge-nav-item') && root.querySelector('.af-materials-nav-item')) return;
+        if (root.querySelector('.af-crafting-nav-item') || root.querySelector('.af-forge-nav-item')) return;
 
         const NAV_SELECTORS = [
             'nav.tabs[data-group="primary"]',
@@ -361,37 +387,41 @@ function injectCraftingTab(app, htmlArg) {
 
         if (!tabsNav) return;
 
-        // Alchemy & Crafting tab (flask icon)
-        const navItem = document.createElement('a');
-        navItem.className = 'item af-crafting-nav-item';
-        navItem.title = 'Alchemy & Crafting Station';
-        navItem.innerHTML = `<i class="fas fa-flask"></i>`;
-        navItem._af_actor = actor;
-        tabsNav.appendChild(navItem);
+        if (showAlchemy) {
+            // Alchemy & Crafting tab (flask icon)
+            const navItem = document.createElement('a');
+            navItem.className = 'item af-crafting-nav-item';
+            navItem.title = 'Alchemy & Crafting Station';
+            navItem.innerHTML = `<i class="fas fa-flask"></i>`;
+            navItem._af_actor = actor;
+            tabsNav.appendChild(navItem);
 
-        // Ingredient Catalog tab (leaf icon)
-        const gathererItem = document.createElement('a');
-        gathererItem.className = 'item af-gatherer-nav-item';
-        gathererItem.title = 'Ingredient Catalog';
-        gathererItem.innerHTML = `<i class="fas fa-leaf"></i>`;
-        gathererItem._af_actor = actor;
-        tabsNav.appendChild(gathererItem);
+            // Ingredient Catalog tab (leaf icon)
+            const gathererItem = document.createElement('a');
+            gathererItem.className = 'item af-gatherer-nav-item';
+            gathererItem.title = 'Ingredient Catalog';
+            gathererItem.innerHTML = `<i class="fas fa-leaf"></i>`;
+            gathererItem._af_actor = actor;
+            tabsNav.appendChild(gathererItem);
+        }
 
-        // Item Forge tab (hammer/anvil icon)
-        const forgeItem = document.createElement('a');
-        forgeItem.className = 'item af-forge-nav-item';
-        forgeItem.title = 'Item Forge';
-        forgeItem.innerHTML = `<i class="fas fa-hammer"></i>`;
-        forgeItem._af_actor = actor;
-        tabsNav.appendChild(forgeItem);
+        if (showForge) {
+            // Item Forge tab (hammer/anvil icon)
+            const forgeItem = document.createElement('a');
+            forgeItem.className = 'item af-forge-nav-item';
+            forgeItem.title = 'Item Forge';
+            forgeItem.innerHTML = `<i class="fas fa-hammer"></i>`;
+            forgeItem._af_actor = actor;
+            tabsNav.appendChild(forgeItem);
 
-        // Materials Catalog tab (cubes icon)
-        const materialsItem = document.createElement('a');
-        materialsItem.className = 'item af-materials-nav-item';
-        materialsItem.title = 'Materials Catalog';
-        materialsItem.innerHTML = `<i class="fas fa-cubes"></i>`;
-        materialsItem._af_actor = actor;
-        tabsNav.appendChild(materialsItem);
+            // Materials Catalog tab (cubes icon)
+            const materialsItem = document.createElement('a');
+            materialsItem.className = 'item af-materials-nav-item';
+            materialsItem.title = 'Materials Catalog';
+            materialsItem.innerHTML = `<i class="fas fa-cubes"></i>`;
+            materialsItem._af_actor = actor;
+            tabsNav.appendChild(materialsItem);
+        }
 
     } catch (err) {
         console.error(`${MODULE} | injectCraftingTab error:`, err);
@@ -421,7 +451,7 @@ Hooks.on('renderApplicationV2', (app, html) => injectCraftingTab(app, html));
 Hooks.on('getActorSheetHeaderButtons', (app, buttons) => {
     const actor = app.document ?? app.object ?? app.actor;
     if (!actor || actor.documentName !== 'Actor') return;
-    if (!game.settings.get(MODULE_ID, "showCraftingButton")) return;
+    if (!game.settings.get(MODULE_ID, "showAlchemyButton") && !game.settings.get(MODULE_ID, "showForgeButton")) return;
     if (buttons.some(b => b.class === 'artificer-foundry-btn')) return;
     buttons.unshift({
         class: 'artificer-foundry-btn',
@@ -438,7 +468,7 @@ Hooks.on('getActorSheetHeaderButtons', (app, buttons) => {
     Hooks.on(hookName, (app, buttons) => {
         const actor = app.document ?? app.object ?? app.actor;
         if (!actor || actor.documentName !== 'Actor') return;
-        if (!game.settings.get(MODULE_ID, "showCraftingButton")) return;
+        if (!game.settings.get(MODULE_ID, "showAlchemyButton") && !game.settings.get(MODULE_ID, "showForgeButton")) return;
         if (buttons.some(b => b.action === MODULE_ID)) return;
         buttons.unshift({
             action: MODULE_ID,
