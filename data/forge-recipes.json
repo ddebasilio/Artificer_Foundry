@@ -522,7 +522,7 @@
   {
     "id": "dragon-scale-mail",
     "name": "Dragon Scale Mail",
-    "rarity": "rare",
+    "rarity": "very rare",
     "category": "armor",
     "learned": false,
     "ingredients": [
@@ -752,7 +752,7 @@
   {
     "id": "frost-brand",
     "name": "Frost Brand",
-    "rarity": "very_rare",
+    "rarity": "very rare",
     "category": "weapon",
     "learned": false,
     "ingredients": [
@@ -787,7 +787,7 @@
   {
     "id": "animated-shield",
     "name": "Animated Shield",
-    "rarity": "very_rare",
+    "rarity": "very rare",
     "category": "shield",
     "learned": false,
     "ingredients": [
@@ -822,7 +822,7 @@
   {
     "id": "belt-of-fire-giant-strength",
     "name": "Belt of Fire Giant Strength",
-    "rarity": "very_rare",
+    "rarity": "very rare",
     "category": "wondrous",
     "learned": false,
     "ingredients": [
@@ -857,7 +857,7 @@
   {
     "id": "wings-of-flying",
     "name": "Wings of Flying",
-    "rarity": "very_rare",
+    "rarity": "rare",
     "category": "wondrous",
     "learned": false,
     "ingredients": [
