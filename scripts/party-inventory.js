@@ -101,9 +101,7 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
 
     /** Broadcast refresh to all connected clients via socket */
     static _broadcastRefresh() {
-        // Refresh locally
         this._refreshLocal();
-        // Notify other clients
         game.socket.emit(SOCKET_NAME, { action: "refreshPartyInventory" });
     }
 
@@ -138,7 +136,11 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
         const rarityOrder = { common: 0, uncommon: 1, rare: 2, "very rare": 3, legendary: 4, artifact: 5 };
         const items = [...(inv.items || [])].sort((a, b) => (rarityOrder[a.rarity] ?? 9) - (rarityOrder[b.rarity] ?? 9));
 
-        // Determine which actors the current user owns
+        // Ensure every item has an img fallback
+        for (const item of items) {
+            if (!item.img) item.img = "icons/svg/item-bag.svg";
+        }
+
         const ownedActors = game.actors.filter(a => a.isOwner && a.type === "character");
 
         Object.assign(context, {
@@ -207,29 +209,6 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
             await this._takeAllCoins(actorId);
         });
 
-        // GM: Add item from character to party inventory
-        el.querySelector('.af-pi-add-item-btn')?.addEventListener('click', () => this._onAddItemDialog());
-
-        // GM: Clear all
-        el.querySelector('.af-pi-clear-all')?.addEventListener('click', async () => {
-            const confirm = await Dialog.confirm({
-                title: "Clear Party Inventory",
-                content: "<p>Remove all items and coins from the party inventory?</p>",
-            });
-            if (confirm) {
-                await PartyInventory._setInventory({ coins: {}, items: [] });
-                PartyInventory._broadcastRefresh();
-            }
-        });
-
-        // Item description expand
-        el.querySelectorAll('.af-pi-item-name').forEach(row => {
-            row.addEventListener('click', () => {
-                const desc = row.closest('.af-pi-item-row')?.querySelector('.af-pi-item-desc');
-                if (desc) desc.classList.toggle('expanded');
-            });
-        });
-
         // ── Drop zone: allow dropping items from character sheets onto party inventory ──
         el.addEventListener('dragover', (e) => {
             e.preventDefault();
@@ -272,10 +251,11 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
             return;
         }
 
-        // Add to party inventory
+        // Add to party inventory (include img for display)
         await PartyInventory.addItems([{
             id: foundry.utils.randomID(),
             name: item.name,
+            img: item.img || "icons/svg/item-bag.svg",
             rarity: item.system?.rarity || "common",
             type: item.type,
             text: item.system?.description?.value || "",
@@ -361,160 +341,67 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
                     price: { value: itemData.price || 0, denomination: "gp" },
                     quantity: 1,
                 },
-                img: "icons/svg/item-bag.svg",
+                img: itemData.img || "icons/svg/item-bag.svg",
             }]);
         }
-    }
-
-    _onAddItemDialog() {
-        const actors = game.actors.filter(a => a.type === "character");
-        const actorOptions = actors.map(a => `<option value="${a.id}">${a.name}</option>`).join("");
-
-        new Dialog({
-            title: "Add Item to Party Inventory",
-            content: `
-                <form>
-                    <div class="form-group">
-                        <label>From Character</label>
-                        <select name="actorId">${actorOptions}</select>
-                    </div>
-                    <p class="notes">Select a character, then pick an item from their inventory to move to the party inventory.</p>
-                </form>`,
-            buttons: {
-                next: {
-                    icon: '<i class="fas fa-arrow-right"></i>',
-                    label: "Select Item",
-                    callback: async (html) => {
-                        const form = html instanceof HTMLElement ? html.querySelector('form') : html[0]?.querySelector('form') ?? html.find?.('form')?.[0];
-                        const actorId = form?.querySelector('[name=actorId]')?.value;
-                        if (actorId) await this._showItemPickerDialog(actorId);
-                    }
-                },
-                cancel: { icon: '<i class="fas fa-times"></i>', label: "Cancel" }
-            },
-            default: "next",
-        }).render(true);
-    }
-
-    async _showItemPickerDialog(actorId) {
-        const actor = game.actors.get(actorId);
-        if (!actor) return;
-
-        const items = actor.items.filter(i => ["loot", "weapon", "equipment", "consumable", "tool", "backpack", "container"].includes(i.type));
-        if (items.length === 0) {
-            ui.notifications.warn(`${actor.name} has no transferable items.`);
-            return;
-        }
-
-        const itemOptions = items.map(i => `<option value="${i.id}">${i.name} (${i.type})</option>`).join("");
-
-        new Dialog({
-            title: `Move Item from ${actor.name}`,
-            content: `
-                <form>
-                    <div class="form-group">
-                        <label>Item</label>
-                        <select name="itemId">${itemOptions}</select>
-                    </div>
-                </form>`,
-            buttons: {
-                move: {
-                    icon: '<i class="fas fa-exchange-alt"></i>',
-                    label: "Move to Party",
-                    callback: async (html) => {
-                        const form = html instanceof HTMLElement ? html.querySelector('form') : html[0]?.querySelector('form') ?? html.find?.('form')?.[0];
-                        const itemId = form?.querySelector('[name=itemId]')?.value;
-                        if (itemId) await this._moveItemToParty(actor, itemId);
-                    }
-                },
-                cancel: { icon: '<i class="fas fa-times"></i>', label: "Cancel" }
-            },
-            default: "move",
-        }).render(true);
-    }
-
-    async _moveItemToParty(actor, itemId) {
-        const item = actor.items.get(itemId);
-        if (!item) return;
-
-        await PartyInventory.addItems([{
-            id: foundry.utils.randomID(),
-            name: item.name,
-            rarity: item.system?.rarity || "common",
-            type: item.type,
-            text: item.system?.description?.value || "",
-            price: item.system?.price?.value || 0,
-            source: "",
-        }]);
-
-        await actor.deleteEmbeddedDocuments("Item", [itemId]);
-        ui.notifications.info(`Moved ${item.name} from ${actor.name} to party inventory.`);
-        await ChatMessage.create({
-            content: `<p><strong>${actor.name}</strong> added <strong>${item.name}</strong> to the party inventory.</p>`,
-            speaker: { alias: "Party Inventory" },
-        });
     }
 }
 
 // ─── Global drop handler: handle party inventory items dropped on actor sheets ──
+// We use a flag to prevent the same drop from being processed multiple times.
 Hooks.once('ready', () => {
-    // Listen for drops on actor sheets — intercept party inventory items
     const DDImpl = foundry.applications.ux.DragDrop.implementation;
     const origDrop = DDImpl.prototype._handleDrop;
-    if (origDrop) {
-        const _piHandleDrop = async function(event) {
-            let data;
-            try {
-                data = JSON.parse(event.dataTransfer.getData("text/plain"));
-            } catch { return origDrop.call(this, event); }
+    if (!origDrop) return;
 
-            if (data.type !== "af-party-inventory-item") {
-                return origDrop.call(this, event);
-            }
-
-            // Find the actor sheet this was dropped on
-            const sheet = Object.values(ui.windows).find(w => {
-                const el = w.element instanceof HTMLElement ? w.element : w.element?.[0];
-                return el?.contains(event.target);
-            });
-            const actor = sheet?.document ?? sheet?.object ?? sheet?.actor;
-            if (!actor || actor.documentName !== "Actor") {
-                ui.notifications.warn("Drop items onto a character sheet.");
-                return;
-            }
-
-            const inv = PartyInventory._getInventory();
-            const item = inv.items?.find(i => i.id === data.itemId);
-            if (!item) {
-                ui.notifications.warn("Item no longer in party inventory.");
-                return;
-            }
-
-            // Import via Plutonium, then compendium, then basic creation
-            const tab = ui["af-party-inventory"];
-            if (tab) {
-                await tab._createItemOnActor(actor, item);
-            }
-            await PartyInventory.removeItem(data.itemId);
-
-            ui.notifications.info(`${actor.name} took ${item.name} from party inventory.`);
-            await ChatMessage.create({
-                content: `<p><strong>${actor.name}</strong> took <strong>${item.name}</strong> from the party inventory.</p>`,
-                speaker: { alias: "Party Inventory" },
-            });
-        };
-
-        DDImpl.prototype._handleDrop = function(event) {
-            let data;
-            try {
-                data = JSON.parse(event.dataTransfer.getData("text/plain"));
-            } catch { return origDrop.call(this, event); }
-
-            if (data.type === "af-party-inventory-item") {
-                _piHandleDrop.call(this, event);
-                return;
-            }
+    DDImpl.prototype._handleDrop = async function(event) {
+        let data;
+        try {
+            data = JSON.parse(event.dataTransfer.getData("text/plain"));
+        } catch {
             return origDrop.call(this, event);
-        };
-    }
+        }
+
+        if (data.type !== "af-party-inventory-item") {
+            return origDrop.call(this, event);
+        }
+
+        // Prevent duplicate processing — mark the event
+        if (event._afPiHandled) return;
+        event._afPiHandled = true;
+
+        // Find the actor sheet this was dropped on
+        const sheet = Object.values(ui.windows).find(w => {
+            const el = w.element instanceof HTMLElement ? w.element : w.element?.[0];
+            return el?.contains(event.target);
+        });
+        const actor = sheet?.document ?? sheet?.object ?? sheet?.actor;
+        if (!actor || actor.documentName !== "Actor") {
+            ui.notifications.warn("Drop items onto a character sheet.");
+            return;
+        }
+
+        // Check item still exists in inventory
+        const inv = PartyInventory._getInventory();
+        const item = inv.items?.find(i => i.id === data.itemId);
+        if (!item) {
+            ui.notifications.warn("Item no longer in party inventory.");
+            return;
+        }
+
+        // Remove from party inventory FIRST to prevent double-processing
+        await PartyInventory.removeItem(data.itemId);
+
+        // Import via Plutonium, then compendium, then basic creation
+        const tab = ui["af-party-inventory"];
+        if (tab) {
+            await tab._createItemOnActor(actor, item);
+        }
+
+        ui.notifications.info(`${actor.name} took ${item.name} from party inventory.`);
+        await ChatMessage.create({
+            content: `<p><strong>${actor.name}</strong> took <strong>${item.name}</strong> from the party inventory.</p>`,
+            speaker: { alias: "Party Inventory" },
+        });
+    };
 });
