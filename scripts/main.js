@@ -220,7 +220,7 @@ Hooks.once('ready', async function () {
     console.log(`${MODULE} | MutationObserver active on #${interfaceEl.id || interfaceEl.tagName}`);
 
     // ── Chat message roll button handler ─────────────────────────────────────
-    Hooks.on('renderChatMessage', (message, html) => {
+    Hooks.on('renderChatMessageHTML', (message, html) => {
         const el = html instanceof HTMLElement ? html : html?.[0] ?? html;
         if (!el) return;
         el.querySelectorAll('.af-gather-roll-btn').forEach(btn => {

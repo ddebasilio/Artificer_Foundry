@@ -1,4 +1,5 @@
 import {
+    loadIngredientData,
     getBiomes, getAbundanceModifiers, getTimeUnits,
     getWeatherModifiers, getSeasonModifiers, getSkillOptions,
     resolveForagingByDC, addIngredientToActor
@@ -67,6 +68,9 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
     async _prepareContext(options) {
         const context = await super._prepareContext(options);
         if (!game.user.isGM) return context;
+
+        // Ensure biome/ingredient data is loaded before building dropdowns
+        await loadIngredientData();
 
         const scene = game.scenes?.active;
         const sceneActors = [];
