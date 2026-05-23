@@ -610,40 +610,22 @@
     color: var(--color-text-light-primary, #b4b0a8);
 }
 
-/* Item rows */
-.af-lg-item-row {
-    border: 1px solid var(--color-border-dark-tertiary, rgba(255,255,255,0.1));
-    border-radius: 3px;
-    margin: 3px 0;
-    padding: 4px 6px;
-    background: transparent;
-    transition: background 0.15s;
+/* Loot generator item list — Foundry-native directory style */
+.af-lg-item-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
-.af-lg-item-row:hover {
-    background: rgba(255,255,255,0.04);
+.af-lg-item-list .directory-item {
+    position: relative;
 }
-.af-lg-item-header {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    flex-wrap: wrap;
-}
-.af-lg-item-icon {
-    width: 24px;
-    height: 24px;
-    flex-shrink: 0;
-    border: none;
-    border-radius: 2px;
-}
-.af-lg-item-name {
-    font-weight: bold;
-    font-size: 12px;
+.af-lg-item-list .entry-name {
     flex: 1;
-    color: var(--color-text-light-highlight, #f0e8d0);
 }
-.af-lg-item-rarity {
-    font-size: 10px;
-    font-style: italic;
+.af-lg-item-actions {
+    display: flex;
+    gap: 2px;
+    margin-left: auto;
 }
 .af-lg-reroll-item,
 .af-lg-item-info {
@@ -658,14 +640,6 @@
 .af-lg-reroll-item:hover,
 .af-lg-item-info:hover {
     color: var(--color-text-hyperlink, #ff6400);
-}
-.af-lg-item-meta {
-    font-size: 10px;
-    color: var(--color-text-light-primary, #b4b0a8);
-    margin-top: 2px;
-}
-.af-lg-item-meta span + span::before {
-    content: " · ";
 }
 .af-lg-item-desc {
     margin-top: 4px;
@@ -788,6 +762,15 @@
     list-style: none;
     margin: 0;
     padding: 0;
+}
+.af-pi-item-list .thumbnail,
+.af-lg-item-list .thumbnail {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    border: none;
+    border-radius: 2px;
+    object-fit: cover;
 }
 .af-pi-item-row.dragging {
     opacity: 0.4;

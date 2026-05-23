@@ -348,29 +348,21 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
 }
 
 // ─── Global drop handler: handle party inventory items dropped on actor sheets ──
-// We use a flag to prevent the same drop from being processed multiple times.
+// Use a document-level drop listener for maximum compatibility with ApplicationV2 sheets.
 Hooks.once('ready', () => {
-    const DDImpl = foundry.applications.ux.DragDrop.implementation;
-    const origDrop = DDImpl.prototype._handleDrop;
-    if (!origDrop) return;
-
-    DDImpl.prototype._handleDrop = async function(event) {
+    document.addEventListener('drop', async (event) => {
         let data;
         try {
             data = JSON.parse(event.dataTransfer.getData("text/plain"));
-        } catch {
-            return origDrop.call(this, event);
-        }
+        } catch { return; }
 
-        if (data.type !== "af-party-inventory-item") {
-            return origDrop.call(this, event);
-        }
+        if (data.type !== "af-party-inventory-item") return;
 
-        // Prevent duplicate processing — mark the event
+        // Prevent duplicate processing
         if (event._afPiHandled) return;
         event._afPiHandled = true;
 
-        // Find the actor sheet this was dropped on
+        // Find the actor sheet this was dropped on (supports both v1 and v2 app windows)
         const sheet = Object.values(ui.windows).find(w => {
             const el = w.element instanceof HTMLElement ? w.element : w.element?.[0];
             return el?.contains(event.target);
@@ -403,5 +395,5 @@ Hooks.once('ready', () => {
             content: `<p><strong>${actor.name}</strong> took <strong>${item.name}</strong> from the party inventory.</p>`,
             speaker: { alias: "Party Inventory" },
         });
-    };
+    });
 });

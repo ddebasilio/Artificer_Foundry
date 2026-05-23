@@ -115,6 +115,7 @@ export async function rollTreasureHoard(crTier) {
                         text: details?.text ?? "",
                         price: details?.price ?? 0,
                         source: details?.source ?? "",
+                        img: "icons/svg/item-bag.svg",
                     });
                 }
             }
@@ -141,6 +142,7 @@ export function rerollItem(rarity) {
         text: details?.text ?? "",
         price: details?.price ?? 0,
         source: details?.source ?? "",
+        img: "icons/svg/item-bag.svg",
     };
 }
 
