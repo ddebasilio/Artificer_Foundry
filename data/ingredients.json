@@ -72,7 +72,19 @@
     "Lich Finger Bone": "icons/commodities/bones/bones-hand-grey.webp",
     "Unicorn Horn": "icons/commodities/bones/horn-simple-white.webp",
     "Dragon Scale": "icons/commodities/biological/shell-ribbed-gold.webp",
-    "Demon Horn Fragment": "icons/commodities/bones/bone-broken-brown.webp"
+    "Demon Horn Fragment": "icons/commodities/bones/bone-broken-brown.webp",
+    "Adamantine Ingot": "icons/commodities/metal/ingot-steel.webp",
+    "Arcane Crystal": "icons/commodities/gems/gem-faceted-radiant-blue.webp",
+    "Arcane Dust": "icons/commodities/materials/powder-teal.webp",
+    "Arcane Essence": "icons/commodities/gems/gem-rough-cushion-teal.webp",
+    "Astral Shard": "icons/commodities/gems/gem-rough-pendeloque-blue.webp",
+    "Dragon Heart": "icons/commodities/biological/organ-heart-red.webp",
+    "Elemental Core": "icons/commodities/gems/gem-rough-oval-orange.webp",
+    "Giant's Nail": "icons/commodities/biological/hand-clawed-tan.webp",
+    "Iron Ingot": "icons/commodities/metal/ingot-green.webp",
+    "Leather Strips": "icons/commodities/leather/leather-worn-tan.webp",
+    "Mithral Ingot": "icons/commodities/metal/ingot-silver.webp",
+    "Steel Ingot": "icons/commodities/metal/ingot-engraved-silver.webp"
   },
   "typeIcons": {
     "common_herb": "icons/consumables/plants/herb-tied-bundle-green.webp",
@@ -229,6 +241,18 @@
     "Lich Finger Bone": 10000,
     "Unicorn Horn": 12000,
     "Dragon Scale": 7000,
-    "Demon Horn Fragment": 6000
+    "Demon Horn Fragment": 6000,
+    "Arcane Essence": 50,
+    "Elemental Core": 400,
+    "Iron Ingot": 5,
+    "Leather Strips": 2,
+    "Steel Ingot": 15,
+    "Adamantine Ingot": 300,
+    "Arcane Crystal": 500,
+    "Arcane Dust": 10,
+    "Astral Shard": 300,
+    "Dragon Heart": 8000,
+    "Giant's Nail": 20,
+    "Mithral Ingot": 200
   }
 }
