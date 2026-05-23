@@ -9,6 +9,8 @@ import { loadForgeData, getForgeTypeLabels } from "./forge-data.js";
 import { loadPotionData } from "./potion-data.js";
 import { loadItemData } from "./item-data.js";
 import { GatheringPanel } from "./gathering-panel.js";
+import { PartyInventory } from "./party-inventory.js";
+import { loadLootTables } from "./loot-generator.js";
 
 const MODULE    = "Artificer Foundry";
 const MODULE_ID = "artificer-foundry";
@@ -120,6 +122,15 @@ Hooks.once('init', function () {
         default: {}
     });
 
+    game.settings.register(MODULE_ID, "partyInventory", {
+        name: "Party Inventory",
+        hint: "Shared party loot storage.",
+        scope: "world",
+        config: false,
+        type: Object,
+        default: { coins: {}, items: [] }
+    });
+
     Handlebars.registerHelper('eq', (a, b) => a === b);
     Handlebars.registerHelper('typeLabel', (typeCode) => {
         const tl = getTypeLabels();
@@ -133,13 +144,21 @@ Hooks.once('init', function () {
     Handlebars.registerHelper('gt', (a, b) => a > b);
     Handlebars.registerHelper('join', (arr, sep) => (arr || []).join(sep || ", "));
 
-    // Register the Gathering sidebar tab for v13+/v14
+    // Register the Loot Generator sidebar tab (renamed from Gathering)
     CONFIG.ui.sidebar.TABS["af-gathering"] = {
         icon: "fa-solid fa-sack",
-        tooltip: "Gathering",
+        tooltip: "Loot Generator",
         gmOnly: true,
     };
     CONFIG.ui["af-gathering"] = GatheringPanel;
+
+    // Register the Party Inventory sidebar tab
+    CONFIG.ui.sidebar.TABS["af-party-inventory"] = {
+        icon: "fa-solid fa-treasure-chest",
+        tooltip: "Party Inventory",
+        gmOnly: false,
+    };
+    CONFIG.ui["af-party-inventory"] = PartyInventory;
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -155,6 +174,7 @@ Hooks.once('ready', async function () {
         loadForgeData(),
         loadPotionData(),
         loadItemData(),
+        loadLootTables(),
     ]);
 
     const recipeManager = new RecipeManager();
@@ -184,10 +204,19 @@ Hooks.once('ready', async function () {
         forgeRecipeManager,
         showCraftingApp: (actor) => new CraftingApp(actor ?? null).render(true),
         showForgeApp: (actor) => new ForgeApp(actor ?? null).render(true),
+        showLootGenerator: () => {
+            const tab = ui.sidebar?.tabInstances?.["af-gathering"] ?? ui.sidebar?.tabs?.["af-gathering"];
+            if (tab) tab.activate();
+        },
         showGatheringPanel: () => {
             const tab = ui.sidebar?.tabInstances?.["af-gathering"] ?? ui.sidebar?.tabs?.["af-gathering"];
             if (tab) tab.activate();
-        }
+        },
+        showPartyInventory: () => {
+            const tab = ui.sidebar?.tabInstances?.["af-party-inventory"] ?? ui.sidebar?.tabs?.["af-party-inventory"];
+            if (tab) tab.activate();
+        },
+        PartyInventory,
     };
 
     // Document-level capture handler for the injected crafting/gatherer nav buttons.

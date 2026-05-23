@@ -1,0 +1,85 @@
+<div class="af-party-inventory-panel">
+
+    {{!-- ── Character Select ── --}}
+    {{#if ownedActors.length}}
+    <section class="gathering-section af-pi-char-section">
+        <div class="gather-row">
+            <label>Character</label>
+            <select class="af-pi-actor-select">
+                {{#each ownedActors}}
+                    <option value="{{this.id}}">{{this.name}}</option>
+                {{/each}}
+            </select>
+        </div>
+    </section>
+    {{/if}}
+
+    {{!-- ── Coins ── --}}
+    {{#if hasCoins}}
+    <section class="gathering-section af-pi-coins-section">
+        <h3 class="gathering-section-title"><i class="fas fa-coins"></i> Coins</h3>
+        <div class="af-pi-coin-list">
+            {{#each coins}}
+            <div class="af-pi-coin-row">
+                <span class="af-pi-coin-amount">{{this.amount}}</span>
+                <span class="af-pi-coin-label">{{this.label}} ({{this.type}})</span>
+                <button class="af-pi-take-coins" data-coin-type="{{this.type}}" title="Take coins">
+                    <i class="fas fa-hand-holding"></i>
+                </button>
+            </div>
+            {{/each}}
+        </div>
+        <div class="af-pi-coin-actions">
+            <button class="af-pi-take-all-coins"><i class="fas fa-hand-holding-usd"></i> Take All Coins</button>
+        </div>
+    </section>
+    {{/if}}
+
+    {{!-- ── Items ── --}}
+    {{#if hasItems}}
+    <section class="gathering-section af-pi-items-section">
+        <h3 class="gathering-section-title"><i class="fas fa-magic"></i> Items</h3>
+        {{#each items}}
+        <div class="af-pi-item-row" data-item-id="{{this.id}}">
+            <div class="af-pi-item-header">
+                <span class="af-pi-item-name af-rarity-{{this.rarity}}">{{this.name}}</span>
+                <span class="af-pi-item-rarity">({{this.rarity}})</span>
+                <button class="af-pi-take-item" data-item-id="{{this.id}}" title="Take this item">
+                    <i class="fas fa-hand-holding"></i>
+                </button>
+            </div>
+            {{#if this.text}}
+            <div class="af-pi-item-desc">
+                <p>{{this.text}}</p>
+            </div>
+            {{/if}}
+        </div>
+        {{/each}}
+    </section>
+    {{/if}}
+
+    {{!-- ── Empty State ── --}}
+    {{#if isEmpty}}
+    <div class="af-pi-empty">
+        <p class="gathering-empty-notice"><i class="fas fa-box-open"></i> The party inventory is empty.</p>
+        <p class="gathering-empty-notice">Use the Loot Generator to roll treasure, then send it here.</p>
+    </div>
+    {{/if}}
+
+    {{!-- ── GM Actions ── --}}
+    {{#if isGM}}
+    <section class="gathering-section af-pi-gm-actions">
+        <div class="gathering-action">
+            <button class="af-pi-add-item-btn">
+                <i class="fas fa-plus"></i> Add Item from Character
+            </button>
+            {{#unless isEmpty}}
+            <button class="af-pi-clear-all">
+                <i class="fas fa-trash"></i> Clear All
+            </button>
+            {{/unless}}
+        </div>
+    </section>
+    {{/if}}
+
+</div>

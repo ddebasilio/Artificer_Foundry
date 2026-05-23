@@ -1,0 +1,137 @@
+{
+  "individualTreasure": {
+    "CR0-4": {
+      "label": "CR 0–4",
+      "coins": [
+        { "min": 1, "max": 30, "formula": "5d6", "type": "cp" },
+        { "min": 31, "max": 60, "formula": "4d6", "type": "sp" },
+        { "min": 61, "max": 70, "formula": "3d6", "type": "ep" },
+        { "min": 71, "max": 95, "formula": "3d6", "type": "gp" },
+        { "min": 96, "max": 100, "formula": "1d6", "type": "pp" }
+      ]
+    },
+    "CR5-10": {
+      "label": "CR 5–10",
+      "coins": [
+        { "min": 1, "max": 30, "formula": "4d6*100", "type": "cp" },
+        { "min": 31, "max": 60, "formula": "6d6*10", "type": "sp" },
+        { "min": 61, "max": 70, "formula": "3d6*10", "type": "ep" },
+        { "min": 71, "max": 95, "formula": "4d6*10", "type": "gp" },
+        { "min": 96, "max": 100, "formula": "2d6*10", "type": "pp" }
+      ]
+    },
+    "CR11-16": {
+      "label": "CR 11–16",
+      "coins": [
+        { "min": 1, "max": 20, "formula": "4d6*100", "type": "sp" },
+        { "min": 21, "max": 35, "formula": "1d6*100", "type": "ep" },
+        { "min": 36, "max": 75, "formula": "2d6*100", "type": "gp" },
+        { "min": 76, "max": 100, "formula": "2d6*10", "type": "pp" }
+      ]
+    },
+    "CR17+": {
+      "label": "CR 17+",
+      "coins": [
+        { "min": 1, "max": 15, "formula": "2d6*1000", "type": "ep" },
+        { "min": 16, "max": 55, "formula": "8d6*100", "type": "gp" },
+        { "min": 56, "max": 100, "formula": "3d6*100", "type": "pp" }
+      ]
+    }
+  },
+  "treasureHoard": {
+    "CR0-4": {
+      "label": "CR 0–4",
+      "baseCoins": {
+        "cp": "6d6*100",
+        "sp": "3d6*100",
+        "gp": "2d6*10"
+      },
+      "magicItems": [
+        { "min": 1, "max": 6, "items": [] },
+        { "min": 7, "max": 16, "items": [{ "count": "1d6", "rarity": "common" }] },
+        { "min": 17, "max": 26, "items": [{ "count": "1d4", "rarity": "uncommon" }] },
+        { "min": 27, "max": 36, "items": [{ "count": "1d6", "rarity": "common" }, { "count": "1d4", "rarity": "uncommon" }] },
+        { "min": 37, "max": 44, "items": [{ "count": "1d4", "rarity": "rare" }] },
+        { "min": 45, "max": 52, "items": [{ "count": "1d6", "rarity": "common" }, { "count": "1d4", "rarity": "rare" }] },
+        { "min": 53, "max": 64, "items": [{ "count": "1d4", "rarity": "uncommon" }, { "count": "1", "rarity": "rare" }] },
+        { "min": 65, "max": 75, "items": [{ "count": "1d6", "rarity": "common" }, { "count": "1d4", "rarity": "uncommon" }, { "count": "1", "rarity": "rare" }] },
+        { "min": 76, "max": 82, "items": [{ "count": "1d4", "rarity": "rare" }, { "count": "1", "rarity": "very rare" }] },
+        { "min": 83, "max": 92, "items": [{ "count": "1d6", "rarity": "uncommon" }, { "count": "1d4", "rarity": "rare" }] },
+        { "min": 93, "max": 97, "items": [{ "count": "1d4", "rarity": "rare" }, { "count": "1", "rarity": "very rare" }] },
+        { "min": 98, "max": 100, "items": [{ "count": "1", "rarity": "legendary" }] }
+      ]
+    },
+    "CR5-10": {
+      "label": "CR 5–10",
+      "baseCoins": {
+        "cp": "2d6*100",
+        "sp": "2d6*1000",
+        "gp": "6d6*100",
+        "pp": "3d6*10"
+      },
+      "magicItems": [
+        { "min": 1, "max": 4, "items": [] },
+        { "min": 5, "max": 10, "items": [{ "count": "1d6", "rarity": "common" }] },
+        { "min": 11, "max": 22, "items": [{ "count": "1d6", "rarity": "uncommon" }] },
+        { "min": 23, "max": 32, "items": [{ "count": "1d6", "rarity": "uncommon" }, { "count": "1d4", "rarity": "rare" }] },
+        { "min": 33, "max": 44, "items": [{ "count": "1d6", "rarity": "rare" }] },
+        { "min": 45, "max": 54, "items": [{ "count": "1d6", "rarity": "rare" }, { "count": "1", "rarity": "very rare" }] },
+        { "min": 55, "max": 65, "items": [{ "count": "1d4", "rarity": "very rare" }] },
+        { "min": 66, "max": 74, "items": [{ "count": "1d6", "rarity": "uncommon" }, { "count": "1d4", "rarity": "very rare" }] },
+        { "min": 75, "max": 82, "items": [{ "count": "1d4", "rarity": "rare" }, { "count": "1d4", "rarity": "very rare" }] },
+        { "min": 83, "max": 92, "items": [{ "count": "1d6", "rarity": "rare" }, { "count": "1", "rarity": "legendary" }] },
+        { "min": 93, "max": 97, "items": [{ "count": "1d4", "rarity": "very rare" }, { "count": "1", "rarity": "legendary" }] },
+        { "min": 98, "max": 100, "items": [{ "count": "1d4", "rarity": "legendary" }] }
+      ]
+    },
+    "CR11-16": {
+      "label": "CR 11–16",
+      "baseCoins": {
+        "gp": "4d6*1000",
+        "pp": "5d6*100"
+      },
+      "magicItems": [
+        { "min": 1, "max": 3, "items": [] },
+        { "min": 4, "max": 6, "items": [{ "count": "1d6", "rarity": "uncommon" }] },
+        { "min": 7, "max": 16, "items": [{ "count": "1d4", "rarity": "rare" }] },
+        { "min": 17, "max": 26, "items": [{ "count": "1d4", "rarity": "rare" }, { "count": "1d4", "rarity": "uncommon" }] },
+        { "min": 27, "max": 36, "items": [{ "count": "1d6", "rarity": "rare" }] },
+        { "min": 37, "max": 44, "items": [{ "count": "1d6", "rarity": "rare" }, { "count": "1", "rarity": "very rare" }] },
+        { "min": 45, "max": 54, "items": [{ "count": "1d4", "rarity": "very rare" }] },
+        { "min": 55, "max": 66, "items": [{ "count": "1d4", "rarity": "very rare" }, { "count": "1d4", "rarity": "rare" }] },
+        { "min": 67, "max": 74, "items": [{ "count": "1d6", "rarity": "very rare" }] },
+        { "min": 75, "max": 82, "items": [{ "count": "1d4", "rarity": "very rare" }, { "count": "1", "rarity": "legendary" }] },
+        { "min": 83, "max": 92, "items": [{ "count": "1d4", "rarity": "legendary" }] },
+        { "min": 93, "max": 100, "items": [{ "count": "1d4", "rarity": "legendary" }, { "count": "1", "rarity": "very rare" }] }
+      ]
+    },
+    "CR17+": {
+      "label": "CR 17+",
+      "baseCoins": {
+        "gp": "12d6*1000",
+        "pp": "8d6*1000"
+      },
+      "magicItems": [
+        { "min": 1, "max": 2, "items": [] },
+        { "min": 3, "max": 5, "items": [{ "count": "1d6", "rarity": "uncommon" }, { "count": "1d4", "rarity": "rare" }] },
+        { "min": 6, "max": 14, "items": [{ "count": "1d6", "rarity": "rare" }] },
+        { "min": 15, "max": 22, "items": [{ "count": "1d6", "rarity": "rare" }, { "count": "1d4", "rarity": "very rare" }] },
+        { "min": 23, "max": 32, "items": [{ "count": "1d6", "rarity": "very rare" }] },
+        { "min": 33, "max": 40, "items": [{ "count": "1d6", "rarity": "very rare" }, { "count": "1d4", "rarity": "legendary" }] },
+        { "min": 41, "max": 50, "items": [{ "count": "1d4", "rarity": "legendary" }] },
+        { "min": 51, "max": 60, "items": [{ "count": "1d4", "rarity": "legendary" }, { "count": "1d6", "rarity": "very rare" }] },
+        { "min": 61, "max": 70, "items": [{ "count": "1d6", "rarity": "legendary" }] },
+        { "min": 71, "max": 80, "items": [{ "count": "1d6", "rarity": "legendary" }, { "count": "1d4", "rarity": "artifact" }] },
+        { "min": 81, "max": 90, "items": [{ "count": "1d4", "rarity": "artifact" }] },
+        { "min": 91, "max": 100, "items": [{ "count": "1d6", "rarity": "legendary" }, { "count": "1d4", "rarity": "artifact" }] }
+      ]
+    }
+  },
+  "coinConversion": {
+    "cp": { "label": "Copper (cp)", "gpValue": 0.01 },
+    "sp": { "label": "Silver (sp)", "gpValue": 0.1 },
+    "ep": { "label": "Electrum (ep)", "gpValue": 0.5 },
+    "gp": { "label": "Gold (gp)", "gpValue": 1 },
+    "pp": { "label": "Platinum (pp)", "gpValue": 10 }
+  }
+}

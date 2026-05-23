@@ -264,9 +264,11 @@
 .af-materials-nav-item i { color: #8a8a60; }
 
 /* ═══════════════════════════════════════════════════════════════
-   GATHERING PANEL — Sidebar Tab
+   GATHERING / LOOT / PARTY INVENTORY PANELS — Sidebar Tabs
    ═══════════════════════════════════════════════════════════════ */
-.af-gathering-panel {
+.af-gathering-panel,
+.af-loot-generator-panel,
+.af-party-inventory-panel {
     padding: 8px;
     font-size: 13px;
     color: inherit;
@@ -274,13 +276,17 @@
     flex-direction: column;
     gap: 8px;
 }
-.af-gathering-panel .gathering-section {
+.af-gathering-panel .gathering-section,
+.af-loot-generator-panel .gathering-section,
+.af-party-inventory-panel .gathering-section {
     background: var(--color-cool-5, rgba(0,0,0,0.04));
     border: 1px solid var(--color-border-light-2, #b5b3a4);
     border-radius: 4px;
     padding: 6px 8px;
 }
-.af-gathering-panel .gathering-section-title {
+.af-gathering-panel .gathering-section-title,
+.af-loot-generator-panel .gathering-section-title,
+.af-party-inventory-panel .gathering-section-title {
     margin: 0 0 6px;
     font-size: 12px;
     font-weight: bold;
@@ -288,12 +294,14 @@
     border-bottom: 1px solid var(--color-border-light-2, #b5b3a4);
     padding-bottom: 4px;
 }
-.af-gathering-panel .gathering-actor-list {
+.af-gathering-panel .gathering-actor-list,
+.af-loot-generator-panel .gathering-actor-list {
     display: flex;
     flex-direction: column;
     gap: 6px;
 }
-.af-gathering-panel .gathering-actor-row {
+.af-gathering-panel .gathering-actor-row,
+.af-loot-generator-panel .gathering-actor-row {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -304,34 +312,43 @@
     border-radius: 3px;
     background: var(--color-cool-5, rgba(0,0,0,0.04));
 }
-.af-gathering-panel .gathering-actor-row input[type="checkbox"] {
+.af-gathering-panel .gathering-actor-row input[type="checkbox"],
+.af-loot-generator-panel .gathering-actor-row input[type="checkbox"] {
     margin: 0 2px 0 0;
     width: 14px;
     height: 14px;
     flex-shrink: 0;
 }
-.af-gathering-panel .gathering-select-controls {
+.af-gathering-panel .gathering-select-controls,
+.af-loot-generator-panel .gathering-select-controls {
     margin-top: 4px;
     font-size: 11px;
 }
-.af-gathering-panel .gathering-select-controls a {
+.af-gathering-panel .gathering-select-controls a,
+.af-loot-generator-panel .gathering-select-controls a {
     cursor: pointer;
     color: var(--color-text-hyperlink, #4b4a44);
     text-decoration: underline;
 }
-.af-gathering-panel .gathering-empty-notice {
+.af-gathering-panel .gathering-empty-notice,
+.af-loot-generator-panel .gathering-empty-notice,
+.af-party-inventory-panel .gathering-empty-notice {
     font-size: 11px;
     color: var(--color-text-dark-secondary, #7a7971);
     font-style: italic;
     margin: 0;
 }
-.af-gathering-panel .gather-row {
+.af-gathering-panel .gather-row,
+.af-loot-generator-panel .gather-row,
+.af-party-inventory-panel .gather-row {
     display: flex;
     align-items: center;
     gap: 6px;
     margin-bottom: 4px;
 }
-.af-gathering-panel .gather-row label {
+.af-gathering-panel .gather-row label,
+.af-loot-generator-panel .gather-row label,
+.af-party-inventory-panel .gather-row label {
     font-size: 11px;
     font-weight: bold;
     min-width: 65px;
@@ -340,7 +357,13 @@
 .af-gathering-panel .gather-row select,
 .af-gathering-panel .gather-row input[type="number"],
 .af-gathering-panel .gather-dc-row input[type="number"],
-.af-gathering-panel select {
+.af-gathering-panel select,
+.af-loot-generator-panel .gather-row select,
+.af-loot-generator-panel .gather-row input[type="number"],
+.af-loot-generator-panel .gather-dc-row input[type="number"],
+.af-loot-generator-panel select,
+.af-party-inventory-panel .gather-row select,
+.af-party-inventory-panel select {
     flex: 1;
     font-size: 12px;
     padding: 4px 6px;
@@ -357,22 +380,26 @@
     opacity: 1;
     cursor: pointer;
 }
-.af-gathering-panel .gather-row input[type="number"] {
+.af-gathering-panel .gather-row input[type="number"],
+.af-loot-generator-panel .gather-row input[type="number"] {
     max-width: 50px;
     flex: 0 0 50px;
 }
-.af-gathering-panel .gather-dc-row {
+.af-gathering-panel .gather-dc-row,
+.af-loot-generator-panel .gather-dc-row {
     display: flex;
     align-items: center;
     gap: 6px;
     margin-bottom: 4px;
 }
-.af-gathering-panel .gather-dc-row label {
+.af-gathering-panel .gather-dc-row label,
+.af-loot-generator-panel .gather-dc-row label {
     font-size: 11px;
     font-weight: bold;
     min-width: 25px;
 }
-.af-gathering-panel .dc-display {
+.af-gathering-panel .dc-display,
+.af-loot-generator-panel .dc-display {
     width: 50px;
     font-size: 12px;
     padding: 3px 5px;
@@ -382,11 +409,13 @@
     color: var(--color-text-dark-primary, #191813);
     text-align: center;
 }
-.af-gathering-panel .dc-auto-label {
+.af-gathering-panel .dc-auto-label,
+.af-loot-generator-panel .dc-auto-label {
     font-size: 10px;
     color: var(--color-text-dark-secondary, #7a7971);
 }
-.af-gathering-panel .dc-reset-btn {
+.af-gathering-panel .dc-reset-btn,
+.af-loot-generator-panel .dc-reset-btn {
     background: none;
     border: none;
     cursor: pointer;
@@ -394,10 +423,13 @@
     color: var(--color-text-hyperlink, #4b4a44);
     padding: 2px 4px;
 }
-.af-gathering-panel .gathering-action {
+.af-gathering-panel .gathering-action,
+.af-loot-generator-panel .gathering-action,
+.af-party-inventory-panel .gathering-action {
     padding: 4px 0;
 }
-.af-gathering-panel .request-roll-btn {
+.af-gathering-panel .request-roll-btn,
+.af-loot-generator-panel .request-roll-btn {
     width: 100%;
     padding: 6px 10px;
     font-size: 12px;
@@ -409,12 +441,14 @@
     color: var(--color-text-dark-primary, #191813);
     transition: background 0.15s;
 }
-.af-gathering-panel .gathering-player-label {
+.af-gathering-panel .gathering-player-label,
+.af-loot-generator-panel .gathering-player-label {
     font-size: 10px;
     opacity: 0.7;
     font-style: italic;
 }
-.af-gathering-panel .request-roll-btn:hover {
+.af-gathering-panel .request-roll-btn:hover,
+.af-loot-generator-panel .request-roll-btn:hover {
     background: var(--color-bg-btn-hover, #b8b6a8);
 }
 
@@ -480,4 +514,310 @@
 .af-gather-roll-btn:disabled {
     opacity: 0.7;
     cursor: not-allowed;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   LOOT GENERATOR
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* Roll button */
+.af-lg-roll-btn {
+    width: 100%;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    border: 1px solid #4a7020;
+    border-radius: 4px;
+    background: linear-gradient(180deg, #2a4a10 0%, #1a3008 100%);
+    color: #c0e080;
+    transition: background 0.15s;
+}
+.af-lg-roll-btn:hover {
+    background: linear-gradient(180deg, #3a5a18 0%, #2a4010 100%);
+    box-shadow: 0 0 6px rgba(80,160,30,0.4);
+}
+
+/* Mode tabs */
+.af-lg-mode-tabs {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 6px;
+    border-bottom: 2px solid var(--color-border-light-2, #b5b3a4);
+    padding-bottom: 0;
+}
+.af-lg-mode-tab {
+    flex: 1;
+    padding: 6px 8px;
+    border: 1px solid var(--color-border-light-2, #b5b3a4);
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+    background: var(--color-bg-option, #f0f0f0);
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: bold;
+    text-align: center;
+    color: inherit;
+    transition: background 0.15s;
+}
+.af-lg-mode-tab:hover {
+    background: var(--color-bg-btn-hover, #e0e0e0);
+}
+.af-lg-mode-tab.active {
+    background: #4b6a2e;
+    color: #fff;
+    border-color: #3a5522;
+}
+
+/* Loot results */
+.af-lg-results h4 {
+    font-size: 12px;
+    font-weight: bold;
+    margin: 6px 0 4px;
+    color: var(--color-text-dark-primary, #191813);
+}
+.af-lg-coin-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.af-lg-coin-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 4px;
+    font-size: 12px;
+}
+.af-lg-coin-amount {
+    font-weight: bold;
+    min-width: 50px;
+    text-align: right;
+}
+.af-lg-coin-type {
+    color: var(--color-text-dark-secondary, #7a7971);
+}
+
+/* Item rows */
+.af-lg-item-row {
+    border: 1px solid var(--color-border-light-2, #b5b3a4);
+    border-radius: 4px;
+    margin: 4px 0;
+    padding: 4px 6px;
+    background: var(--color-bg-option, rgba(255,255,255,0.5));
+}
+.af-lg-item-header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+.af-lg-item-name {
+    font-weight: bold;
+    font-size: 12px;
+    flex: 1;
+}
+.af-lg-item-rarity {
+    font-size: 10px;
+    color: var(--color-text-dark-secondary, #7a7971);
+    font-style: italic;
+}
+.af-lg-reroll-item,
+.af-lg-item-info {
+    background: none;
+    border: 1px solid var(--color-border-light-2, #b5b3a4);
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 11px;
+    padding: 2px 5px;
+    color: var(--color-text-hyperlink, #4b4a44);
+    transition: background 0.15s;
+}
+.af-lg-reroll-item:hover,
+.af-lg-item-info:hover {
+    background: var(--color-bg-btn-hover, #e0e0e0);
+}
+.af-lg-item-meta {
+    font-size: 10px;
+    color: var(--color-text-dark-secondary, #7a7971);
+    margin-top: 2px;
+}
+.af-lg-item-meta span + span::before {
+    content: " · ";
+}
+.af-lg-item-desc {
+    margin-top: 4px;
+    padding: 4px 6px;
+    background: var(--color-bg-option, rgba(0,0,0,0.03));
+    border-radius: 3px;
+    font-size: 11px;
+    line-height: 1.4;
+    color: var(--color-text-dark-primary, #191813);
+}
+.af-lg-item-desc p {
+    margin: 0;
+}
+
+/* Send to party button */
+.af-lg-send-actions {
+    margin-top: 6px;
+}
+.af-lg-send-to-party {
+    width: 100%;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    border: 1px solid #2a5a8a;
+    border-radius: 4px;
+    background: linear-gradient(180deg, #3a7ab8 0%, #2a5a8a 100%);
+    color: #fff;
+    transition: background 0.15s;
+}
+.af-lg-send-to-party:hover {
+    background: linear-gradient(180deg, #4a8ac8 0%, #3a6a9a 100%);
+}
+
+/* Rarity colors */
+.af-rarity-common { color: #1a1a1a; }
+.af-rarity-uncommon { color: #1a8a1a; }
+.af-rarity-rare { color: #2a4ab8; }
+.af-rarity-very\ rare,
+[class*="af-rarity-very"] { color: #8a2ab8; }
+.af-rarity-legendary { color: #c8a020; }
+.af-rarity-artifact { color: #c83030; }
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   PARTY INVENTORY
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+.af-pi-coin-list {
+    margin: 0;
+    padding: 0;
+}
+.af-pi-coin-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 4px;
+    font-size: 12px;
+}
+.af-pi-coin-amount {
+    font-weight: bold;
+    min-width: 50px;
+    text-align: right;
+}
+.af-pi-coin-label {
+    flex: 1;
+    color: var(--color-text-dark-secondary, #7a7971);
+}
+.af-pi-take-coins,
+.af-pi-take-item {
+    background: none;
+    border: 1px solid var(--color-border-light-2, #b5b3a4);
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 11px;
+    padding: 2px 6px;
+    color: var(--color-text-hyperlink, #4b4a44);
+    transition: background 0.15s;
+}
+.af-pi-take-coins:hover,
+.af-pi-take-item:hover {
+    background: var(--color-bg-btn-hover, #e0e0e0);
+}
+.af-pi-coin-actions {
+    margin-top: 4px;
+}
+.af-pi-take-all-coins {
+    width: 100%;
+    padding: 4px 8px;
+    font-size: 11px;
+    cursor: pointer;
+    border: 1px solid var(--color-border-light-2, #b5b3a4);
+    border-radius: 4px;
+    background: var(--color-bg-option, #f0f0f0);
+    color: inherit;
+}
+.af-pi-take-all-coins:hover {
+    background: var(--color-bg-btn-hover, #e0e0e0);
+}
+
+/* Party inventory items */
+.af-pi-item-row {
+    border: 1px solid var(--color-border-light-2, #b5b3a4);
+    border-radius: 4px;
+    margin: 4px 0;
+    padding: 4px 6px;
+    background: var(--color-bg-option, rgba(255,255,255,0.5));
+}
+.af-pi-item-header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.af-pi-item-name {
+    font-weight: bold;
+    font-size: 12px;
+    flex: 1;
+    cursor: pointer;
+}
+.af-pi-item-name:hover {
+    text-decoration: underline;
+}
+.af-pi-item-rarity {
+    font-size: 10px;
+    color: var(--color-text-dark-secondary, #7a7971);
+    font-style: italic;
+}
+.af-pi-item-desc {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    font-size: 11px;
+    line-height: 1.4;
+    padding: 0 4px;
+}
+.af-pi-item-desc.expanded {
+    max-height: 300px;
+    padding: 4px;
+    margin-top: 4px;
+    background: var(--color-bg-option, rgba(0,0,0,0.03));
+    border-radius: 3px;
+}
+.af-pi-item-desc p {
+    margin: 0;
+}
+
+.af-pi-empty {
+    text-align: center;
+    padding: 12px 0;
+}
+
+.af-pi-gm-actions .gathering-action {
+    display: flex;
+    gap: 4px;
+}
+.af-pi-add-item-btn,
+.af-pi-clear-all {
+    flex: 1;
+    padding: 5px 8px;
+    font-size: 11px;
+    cursor: pointer;
+    border: 1px solid var(--color-border-dark-2, #6e6e6e);
+    border-radius: 4px;
+    background: var(--color-bg-btn, #c9c7b8);
+    color: var(--color-text-dark-primary, #191813);
+    transition: background 0.15s;
+}
+.af-pi-add-item-btn:hover,
+.af-pi-clear-all:hover {
+    background: var(--color-bg-btn-hover, #b8b6a8);
+}
+.af-pi-clear-all {
+    background: #8a2020;
+    color: #fff;
+    border-color: #6a1010;
+}
+.af-pi-clear-all:hover {
+    background: #a03030;
 }

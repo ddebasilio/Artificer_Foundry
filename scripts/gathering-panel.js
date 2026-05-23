@@ -5,6 +5,11 @@ import {
     resolveForagingByDC, addIngredientToActor
 } from "./ingredient-data.js";
 import { addForgeMaterialToActor } from "./forge-data.js";
+import {
+    loadLootTables, getCRTiers, getLootTypes,
+    rollIndividualTreasure, rollTreasureHoard, rerollItem
+} from "./loot-generator.js";
+import { PartyInventory } from "./party-inventory.js";
 
 const MODULE_ID = "artificer-foundry";
 
@@ -17,7 +22,7 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
 
     static PARTS = {
         gathering: {
-            template: "modules/artificer-foundry/templates/gathering-panel.hbs",
+            template: "modules/artificer-foundry/templates/loot-generator-panel.hbs",
         }
     };
 
@@ -38,6 +43,12 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
         this.skillKey   = "sur";
         this.gatherMode = "ingredients"; // "ingredients" or "materials"
         this.selectedActorIds = new Set();
+
+        // Loot generator state
+        this.mode      = "loot";       // "loot" or "gathering"
+        this.lootType  = "hoard";      // "hoard" or "individual"
+        this.crTier    = "CR0-4";
+        this.lootResult = null;        // { coins, items } from last roll
     }
 
     // ─── Computed DC ────────────────────────────────────────────────────────────
@@ -69,8 +80,9 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
         const context = await super._prepareContext(options);
         if (!game.user.isGM) return context;
 
-        // Ensure biome/ingredient data is loaded before building dropdowns
+        // Ensure data is loaded
         await loadIngredientData();
+        await loadLootTables();
 
         const scene = game.scenes?.active;
         const sceneActors = [];
@@ -93,7 +105,35 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
         const abundanceMods = getAbundanceModifiers();
         const timeUnits = getTimeUnits();
 
+        // Format loot result for template
+        let lootResult = null;
+        if (this.lootResult) {
+            const coinLabels = { cp: "Copper", sp: "Silver", ep: "Electrum", gp: "Gold", pp: "Platinum" };
+            const coinOrder = ["pp", "gp", "ep", "sp", "cp"];
+            const coins = coinOrder
+                .filter(c => (this.lootResult.coins?.[c] || 0) > 0)
+                .map(c => ({ type: c, label: coinLabels[c], amount: this.lootResult.coins[c] }));
+
+            lootResult = {
+                coins,
+                hasCoins: coins.length > 0,
+                items: this.lootResult.items || [],
+                hasItems: (this.lootResult.items || []).length > 0,
+            };
+        }
+
         Object.assign(context, {
+            // Mode
+            mode: this.mode,
+
+            // Loot generator
+            crTiers:   getCRTiers(),
+            lootTypes: getLootTypes(),
+            crTier:    this.crTier,
+            lootType:  this.lootType,
+            lootResult,
+
+            // Gathering
             sceneActors,
             biomes:     Object.entries(biomes).map(([k, v])             => ({ value: k, ...v })),
             abundances: Object.entries(abundanceMods).map(([k, v]) => ({ value: k, ...v })),
@@ -124,6 +164,46 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
         if (!game.user.isGM) return;
 
         const el = this.element;
+
+        // ── Mode tabs ──
+        el.querySelectorAll('.af-lg-mode-tab').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.mode = btn.dataset.mode;
+                el.querySelector('.af-lg-loot-mode').style.display = this.mode === 'loot' ? '' : 'none';
+                el.querySelector('.af-lg-gathering-mode').style.display = this.mode === 'gathering' ? '' : 'none';
+                el.querySelectorAll('.af-lg-mode-tab').forEach(b => b.classList.toggle('active', b.dataset.mode === this.mode));
+            });
+        });
+
+        // ── Loot generator controls ──
+        el.querySelector('.af-lg-loot-type')?.addEventListener('change', e => { this.lootType = e.target.value; });
+        el.querySelector('.af-lg-cr-tier')?.addEventListener('change', e => { this.crTier = e.target.value; });
+        el.querySelector('.af-lg-roll-btn')?.addEventListener('click', () => this._onRollLoot());
+
+        // Reroll individual items
+        el.querySelectorAll('.af-lg-reroll-item').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const itemId = btn.dataset.itemId;
+                const rarity = btn.dataset.rarity;
+                this._onRerollItem(itemId, rarity);
+            });
+        });
+
+        // Toggle item description
+        el.querySelectorAll('.af-lg-item-info').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const row = btn.closest('.af-lg-item-row');
+                const desc = row?.querySelector('.af-lg-item-desc');
+                if (desc) desc.style.display = desc.style.display === 'none' ? '' : 'none';
+            });
+        });
+
+        // Send to party inventory
+        el.querySelector('.af-lg-send-to-party')?.addEventListener('click', () => this._onSendToParty());
+
+        // ── Gathering controls (same as before) ──
 
         // Player checkboxes
         el.querySelectorAll('.gathering-player-check').forEach(cb => {
@@ -216,7 +296,63 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
         el.querySelector('.request-roll-btn')?.addEventListener('click', this._onRequestRoll.bind(this));
     }
 
-    // ─── Request Roll ────────────────────────────────────────────────────────────
+    // ─── Loot Generator Actions ──────────────────────────────────────────────────
+
+    async _onRollLoot() {
+        try {
+            if (this.lootType === "individual") {
+                this.lootResult = await rollIndividualTreasure(this.crTier);
+            } else {
+                this.lootResult = await rollTreasureHoard(this.crTier);
+            }
+            this.render(true);
+        } catch (err) {
+            console.error("Artificer Foundry | Loot roll error:", err);
+            ui.notifications.error("Failed to roll loot. Check console for details.");
+        }
+    }
+
+    _onRerollItem(itemId, rarity) {
+        if (!this.lootResult?.items) return;
+        const idx = this.lootResult.items.findIndex(i => i.id === itemId);
+        if (idx === -1) return;
+
+        const newItem = rerollItem(rarity);
+        if (newItem) {
+            this.lootResult.items[idx] = newItem;
+            this.render(true);
+        }
+    }
+
+    async _onSendToParty() {
+        if (!this.lootResult) return;
+
+        await PartyInventory.addLoot(this.lootResult);
+        ui.notifications.info("Loot sent to Party Inventory!");
+
+        // Post to chat
+        let msg = `<p><strong><i class="fas fa-treasure-chest"></i> Loot added to Party Inventory</strong></p>`;
+        const coinLabels = { cp: "Copper", sp: "Silver", ep: "Electrum", gp: "Gold", pp: "Platinum" };
+        if (this.lootResult.coins) {
+            const coinEntries = Object.entries(this.lootResult.coins).filter(([, v]) => v > 0);
+            if (coinEntries.length) {
+                msg += `<p><strong>Coins:</strong> ${coinEntries.map(([t, a]) => `${a} ${coinLabels[t] || t}`).join(", ")}</p>`;
+            }
+        }
+        if (this.lootResult.items?.length) {
+            msg += `<p><strong>Items:</strong></p><ul>`;
+            for (const item of this.lootResult.items) {
+                msg += `<li>${item.name} <em>(${item.rarity})</em></li>`;
+            }
+            msg += `</ul>`;
+        }
+        await ChatMessage.create({ content: msg, speaker: { alias: "Loot Generator" } });
+
+        this.lootResult = null;
+        this.render(true);
+    }
+
+    // ─── Request Roll (gathering) ────────────────────────────────────────────────
 
     async _onRequestRoll() {
         if (this.selectedActorIds.size === 0) {
