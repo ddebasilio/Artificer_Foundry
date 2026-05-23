@@ -258,20 +258,28 @@ export class ForgeApp extends HandlebarsApplicationMixin(ApplicationV2) {
         const output = recipe.output;
         const compendiumItem = await this._findInCompendiums(output.name);
 
-        const cleanItemData = {
-            name: output.name,
-            type: compendiumItem?.type ?? (output.type === "weapon" ? "weapon" : "equipment"),
-            img: output.img || compendiumItem?.img || "icons/svg/item-bag.svg",
-            system: {
-                quantity: output.quantity ?? 1,
-                description: {
-                    value: compendiumItem?.system?.description?.value || ""
+        let itemData;
+        if (compendiumItem) {
+            // Clone full compendium item data to preserve all mechanical properties
+            itemData = compendiumItem.toObject();
+            itemData.name = output.name;
+            if (output.img) itemData.img = output.img;
+            if (output.quantity && itemData.system) itemData.system.quantity = output.quantity;
+            delete itemData._id;
+        } else {
+            itemData = {
+                name: output.name,
+                type: output.type === "weapon" ? "weapon" : "equipment",
+                img: output.img || "icons/svg/item-bag.svg",
+                system: {
+                    quantity: output.quantity ?? 1,
+                    description: { value: "" }
                 }
-            }
-        };
+            };
+        }
 
         try {
-            await this.actor.createEmbeddedDocuments("Item", [cleanItemData]);
+            await this.actor.createEmbeddedDocuments("Item", [itemData]);
             ui.notifications.info(`\u2713 ${this.actor.name} forged ${output.name}!`);
         } catch (error) {
             console.error(`Artificer Foundry | Failed to create forged item ${output.name}. Error:`, error);

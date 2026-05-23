@@ -21,7 +21,8 @@
       "img": "icons/consumables/potions/bottle-corked-red.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "This potion is a magic item. As a Bonus Action, you can drink it or administer it to another creature within 5 feet of yourself. The creature that drinks the magical red fluid in this vial regains 2d4 + 2 Hit Points. The potion's red liquid glimmers when agitated."
   },
   {
     "id": "antitoxin",
@@ -98,7 +99,8 @@
       "img": "icons/consumables/potions/bottle-conical-corked-labeled-shell-cyan.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you gain a Climb Speed equal to your Speed for 1 hour. During this time, you have Advantage on Strength (Athletics) checks to climb.\n\nThis potion is separated into brown, silver, and gray layers resembling bands of stone. Shaking the bottle fails to mix the colors."
   },
   {
     "id": "potion-greater-healing",
@@ -127,7 +129,8 @@
       "img": "icons/consumables/potions/bottle-corked-red.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "You regain 4d4 + 4 Hit Points when you drink this potion. The potion's red liquid glimmers when agitated."
   },
   {
     "id": "potion-cold-resistance",
@@ -156,7 +159,8 @@
       "img": "icons/consumables/potions/bottle-conical-corked-cyan.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you have Resistance to Cold damage for 1 hour."
   },
   {
     "id": "potion-fire-resistance",
@@ -180,7 +184,8 @@
       "img": "icons/consumables/potions/bottle-round-corked-orange.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you have Resistance to Fire damage for 1 hour."
   },
   {
     "id": "potion-lightning-resistance",
@@ -209,7 +214,8 @@
       "img": "icons/consumables/potions/bottle-round-corked-yellow.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you have Resistance to Lightning damage for 1 hour."
   },
   {
     "id": "potion-necrotic-resistance",
@@ -238,7 +244,8 @@
       "img": "icons/consumables/potions/bottle-ornate-bat-teal.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you have Resistance to Necrotic damage for 1 hour."
   },
   {
     "id": "potion-poison",
@@ -267,7 +274,8 @@
       "img": "icons/consumables/potions/bottle-corked-green.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "This concoction looks, smells, and tastes like a Potion of Healing or another beneficial potion. However, it is actually poison masked by illusion magic. Identify reveals its true nature.\n\nIf you drink this potion, you take 4d6 Poison damage and must succeed on a DC 13 Constitution saving throw or have the Poisoned condition for 1 hour."
   },
   {
     "id": "potion-psychic-resistance",
@@ -291,7 +299,8 @@
       "img": "icons/consumables/potions/bottle-bulb-corked-purple.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you have Resistance to Psychic damage for 1 hour."
   },
   {
     "id": "potion-psionic-fortitude",
@@ -315,7 +324,8 @@
       "img": "icons/consumables/potions/bottle-conical-corked-purple.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you have advantage for 1 hour on saving throws you make to avoid or end the charmed or stunned condition on yourself.\n\nThis black potion swirls with shimmering flecks of pink and purple."
   },
   {
     "id": "potion-radiant-resistance",
@@ -339,7 +349,8 @@
       "img": "icons/consumables/potions/bottle-round-corked-yellow.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you have Resistance to Radiant damage for 1 hour."
   },
   {
     "id": "potion-resistance",
@@ -368,7 +379,8 @@
       "img": "icons/consumables/potions/bottle-corked-blue.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you have Resistance to one type of damage for 1 hour. The DM chooses the type or determines it randomly by rolling on the following table.\n\nd10Damage Type1Acid2Cold3Fire4Force5Lightning6Necrotic7Poison8Psychic9Radiant10Thunder"
   },
   {
     "id": "potion-thunder-resistance",
@@ -397,7 +409,8 @@
       "img": "icons/consumables/potions/bottle-round-corked-yellow.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you have Resistance to Thunder damage for 1 hour."
   },
   {
     "id": "potion-polychromy",
@@ -421,7 +434,8 @@
       "img": "icons/consumables/potions/bottle-bulb-corked-purple.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you and everything you are wearing or carrying take on a rainbow-hued appearance for 1 hour. During that time, you can use a bonus action to turn any color or combination of colors you choose. If you mimic the colors of your surroundings, your hues continually shift to match your surroundings, and you have advantage on Dexterity (Stealth) checks until you change your colors again or the potion wears off.\n\nThe potion is separated into seven brightly colored bands of immiscible liquids and has a syrupy taste."
   },
   {
     "id": "potion-superior-healing",
@@ -455,7 +469,8 @@
       "img": "icons/consumables/potions/bottle-corked-red.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "You regain 8d4 + 8 Hit Points when you drink this potion. The potion's red liquid glimmers when agitated."
   },
   {
     "id": "potion-speed",
@@ -484,7 +499,8 @@
       "img": "icons/consumables/potions/bottle-corked-blue.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you gain the effect of the Haste spell for 1 minute (no Concentration required) without suffering the wave of lethargy that typically occurs when the effect ends.\n\nThis potion's yellow fluid is streaked with black and swirls on its own."
   },
   {
     "id": "potion-mind-reading",
@@ -513,7 +529,8 @@
       "img": "icons/consumables/potions/bottle-corked-empty.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you gain the effect of the Detect Thoughts spell (save DC 13) for 10 minutes (no Concentration required).\n\nThis potion's dense, purple liquid has an ovoid cloud of pink floating in it."
   },
   {
     "id": "elixir-stone-giant-strength",
@@ -571,7 +588,8 @@
       "img": "icons/consumables/potions/bottle-corked-green.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you are cured of all magical contagions. In addition, the following conditions end on you: Blinded, Deafened, Paralyzed, and Poisoned.\n\nThe clear, red liquid has tiny bubbles of light in it."
   },
   {
     "id": "elixir-frost-giant-strength",
@@ -658,7 +676,8 @@
       "img": "icons/consumables/potions/flask-corked-blue-glow.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "The first time you cast a damage-dealing spell of 4th level or lower within 1 minute after drinking the potion, instead of rolling dice to determine the damage dealt, you can instead use the highest number possible for each die.\n\nThis glowing purple liquid smells of sugar and plum, but it has a muddy taste."
   },
   {
     "id": "potion-mind-control-beast",
@@ -716,7 +735,8 @@
       "img": "icons/consumables/potions/bottle-pear-corked-labeled-ornamental-purple.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "One vial of this oil can cover one Medium or smaller creature, along with the equipment it's wearing and carrying (one additional vial is required for each size category above Medium). Applying the oil takes 10 minutes. The affected creature then gains the effect of the Etherealness spell for 1 hour.\n\nBeads of this cloudy, gray oil form on the outside of its container and quickly evaporate."
   },
   {
     "id": "potion-diminution",
@@ -745,7 +765,8 @@
       "img": "icons/consumables/potions/bottle-conical-corked-purple.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you gain the \"reduce\" effect of the Enlarge/Reduce spell for 1d4 hours (no Concentration required).\n\nThe red in the potion's liquid continuously contracts to a tiny bead and then expands to color the clear liquid around it. Shaking the bottle fails to interrupt this process."
   },
   {
     "id": "potion-supreme-healing",
@@ -779,7 +800,8 @@
       "img": "icons/consumables/potions/bottle-corked-red.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "You regain 10d4 + 20 Hit Points when you drink this potion. The potion's red liquid glimmers when agitated."
   },
   {
     "id": "potion-invisibility",
@@ -808,7 +830,8 @@
       "img": "icons/consumables/potions/bottle-corked-empty.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "This potion's container looks empty but feels as though it holds liquid. When you drink the potion, you have the Invisible condition for 1 hour. The effect ends early if you make an attack roll, deal damage, or cast a spell."
   },
   {
     "id": "elixir-cloud-giant-strength",
@@ -866,7 +889,8 @@
       "img": "icons/consumables/potions/bottle-corked-empty.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you gain the effect of the Gaseous Form spell for 1 hour (no Concentration required) or until you end the effect as a Bonus Action.\n\nThis potion's container seems to hold fog that moves and pours like water."
   },
   {
     "id": "potion-longevity",
@@ -895,7 +919,8 @@
       "img": "icons/consumables/potions/flask-corked-yellow-glow.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, your physical age is reduced by 1d6 + 6 years, to a minimum of 13 years. Each time you subsequently drink a Potion of Longevity, there is 10 percent cumulative chance that you instead age by 1d6 + 6 years.\n\nSuspended in this amber liquid is a tiny heart that, against all reason, is still beating. These ingredients vanish when the potion is opened."
   },
   {
     "id": "potion-mind-control-monster",
@@ -953,7 +978,8 @@
       "img": "icons/consumables/potions/bottle-metal-yellow-gray.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "One vial of this oil can coat one Melee weapon or twenty pieces of ammunition, but only ammunition and Melee weapons that are nonmagical and deal Slashing or Piercing damage are affected. Applying the oil takes 1 minute, after which the oil magically seeps into whatever it coats, turning the coated weapon into a +3 Weapon or the coated ammunition into +3 Ammunition.\n\nThis clear, gelatinous oil sparkles with tiny, ultrathin silver shards."
   },
   {
     "id": "elixir-storm-giant-strength",
@@ -1040,7 +1066,8 @@
       "img": "icons/consumables/potions/flask-corked-red-glow.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you become Huge for 24 hours if you are Medium or smaller, otherwise the potion does nothing. For that duration, your Strength becomes 25, if it isn't already higher, and your hit point maximum is doubled (your current hit points are doubled when you drink the potion). In addition, the reach of your melee attacks increases by 5 feet.\n\nEverything you are carrying and wearing also increases in size for the duration. When rolling damage for weapons enlarged in this manner, roll three times the normal number of dice; for example, an enlarged longsword would deal 3d8 slashing damage (instead of 1d8), or 3d10 slashing damage (instead of 1d10) when used with two hands.\n\nWhen the effect ends, any hit points you have above your hit point maximum become temporary hit points. This potion is a pale white liquid made from the tongue of a giant clam, with a pungent aroma akin to that of rotting algae. It tastes sweet, however, when consumed."
   },
   {
     "id": "potion-dragons-majesty",
@@ -1069,7 +1096,8 @@
       "img": "icons/consumables/potions/flask-corked-red-glow.webp",
       "type": "consumable",
       "quantity": 1
-    }
+    },
+    "description": "This potion looks like liquid gold, with a single scale from a chromatic, gem, or metallic dragon suspended in it. When you drink this potion, you transform into an adult dragon of the same kind as the dragon the scale came from. The transformation lasts for 1 hour. Any equipment you are wearing or carrying melds into your new form or falls to the ground (your choice). For the duration, you use the game statistics of the adult dragon instead of your own, but you retain your languages, personality, and memories. You can't use a dragon's Change Shape or its legendary or lair actions."
   },
   {
     "id": "bottled-breath",
@@ -1108,7 +1136,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "This bottle contains a breath of elemental air. When you inhale it, you either exhale it or hold it.\n\nIf you exhale the breath, you gain the effect of the gust of wind spell. If you hold the breath, you don't need to breathe for 1 hour, though you can end this benefit early (for example, to speak). Ending it early doesn't give you the benefit of exhaling the breath."
   },
   {
     "id": "oil-of-slipperiness",
@@ -1147,7 +1176,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "One vial of this oil can cover one Medium or smaller creature, along with the equipment it's wearing and carrying (one additional vial is required for each size category above Medium). Applying the oil takes 10 minutes. The affected creature then gains the effect of the Freedom of Movement spell for 8 hours.\n\nAlternatively, the oil can be poured on the ground as a Magic action, where it covers a 10-foot square, duplicating the effect of the Grease spell in that area for 8 hours.\n\nThis sticky, black unguent is thick and heavy, but it flows quickly when poured."
   },
   {
     "id": "philter-of-love",
@@ -1186,7 +1216,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "The next time you see a creature within 10 minutes after drinking this philter, you are charmed by that creature and have the Charmed condition for 1 hour.\n\nThis rose-hued, effervescent liquid contains one easy-to-miss bubble shaped like a heart."
   },
   {
     "id": "potion-of-acid-resistance",
@@ -1225,7 +1256,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you have Resistance to Acid damage for 1 hour."
   },
   {
     "id": "potion-of-advantage",
@@ -1264,7 +1296,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you gain advantage on one ability check, attack roll, or saving throw of your choice that you make within the next hour.\n\nThis potion takes the form of a sparkling, golden mist that moves and pours like water."
   },
   {
     "id": "potion-of-animal-friendship",
@@ -1303,7 +1336,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you can cast the level 3 version of the Animal Friendship spell (save DC 13).\n\nAgitating this potion's muddy liquid brings little bits into view: a fish scale, a hummingbird feather, a cat claw, or a squirrel hair."
   },
   {
     "id": "potion-of-aqueous-form",
@@ -1342,7 +1376,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you transform into a pool of water. You return to your true form after 10 minutes or if you are incapacitated or die.\n\nYou're under the following effects while in this form:\n\nLiquid Movement. You have a swimming speed of 30 feet. You can move over or through other liquids. You can enter and occupy the space of another creature. You can rise up to your normal height, and you can pass through even Tiny openings. You extinguish nonmagical flames in any space you enter.\n\nWatery Resilience. You have resistance to nonmagical damage. You also have advantage on Strength, Dexterity, and Constitution saving throws.\n\nLimitations. You can't talk, attack, cast spells, or activate magic items. Any objects you were carrying or wearing meld into your new form and are inaccessible, though you continue to be affected by anything you're wearing, such as armor."
   },
   {
     "id": "potion-of-clairvoyance",
@@ -1381,7 +1416,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you gain the effect of the Clairvoyance spell (no Concentration required).\n\nAn eyeball bobs in this potion's yellowish liquid but vanishes when the potion is opened."
   },
   {
     "id": "potion-of-cloud-giant-strength",
@@ -1425,7 +1461,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, your Strength score changes to 27 for 1 hour. The potion has no effect on you if your Strength is equal to or greater than that score.\n\nThis potion's transparent liquid has floating in it a sliver of fingernail from a cloud giant."
   },
   {
     "id": "potion-of-comprehension",
@@ -1459,7 +1496,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you gain the effect of the Comprehend Languages spell for 1 hour.\n\nThis potion's liquid is a clear concoction with bits of salt and soot swirling in it."
   },
   {
     "id": "potion-of-fire-breath",
@@ -1498,7 +1536,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "After drinking this potion, you can take a Bonus Action to exhale fire at a target within 30 feet of yourself. The target makes a DC 13 Dexterity saving throw, taking 4d6 Fire damage on a failed save or half as much damage on a successful one. The effect ends after you exhale the fire three times or when 1 hour has passed.\n\nThis potion's orange liquid flickers, and smoke fills the top of the container and wafts out whenever it is opened."
   },
   {
     "id": "potion-of-fire-giant-strength",
@@ -1537,7 +1576,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, your Strength score changes to 25 for 1 hour. The potion has no effect on you if your Strength is equal to or greater than that score.\n\nThis potion's transparent liquid has floating in it a sliver of fingernail from a fire giant."
   },
   {
     "id": "potion-of-flying",
@@ -1581,7 +1621,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you gain a Fly Speed equal to your Speed for 1 hour and can hover. If you're in the air when the potion wears off, you fall unless you have some other means of staying aloft.\n\nThis potion's clear liquid floats at the top of its container and has cloudy white impurities drifting in it."
   },
   {
     "id": "potion-of-force-resistance",
@@ -1620,7 +1661,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you have Resistance to Force damage for 1 hour."
   },
   {
     "id": "potion-of-frost-giant-strength",
@@ -1659,7 +1701,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, your Strength score changes to 23 for 1 hour. The potion has no effect on you if your Strength is equal to or greater than that score.\n\nThis potion's transparent liquid has floating in it a sliver of fingernail from a frost giant."
   },
   {
     "id": "potion-of-giant-strength",
@@ -1693,7 +1736,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "Multiple variations of this item exist, as listed below:\n\nPotion of Hill Giant StrengthPotion of Frost Giant StrengthPotion of Stone Giant StrengthPotion of Fire Giant StrengthPotion of Cloud Giant StrengthPotion of Storm Giant Strength"
   },
   {
     "id": "potion-of-greater-invisibility",
@@ -1737,7 +1781,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "This potion's container looks empty but feels as though it holds liquid. When you drink the potion, you have the Invisible condition for 1 hour."
   },
   {
     "id": "potion-of-growth",
@@ -1776,7 +1821,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you gain the \"enlarge\" effect of the Enlarge/Reduce spell for 10 minutes (no Concentration required).\n\nThe red in the potion's liquid continuously expands from a tiny bead to color the clear liquid around it and then contracts. Shaking the bottle fails to interrupt this process."
   },
   {
     "id": "potion-of-healing",
@@ -1810,7 +1856,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "* This item group has the same name and source as the item potion of healing.\n\nMultiple variations of this item exist, as listed below:\n\nPotion of HealingPotion of Greater HealingPotion of Superior HealingPotion of Supreme Healing"
   },
   {
     "id": "potion-of-heroism",
@@ -1849,7 +1896,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you gain 10 Temporary Hit Points that last for 1 hour. For the same duration, you are under the effect of the Bless spell (no Concentration required).\n\nThis potion's blue liquid bubbles and steams as if boiling."
   },
   {
     "id": "potion-of-hill-giant-strength",
@@ -1888,7 +1936,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, your Strength score changes to 21 for 1 hour. The potion has no effect on you if your Strength is equal to or greater than that score.\n\nThis potion's transparent liquid has floating in it a sliver of fingernail from a hill giant."
   },
   {
     "id": "potion-of-invulnerability",
@@ -1927,7 +1976,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "For 1 minute after you drink this potion, you have Resistance to all damage.\n\nThis potion's syrupy liquid looks like liquefied iron."
   },
   {
     "id": "potion-of-mind-control",
@@ -1961,7 +2011,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "Multiple variations of this item exist, as listed below:\n\nPotion of Mind Control (beast)Potion of Mind Control (humanoid)Potion of Mind Control (monster)"
   },
   {
     "id": "potion-of-mind-control-beast",
@@ -2000,7 +2051,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "When you drink a potion of mind control, you can cast a dominate spell (save DC 15) on a specific creature if you do so before the end of your next turn. If you don't, the potion is wasted.\n\nA potion of mind control produces the effect of a dominate beast spell. If the target's initial saving throw fails, the effect lasts for 1 hour, with no concentration required on your part. The charmed creature has disadvantage on new saving throws to break the effect during this time."
   },
   {
     "id": "potion-of-mind-control-humanoid",
@@ -2039,7 +2091,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "When you drink a potion of mind control, you can cast a dominate spell (save DC 15) on a specific creature if you do so before the end of your next turn. If you don't, the potion is wasted.\n\nA potion of mind control produces the effect of a dominate person spell. If the target's initial saving throw fails, the effect lasts for 1 hour, with no concentration required on your part. The charmed creature has disadvantage on new saving throws to break the effect during this time."
   },
   {
     "id": "potion-of-mind-control-monster",
@@ -2083,7 +2136,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "When you drink a potion of mind control, you can cast a dominate spell (save DC 15) on a specific creature if you do so before the end of your next turn. If you don't, the potion is wasted.\n\nA potion of mind control produces the effect of a dominate monster spell. If the target's initial saving throw fails, the effect lasts for 1 hour, with no concentration required on your part. The charmed creature has disadvantage on new saving throws to break the effect during this time."
   },
   {
     "id": "potion-of-poison-resistance",
@@ -2122,7 +2176,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you have Resistance to Poison damage for 1 hour."
   },
   {
     "id": "potion-of-possibility",
@@ -2166,7 +2221,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this clear potion, you gain two Fragments of Possibility, each of which looks like a Tiny, grayish bead of energy that follows you around, staying within 1 foot of you at all times. Each fragment lasts for 8 hours or until used.\n\nWhen you make an attack roll, an ability check, or a saving throw, you can expend your fragment to roll an additional d20 and choose which of the d20s to use. Alternatively, when an attack roll is made against you, you can expend your fragment to roll a d20 and choose which of the d20s to use, the one you rolled or the one the attacker rolled.\n\nIf the original d20 roll has advantage or disadvantage, you roll your d20 after advantage or disadvantage has been applied to the original roll.\n\nWhile you have one or more Fragments of Possibility from this potion, you can't gain another Fragment of Possibility from any source."
   },
   {
     "id": "potion-of-pugilism",
@@ -2205,7 +2261,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "After you drink this potion, each Unarmed Strike you make deals an extra 1d6 Force damage on a hit. This effect lasts 10 minutes.\n\nThis potion is a thick green fluid that tastes like spinach."
   },
   {
     "id": "potion-of-stone-giant-strength",
@@ -2244,7 +2301,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, your Strength score changes to 23 for 1 hour. The potion has no effect on you if your Strength is equal to or greater than that score.\n\nThis potion's transparent liquid has floating in it a sliver of fingernail from a stone giant."
   },
   {
     "id": "potion-of-storm-giant-strength",
@@ -2293,7 +2351,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, your Strength score changes to 29 for 1 hour. The potion has no effect on you if your Strength is equal to or greater than that score.\n\nThis potion's transparent liquid has floating in it a sliver of fingernail from a storm giant."
   },
   {
     "id": "potion-of-vitality",
@@ -2337,7 +2396,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, it removes any Exhaustion levels you have and ends the Poisoned condition on you. For the next 24 hours, you regain the maximum number of Hit Points for any Hit Point Die you spend.\n\nThis potion's crimson liquid regularly pulses with dull light, calling to mind a heartbeat."
   },
   {
     "id": "potion-of-watchful-rest",
@@ -2371,7 +2431,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "When you drink this potion, you gain the following benefits for the next 8 hours: magic can't put you to sleep, and you can remain awake during a long rest and still gain its benefits. This sweet, amber-colored brew has no effect on creatures that don't require sleep, such as elves."
   },
   {
     "id": "potion-of-water-breathing",
@@ -2410,7 +2471,8 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "You can breathe underwater for 24 hours after drinking this potion.\n\nThis potion's cloudy green fluid smells of the sea and has a jellyfish-like bubble floating in it."
   },
   {
     "id": "potions-of-healing",
@@ -2444,6 +2506,7 @@
       "img": "",
       "type": "potion",
       "quantity": 1
-    }
+    },
+    "description": "Multiple variations of this item exist, as listed below:\n\nPotion of HealingPotion of Greater HealingPotion of Superior HealingPotion of Supreme Healing"
   }
 ]
