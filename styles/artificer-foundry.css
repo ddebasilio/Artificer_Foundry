@@ -275,6 +275,22 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    height: 100%;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+.af-gathering-panel::-webkit-scrollbar,
+.af-loot-generator-panel::-webkit-scrollbar,
+.af-party-inventory-panel::-webkit-scrollbar {
+    width: 6px;
+}
+
+.af-gathering-panel::-webkit-scrollbar-thumb,
+.af-loot-generator-panel::-webkit-scrollbar-thumb,
+.af-party-inventory-panel::-webkit-scrollbar-thumb {
+    background: var(--color-border-dark-tertiary, rgba(255,255,255,0.1));
+    border-radius: 3px;
 }
 .af-gathering-panel .gathering-section,
 .af-loot-generator-panel .gathering-section,
