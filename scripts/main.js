@@ -305,7 +305,7 @@ Hooks.once('ready', async function () {
                 // Roll the skill check using Foundry's native dialog (includes modifiers)
                 let rollTotal;
                 try {
-                    const result = await actor.rollSkill(dndSkill);
+                    const result = await actor.rollSkill(dndSkill, {});
                     if (!result) return; // user cancelled the dialog
                     // dnd5e v4+ returns an array of rolls; v3 returns a single roll
                     const roll = Array.isArray(result) ? result[0] : result;

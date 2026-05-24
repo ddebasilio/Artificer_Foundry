@@ -257,7 +257,7 @@ export class GathererApp extends HandlebarsApplicationMixin(ApplicationV2) {
         // Roll using Foundry's native skill dialog (includes modifiers, advantage, etc.)
         let rollTotal;
         try {
-            const rollResult = await this.actor.rollSkill("sur");
+            const rollResult = await this.actor.rollSkill("sur", {});
             if (!rollResult) return; // user cancelled the dialog
             const roll = Array.isArray(rollResult) ? rollResult[0] : rollResult;
             if (!roll) return;
