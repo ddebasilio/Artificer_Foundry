@@ -61,4 +61,52 @@ export class PlutoniumHelper {
             return false;
         }
     }
+
+    /**
+     * Import an item directly to the world items directory via Plutonium.
+     * @param {string} itemName - The name of the item to import
+     * @param {string} folderId - The folder ID to place the item in
+     * @returns {Promise<Item|null>} the created world Item document or null
+     */
+    static async pImportItemToWorld(itemName, folderId) {
+        if (!this.isAvailable()) return null;
+
+        try {
+            const api = this._getApi();
+
+            const allItems = await DataLoader.pCacheAndGetAllSite("item");
+            if (!allItems?.length) {
+                console.warn("Artificer Foundry | Plutonium DataLoader returned no items");
+                return null;
+            }
+
+            const target = itemName.toLowerCase();
+            const ent = allItems.find(it => it.name.toLowerCase() === target);
+            if (!ent) {
+                console.warn(`Artificer Foundry | Item "${itemName}" not found in 5etools data`);
+                return null;
+            }
+
+            const importer = await api.importer.pGetImporter({page: "items.html"});
+            if (!importer) {
+                console.warn("Artificer Foundry | Failed to get Plutonium item importer");
+                return null;
+            }
+
+            // Import directly to the world (no actor)
+            const importOpts = new api.importer.ImportOpts({});
+            await importer.pImportEntry(ent, importOpts);
+
+            // Find the created world item
+            const created = game.items.contents.find(i => i.name.toLowerCase() === target && (!i.folder || i.folder.id === folderId));
+            if (created && folderId) {
+                await created.update({ folder: folderId });
+            }
+
+            return created || null;
+        } catch (err) {
+            console.error("Artificer Foundry | Plutonium world import failed:", err);
+            return null;
+        }
+    }
 }

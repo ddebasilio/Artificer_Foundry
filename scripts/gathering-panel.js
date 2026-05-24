@@ -190,13 +190,14 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
             });
         });
 
-        // Toggle item description
-        el.querySelectorAll('.af-lg-item-info').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const row = btn.closest('.af-lg-item-row');
-                const desc = row?.querySelector('.af-lg-item-desc');
-                if (desc) desc.style.display = desc.style.display === 'none' ? '' : 'none';
+        // Click on rolled item row to view its native sheet
+        el.querySelectorAll('.af-lg-item-row').forEach(row => {
+            row.addEventListener('click', (e) => {
+                // Ignore if clicked on the reroll button
+                if (e.target.closest('.af-lg-reroll-item')) return;
+                const itemId = row.dataset.itemId;
+                const item = game.items.get(itemId);
+                if (item) item.sheet.render(true);
             });
         });
 
@@ -300,11 +301,31 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
 
     async _onRollLoot() {
         try {
+            let rolledLoot;
             if (this.lootType === "individual") {
-                this.lootResult = await rollIndividualTreasure(this.crTier);
+                rolledLoot = await rollIndividualTreasure(this.crTier);
             } else {
-                this.lootResult = await rollTreasureHoard(this.crTier);
+                rolledLoot = await rollTreasureHoard(this.crTier);
             }
+
+            if (rolledLoot?.items?.length) {
+                const worldItems = [];
+                for (const itemData of rolledLoot.items) {
+                    const createdItem = await PartyInventory._createItemInWorld(itemData);
+                    if (createdItem) {
+                        worldItems.push({
+                            id: createdItem.id,
+                            name: createdItem.name,
+                            img: createdItem.img || "icons/svg/item-bag.svg",
+                            rarity: createdItem.system?.rarity || itemData.rarity || "common",
+                            text: createdItem.system?.description?.value || itemData.text || ""
+                        });
+                    }
+                }
+                rolledLoot.items = worldItems;
+            }
+
+            this.lootResult = rolledLoot;
             this.render(true);
         } catch (err) {
             console.error("Artificer Foundry | Loot roll error:", err);
@@ -312,14 +333,30 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
         }
     }
 
-    _onRerollItem(itemId, rarity) {
+    async _onRerollItem(itemId, rarity) {
         if (!this.lootResult?.items) return;
         const idx = this.lootResult.items.findIndex(i => i.id === itemId);
         if (idx === -1) return;
 
+        // Delete the old world Item document
+        try {
+            await game.items.get(itemId)?.delete();
+        } catch (e) {
+            console.warn("Artificer Foundry | Failed to delete rerolled world item:", e);
+        }
+
         const newItem = rerollItem(rarity);
         if (newItem) {
-            this.lootResult.items[idx] = newItem;
+            const createdItem = await PartyInventory._createItemInWorld(newItem);
+            if (createdItem) {
+                this.lootResult.items[idx] = {
+                    id: createdItem.id,
+                    name: createdItem.name,
+                    img: createdItem.img || "icons/svg/item-bag.svg",
+                    rarity: createdItem.system?.rarity || newItem.rarity || "common",
+                    text: createdItem.system?.description?.value || newItem.text || ""
+                };
+            }
             this.render(true);
         }
     }

@@ -853,3 +853,34 @@
     display: flex;
     flex-direction: column;
 }
+
+.af-lg-item-row {
+    display: flex !important;
+    align-items: center;
+    padding: 6px 8px;
+    border: 1px solid var(--color-border-dark-tertiary, rgba(255,255,255,0.1));
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.15);
+    margin-bottom: 2px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    height: 38px;
+    box-sizing: border-box;
+}
+.af-lg-item-row:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--color-border-highlight, #ff6400);
+}
+.af-lg-item-row .entry-name {
+    font-size: 13px;
+    font-weight: bold;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+}
+.af-lg-item-row .entry-name:hover {
+    text-shadow: 0 0 4px currentColor;
+}

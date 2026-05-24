@@ -134,12 +134,22 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
             .map(c => ({ type: c, label: coinLabels[c], amount: inv.coins[c], icon: coinIcons[c] }));
 
         const rarityOrder = { common: 0, uncommon: 1, rare: 2, "very rare": 3, legendary: 4, artifact: 5 };
-        const items = [...(inv.items || [])].sort((a, b) => (rarityOrder[a.rarity] ?? 9) - (rarityOrder[b.rarity] ?? 9));
-
-        // Ensure every item has an img fallback
-        for (const item of items) {
-            if (!item.img) item.img = "icons/svg/item-bag.svg";
+        
+        const items = [];
+        for (const itemRef of inv.items || []) {
+            const realItem = game.items.get(itemRef.id);
+            if (realItem) {
+                items.push({
+                    id: realItem.id,
+                    name: realItem.name,
+                    img: realItem.img || "icons/svg/item-bag.svg",
+                    rarity: realItem.system?.rarity || "common",
+                    type: realItem.type,
+                    text: realItem.system?.description?.value || ""
+                });
+            }
         }
+        items.sort((a, b) => (rarityOrder[a.rarity] ?? 9) - (rarityOrder[b.rarity] ?? 9));
 
         const ownedActors = game.actors.filter(a => a.isOwner && a.type === "character");
 
@@ -166,6 +176,17 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
         el.querySelectorAll('.af-pi-item-row[draggable="true"]').forEach(row => {
             row.addEventListener('dragstart', (e) => {
                 const itemId = row.dataset.itemId;
+                const item = game.items.get(itemId);
+                if (!item) return;
+
+                const dragData = {
+                    type: "Item",
+                    uuid: item.uuid,
+                    afPartyLoot: true,
+                    itemId: itemId
+                };
+
+                e.dataTransfer.setData("text/plain", JSON.stringify(dragData));
                 e.dataTransfer.setData("application/af-party-inventory", JSON.stringify({
                     type: "af-party-inventory-item",
                     itemId,
@@ -182,10 +203,7 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
         el.querySelectorAll('.af-pi-item-row').forEach(row => {
             row.addEventListener('click', (e) => {
                 const itemId = row.dataset.itemId;
-                const inv = PartyInventory._getInventory();
-                const item = inv.items?.find(i => i.id === itemId);
-                if (!item) return;
-                this._viewItem(item);
+                this._viewItem(itemId);
             });
         });
 
@@ -294,27 +312,24 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
             return;
         }
 
-        const qty = item.system?.quantity || 1;
-        const itemsToAdd = [];
-        for (let i = 0; i < qty; i++) {
-            itemsToAdd.push({
-                id: foundry.utils.randomID(),
-                name: item.name,
-                img: item.img || "icons/svg/item-bag.svg",
-                rarity: item.system?.rarity || "common",
-                type: item.type,
-                text: item.system?.description?.value || "",
-                price: item.system?.price?.value || 0,
-                source: "",
-            });
+        // Create the actual Item in the world directory under Party Loot folder!
+        const folder = await PartyInventory._getOrCreatePartyLootFolder();
+        const itemData = item.toObject();
+        itemData.folder = folder.id;
+        
+        const createdWorldItem = await Item.create(itemData);
+        if (!createdWorldItem) {
+            ui.notifications.error("Failed to transfer item to world directory.");
+            return;
         }
 
-        // Add to party inventory (include img for display)
-        await PartyInventory.addItems(itemsToAdd);
+        // Add to party inventory tracking
+        await PartyInventory.addItems([{ id: createdWorldItem.id }]);
 
         // Remove from character
         await actor.deleteEmbeddedDocuments("Item", [item.id]);
         
+        const qty = item.system?.quantity || 1;
         const countText = qty > 1 ? `${qty}× ` : "";
         ui.notifications.info(`Moved ${countText}${item.name} from ${actor.name} to party inventory.`);
         await ChatMessage.create({
@@ -359,93 +374,68 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
         ui.notifications.info(`${actor.name} took all coins from party inventory.`);
     }
 
-    /** View item details - tries to show real sheet */
-    async _viewItem(itemData) {
-        // 1. Search compendiums for matching real item
+    /** View item details - opens native Foundry item sheet */
+    _viewItem(itemId) {
+        const item = game.items.get(itemId);
+        if (item) {
+            item.sheet.render(true);
+        }
+    }
+
+    /** Helper to get or create the Party Loot directory folder */
+    static async _getOrCreatePartyLootFolder() {
+        let folder = game.folders.find(f => f.name === "Party Loot" && f.type === "Item");
+        if (!folder) {
+            folder = await Folder.create({
+                name: "Party Loot",
+                type: "Item",
+                color: "#7a30a0"
+            });
+        }
+        return folder;
+    }
+
+    /** Create a real Item in the world items directory */
+    static async _createItemInWorld(itemData) {
+        const folder = await PartyInventory._getOrCreatePartyLootFolder();
+
+        // 1. Try Plutonium Importer to World
+        const plutoniumItem = await PlutoniumHelper.pImportItemToWorld(itemData.name, folder.id);
+        if (plutoniumItem) return plutoniumItem;
+
+        // 2. Try Compendium
+        let compendiumItem = null;
         for (const pack of game.packs) {
             if (pack.documentName !== "Item") continue;
             try {
                 const index = await pack.getIndex();
                 const entry = index.find(e => e.name.toLowerCase() === itemData.name.toLowerCase());
                 if (entry) {
-                    const realItem = await pack.getDocument(entry._id);
-                    realItem.sheet.render(true);
-                    return;
+                    compendiumItem = await pack.getDocument(entry._id);
+                    break;
                 }
             } catch (e) {}
         }
 
-        // 2. Fallback: create transient item and render its sheet
-        try {
-            const tempItem = new Item({
-                name: itemData.name,
-                type: itemData.type || "loot",
-                img: itemData.img || "icons/svg/item-bag.svg",
-                system: {
-                    description: { value: itemData.text || "" },
-                    rarity: itemData.rarity || "common",
-                    price: { value: itemData.price || 0, denomination: "gp" }
-                }
-            });
-            tempItem.sheet.render(true);
-        } catch (err) {
-            console.error("Artificer Foundry | Failed to render transient sheet, falling back to dialog:", err);
-            // 3. Last resort: render basic DialogV2
-            const rarityLabel = itemData.rarity ? itemData.rarity.charAt(0).toUpperCase() + itemData.rarity.slice(1) : "Common";
-            const html = `
-                <div style="display:flex; gap:12px; align-items:flex-start;">
-                    <img src="${itemData.img || 'icons/svg/item-bag.svg'}" width="64" height="64" style="border:none; border-radius:4px;">
-                    <div>
-                        <p><strong>Type:</strong> ${itemData.type || 'loot'}</p>
-                        <p><strong>Rarity:</strong> ${rarityLabel}</p>
-                        ${itemData.price ? `<p><strong>Price:</strong> ${itemData.price} gp</p>` : ''}
-                        ${itemData.text ? `<div style="margin-top:8px;">${itemData.text}</div>` : '<p><em>No description available.</em></p>'}
-                    </div>
-                </div>`;
-            new foundry.applications.api.DialogV2({
-                window: { title: itemData.name },
-                content: html,
-                buttons: [{ action: "close", label: "Close" }],
-            }).render(true);
-        }
-    }
-
-    /** Import item to actor using Plutonium (like forge-app), fallback to compendium */
-    static async _createItemOnActor(actor, itemData) {
-        // Try Plutonium first (same pattern as forge-app.js)
-        const plutoniumImported = await PlutoniumHelper.pImportItem(actor, itemData.name, 1);
-        if (plutoniumImported) return;
-
-        // Fallback: search compendiums
-        let compendiumItem = null;
-        for (const pack of game.packs) {
-            if (pack.documentName !== "Item") continue;
-            try {
-                const index = await pack.getIndex();
-                const entry = index.find(e => e.name === itemData.name);
-                if (entry) {
-                    compendiumItem = await pack.getDocument(entry._id);
-                    break;
-                }
-            } catch (e) { /* skip inaccessible packs */ }
-        }
-
         if (compendiumItem) {
-            await actor.createEmbeddedDocuments("Item", [compendiumItem.toObject()]);
-        } else {
-            // Last resort: create a basic loot item
-            await actor.createEmbeddedDocuments("Item", [{
-                name: itemData.name,
-                type: "loot",
-                system: {
-                    description: { value: itemData.text || "" },
-                    rarity: itemData.rarity || "",
-                    price: { value: itemData.price || 0, denomination: "gp" },
-                    quantity: 1,
-                },
-                img: itemData.img || "icons/svg/item-bag.svg",
-            }]);
+            const data = compendiumItem.toObject();
+            data.folder = folder.id;
+            return await Item.create(data);
         }
+
+        // 3. Fallback: Create basic loot item in the world
+        return await Item.create({
+            name: itemData.name,
+            type: "loot",
+            folder: folder.id,
+            system: {
+                description: { value: itemData.text || "" },
+                rarity: itemData.rarity || "common",
+                price: { value: itemData.price || 0, denomination: "gp" },
+                quantity: 1
+            },
+            img: itemData.img || "icons/svg/item-bag.svg"
+        });
     }
 }
 
@@ -515,30 +505,33 @@ Hooks.once('ready', () => {
             return;
         }
 
-        // Check item still exists in inventory
-        const inv = PartyInventory._getInventory();
-        const item = inv.items?.find(i => i.id === data.itemId);
-        if (!item) {
+        // Retrieve real world Item document
+        const realItem = game.items.get(data.itemId);
+        if (!realItem) {
             ui.notifications.warn("Item no longer in party inventory.");
             return;
         }
 
-        // Import via Plutonium, then compendium, then basic creation
-        // Do this before deleting from party inventory to ensure transaction safety
+        // Import/copy to actor
         try {
-            await PartyInventory._createItemOnActor(actor, item);
+            await actor.createEmbeddedDocuments("Item", [realItem.toObject()]);
         } catch (err) {
             console.error("Artificer Foundry | Failed to create item on actor sheet:", err);
-            ui.notifications.error(`Failed to add ${item.name} to ${actor.name}.`);
+            ui.notifications.error(`Failed to add ${realItem.name} to ${actor.name}.`);
             return;
         }
 
-        // Successfully created, now safe to remove from party inventory
+        // Successfully created, now safe to remove from party inventory tracking and delete the world Item
         await PartyInventory.removeItem(data.itemId);
+        try {
+            await realItem.delete();
+        } catch (e) {
+            console.warn("Artificer Foundry | Failed to delete world item after transfer:", e);
+        }
 
-        ui.notifications.info(`${actor.name} took ${item.name} from party inventory.`);
+        ui.notifications.info(`${actor.name} took ${realItem.name} from party inventory.`);
         await ChatMessage.create({
-            content: `<p><strong>${actor.name}</strong> took <strong>${item.name}</strong> from the party inventory.</p>`,
+            content: `<p><strong>${actor.name}</strong> took <strong>${realItem.name}</strong> from the party inventory.</p>`,
             speaker: { alias: "Party Inventory" },
         });
     }, true);  // Use capture phase to intercept before Foundry's handlers
