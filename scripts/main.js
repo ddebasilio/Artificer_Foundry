@@ -221,6 +221,13 @@ Hooks.once('ready', async function () {
             await PartyInventory.removeCoins(data.coinType, data.amount);
         } else if (data.action === "addCoinsToPartyInventory") {
             await PartyInventory.addCoins(data.coins);
+        } else if (data.action === "setPartyInventoryCoins") {
+            const inv = PartyInventory._getInventory();
+            if (!inv.coins) inv.coins = {};
+            inv.coins[data.coinType] = data.value;
+            if (data.value <= 0) delete inv.coins[data.coinType];
+            await PartyInventory._setInventory(inv);
+            PartyInventory._broadcastRefresh();
         } else if (data.action === "playerAddItemToPartyInventory") {
             const folder = await PartyInventory._getOrCreatePartyLootFolder();
             const itemData = data.itemData;

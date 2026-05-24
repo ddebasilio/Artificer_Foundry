@@ -259,22 +259,21 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
             ui.notifications.info("Party inventory cleared.");
         });
 
-        // ── Coin direct-edit: GM can modify totals inline ──
+        // ── Coin direct-edit: anyone can modify totals inline ──
         el.querySelectorAll('.af-pi-coin-total').forEach(input => {
             input.addEventListener('change', async () => {
-                if (!game.user.isGM) {
-                    ui.notifications.warn("Only the GM can edit coin totals.");
-                    this.render(true);
-                    return;
-                }
                 const coinType = input.dataset.coinType;
                 const newValue = Math.max(0, parseInt(input.value) || 0);
-                const inv = PartyInventory._getInventory();
-                if (!inv.coins) inv.coins = {};
-                inv.coins[coinType] = newValue;
-                if (newValue <= 0) delete inv.coins[coinType];
-                await PartyInventory._setInventory(inv);
-                PartyInventory._broadcastRefresh();
+                if (game.user.isGM) {
+                    const inv = PartyInventory._getInventory();
+                    if (!inv.coins) inv.coins = {};
+                    inv.coins[coinType] = newValue;
+                    if (newValue <= 0) delete inv.coins[coinType];
+                    await PartyInventory._setInventory(inv);
+                    PartyInventory._broadcastRefresh();
+                } else {
+                    game.socket.emit(SOCKET_NAME, { action: "setPartyInventoryCoins", coinType, value: newValue });
+                }
             });
         });
 
