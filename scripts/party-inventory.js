@@ -287,23 +287,31 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
             return;
         }
 
+        const qty = item.system?.quantity || 1;
+        const itemsToAdd = [];
+        for (let i = 0; i < qty; i++) {
+            itemsToAdd.push({
+                id: foundry.utils.randomID(),
+                name: item.name,
+                img: item.img || "icons/svg/item-bag.svg",
+                rarity: item.system?.rarity || "common",
+                type: item.type,
+                text: item.system?.description?.value || "",
+                price: item.system?.price?.value || 0,
+                source: "",
+            });
+        }
+
         // Add to party inventory (include img for display)
-        await PartyInventory.addItems([{
-            id: foundry.utils.randomID(),
-            name: item.name,
-            img: item.img || "icons/svg/item-bag.svg",
-            rarity: item.system?.rarity || "common",
-            type: item.type,
-            text: item.system?.description?.value || "",
-            price: item.system?.price?.value || 0,
-            source: "",
-        }]);
+        await PartyInventory.addItems(itemsToAdd);
 
         // Remove from character
         await actor.deleteEmbeddedDocuments("Item", [item.id]);
-        ui.notifications.info(`Moved ${item.name} from ${actor.name} to party inventory.`);
+        
+        const countText = qty > 1 ? `${qty}× ` : "";
+        ui.notifications.info(`Moved ${countText}${item.name} from ${actor.name} to party inventory.`);
         await ChatMessage.create({
-            content: `<p><strong>${actor.name}</strong> added <strong>${item.name}</strong> to the party inventory.</p>`,
+            content: `<p><strong>${actor.name}</strong> added <strong>${countText}${item.name}</strong> to the party inventory.</p>`,
             speaker: { alias: "Party Inventory" },
         });
     }
@@ -365,7 +373,7 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
     }
 
     /** Import item to actor using Plutonium (like forge-app), fallback to compendium */
-    async _createItemOnActor(actor, itemData) {
+    static async _createItemOnActor(actor, itemData) {
         // Try Plutonium first (same pattern as forge-app.js)
         const plutoniumImported = await PlutoniumHelper.pImportItem(actor, itemData.name, 1);
         if (plutoniumImported) return;
@@ -428,20 +436,42 @@ Hooks.once('ready', () => {
         // Find the actor sheet this was dropped on
         // Check AppV2 instances first, then legacy ui.windows
         let actor = null;
-        for (const app of foundry.applications.instances.values()) {
-            const el = app.element instanceof HTMLElement ? app.element : app.element?.[0];
-            if (el?.contains(event.target) && app.document?.documentName === "Actor") {
-                actor = app.document;
-                break;
+        const sheetEl = event.target.closest?.(".window-app, .application");
+        if (sheetEl) {
+            // Check ApplicationV2 instances
+            for (const app of foundry.applications.instances.values()) {
+                const el = app.element instanceof HTMLElement ? app.element : app.element?.[0];
+                if ((el === sheetEl || el?.contains(event.target)) && (app.document?.documentName === "Actor" || app.actor?.documentName === "Actor")) {
+                    actor = app.document ?? app.actor;
+                    break;
+                }
+            }
+            // Check legacy ui.windows
+            if (!actor) {
+                const sheet = Object.values(ui.windows).find(w => {
+                    const el = w.element instanceof HTMLElement ? w.element : w.element?.[0];
+                    return el === sheetEl || el?.contains(event.target);
+                });
+                actor = sheet?.document ?? sheet?.object ?? sheet?.actor;
+            }
+        } else {
+            // Fallback: search by containment
+            for (const app of foundry.applications.instances.values()) {
+                const el = app.element instanceof HTMLElement ? app.element : app.element?.[0];
+                if (el?.contains(event.target) && (app.document?.documentName === "Actor" || app.actor?.documentName === "Actor")) {
+                    actor = app.document ?? app.actor;
+                    break;
+                }
+            }
+            if (!actor) {
+                const sheet = Object.values(ui.windows).find(w => {
+                    const el = w.element instanceof HTMLElement ? w.element : w.element?.[0];
+                    return el?.contains(event.target);
+                });
+                actor = sheet?.document ?? sheet?.object ?? sheet?.actor;
             }
         }
-        if (!actor) {
-            const sheet = Object.values(ui.windows).find(w => {
-                const el = w.element instanceof HTMLElement ? w.element : w.element?.[0];
-                return el?.contains(event.target);
-            });
-            actor = sheet?.document ?? sheet?.object ?? sheet?.actor;
-        }
+
         if (!actor || actor.documentName !== "Actor") {
             ui.notifications.warn("Drop items onto a character sheet.");
             return;
@@ -455,14 +485,18 @@ Hooks.once('ready', () => {
             return;
         }
 
-        // Remove from party inventory FIRST to prevent double-processing
-        await PartyInventory.removeItem(data.itemId);
-
         // Import via Plutonium, then compendium, then basic creation
-        const tab = ui["af-party-inventory"];
-        if (tab) {
-            await tab._createItemOnActor(actor, item);
+        // Do this before deleting from party inventory to ensure transaction safety
+        try {
+            await PartyInventory._createItemOnActor(actor, item);
+        } catch (err) {
+            console.error("Artificer Foundry | Failed to create item on actor sheet:", err);
+            ui.notifications.error(`Failed to add ${item.name} to ${actor.name}.`);
+            return;
         }
+
+        // Successfully created, now safe to remove from party inventory
+        await PartyInventory.removeItem(data.itemId);
 
         ui.notifications.info(`${actor.name} took ${item.name} from party inventory.`);
         await ChatMessage.create({
