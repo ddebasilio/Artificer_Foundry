@@ -143,6 +143,14 @@ Hooks.once('init', function () {
     });
     Handlebars.registerHelper('gt', (a, b) => a > b);
     Handlebars.registerHelper('join', (arr, sep) => (arr || []).join(sep || ", "));
+    Handlebars.registerHelper('math', (a, op, b) => {
+        a = Number(a); b = Number(b);
+        if (op === '+') return a + b;
+        if (op === '-') return a - b;
+        if (op === '*') return a * b;
+        if (op === '/') return a / b;
+        return a;
+    });
 
     // Register the Loot Generator sidebar tab (renamed from Gathering)
     CONFIG.ui.sidebar.TABS["af-gathering"] = {
@@ -205,6 +213,28 @@ Hooks.once('ready', async function () {
                 await realItem.delete();
             }
             await PartyInventory.removeItem(data.itemId);
+        } else if (data.action === "addItemToPartyInventory") {
+            await PartyInventory.addItems([{ id: data.itemId }]);
+        } else if (data.action === "removeItemFromPartyInventory") {
+            await PartyInventory.removeItem(data.itemId);
+        } else if (data.action === "takeCoinsFromPartyInventory") {
+            await PartyInventory.removeCoins(data.coinType, data.amount);
+        } else if (data.action === "addCoinsToPartyInventory") {
+            await PartyInventory.addCoins(data.coins);
+        } else if (data.action === "playerAddItemToPartyInventory") {
+            const folder = await PartyInventory._getOrCreatePartyLootFolder();
+            const itemData = data.itemData;
+            itemData.folder = folder.id;
+            const createdWorldItem = await Item.create(itemData);
+            if (createdWorldItem) {
+                await PartyInventory.addItems([{ id: createdWorldItem.id }]);
+                const qty = data.qty || 1;
+                const countText = qty > 1 ? `${qty}× ` : "";
+                await ChatMessage.create({
+                    content: `<p><strong>${data.actorName}</strong> added <strong>${countText}${data.itemName}</strong> to the party inventory.</p>`,
+                    speaker: { alias: "Party Inventory" },
+                });
+            }
         }
         // Note: refreshPartyInventory is handled by PartyInventory.registerSocketListeners()
     });

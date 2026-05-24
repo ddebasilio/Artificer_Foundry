@@ -44,6 +44,10 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
 
     /** Add coins to party inventory */
     static async addCoins(coins) {
+        if (!game.user.isGM) {
+            game.socket.emit(SOCKET_NAME, { action: "addCoinsToPartyInventory", coins });
+            return;
+        }
         const inv = this._getInventory();
         if (!inv.coins) inv.coins = {};
         for (const [type, amount] of Object.entries(coins)) {
@@ -55,6 +59,10 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
 
     /** Add items to party inventory */
     static async addItems(items) {
+        if (!game.user.isGM) {
+            game.socket.emit(SOCKET_NAME, { action: "addItemToPartyInventory", itemId: items[0]?.id });
+            return;
+        }
         const inv = this._getInventory();
         if (!inv.items) inv.items = [];
         inv.items.push(...items);
@@ -64,6 +72,16 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
 
     /** Add full loot result (coins + items) to party inventory */
     static async addLoot(lootResult) {
+        if (!game.user.isGM) {
+            // Proxy through GM: add coins and items separately
+            if (lootResult.coins) {
+                game.socket.emit(SOCKET_NAME, { action: "addCoinsToPartyInventory", coins: lootResult.coins });
+            }
+            for (const item of (lootResult.items || [])) {
+                game.socket.emit(SOCKET_NAME, { action: "addItemToPartyInventory", itemId: item.id });
+            }
+            return;
+        }
         const inv = this._getInventory();
         if (!inv.coins) inv.coins = {};
         if (!inv.items) inv.items = [];
@@ -81,6 +99,10 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
 
     /** Remove an item by id from party inventory */
     static async removeItem(itemId) {
+        if (!game.user.isGM) {
+            game.socket.emit(SOCKET_NAME, { action: "removeItemFromPartyInventory", itemId });
+            return;
+        }
         const inv = this._getInventory();
         inv.items = (inv.items || []).filter(i => i.id !== itemId);
         await this._setInventory(inv);
@@ -89,6 +111,10 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
 
     /** Remove coins from party inventory */
     static async removeCoins(coinType, amount) {
+        if (!game.user.isGM) {
+            game.socket.emit(SOCKET_NAME, { action: "takeCoinsFromPartyInventory", coinType, amount });
+            return true;
+        }
         const inv = this._getInventory();
         if (!inv.coins?.[coinType]) return false;
         if (inv.coins[coinType] < amount) return false;
@@ -126,12 +152,17 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
         const context = await super._prepareContext(options);
         const inv = PartyInventory._getInventory();
 
-        const coinOrder = ["pp", "gp", "ep", "sp", "cp"];
-        const coinLabels = { cp: "Copper", sp: "Silver", ep: "Electrum", gp: "Gold", pp: "Platinum" };
-        const coinIcons = { cp: "fa-coins", sp: "fa-coins", ep: "fa-coins", gp: "fa-coins", pp: "fa-coins" };
-        const coins = coinOrder
-            .filter(c => (inv.coins?.[c] || 0) > 0)
-            .map(c => ({ type: c, label: coinLabels[c], amount: inv.coins[c], icon: coinIcons[c] }));
+        const coinDefs = [
+            { type: "pp", label: "Platinum", abbr: "PP", icon: "systems/dnd5e/icons/currency/platinum.webp" },
+            { type: "gp", label: "Gold",     abbr: "GP", icon: "systems/dnd5e/icons/currency/gold.webp" },
+            { type: "ep", label: "Electrum", abbr: "EP", icon: "systems/dnd5e/icons/currency/electrum.webp" },
+            { type: "sp", label: "Silver",   abbr: "SP", icon: "systems/dnd5e/icons/currency/silver.webp" },
+            { type: "cp", label: "Copper",   abbr: "CP", icon: "systems/dnd5e/icons/currency/copper.webp" },
+        ];
+        const coins = coinDefs.map(c => ({
+            ...c,
+            amount: inv.coins?.[c.type] || 0,
+        }));
 
         const rarityOrder = { common: 0, uncommon: 1, rare: 2, "very rare": 3, legendary: 4, artifact: 5 };
         
@@ -152,13 +183,14 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
         items.sort((a, b) => (rarityOrder[a.rarity] ?? 9) - (rarityOrder[b.rarity] ?? 9));
 
         const ownedActors = game.actors.filter(a => a.isOwner && a.type === "character");
+        const hasCoins = coins.some(c => c.amount > 0);
 
         Object.assign(context, {
             coins,
             items,
-            hasCoins: coins.length > 0,
+            hasCoins,
             hasItems: items.length > 0,
-            isEmpty: coins.length === 0 && items.length === 0,
+            isEmpty: !hasCoins && items.length === 0,
             isGM: game.user.isGM,
             ownedActors: ownedActors.map(a => ({ id: a.id, name: a.name })),
         });
@@ -227,11 +259,30 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
             ui.notifications.info("Party inventory cleared.");
         });
 
-        // ── Coin take: input + take button ──
+        // ── Coin direct-edit: GM can modify totals inline ──
+        el.querySelectorAll('.af-pi-coin-total').forEach(input => {
+            input.addEventListener('change', async () => {
+                if (!game.user.isGM) {
+                    ui.notifications.warn("Only the GM can edit coin totals.");
+                    this.render(true);
+                    return;
+                }
+                const coinType = input.dataset.coinType;
+                const newValue = Math.max(0, parseInt(input.value) || 0);
+                const inv = PartyInventory._getInventory();
+                if (!inv.coins) inv.coins = {};
+                inv.coins[coinType] = newValue;
+                if (newValue <= 0) delete inv.coins[coinType];
+                await PartyInventory._setInventory(inv);
+                PartyInventory._broadcastRefresh();
+            });
+        });
+
+        // ── Coin take: take-amount input + take button ──
         el.querySelectorAll('.af-pi-coin-take-btn').forEach(btn => {
             btn.addEventListener('click', async () => {
                 const coinType = btn.dataset.coinType;
-                const input = el.querySelector(`.af-pi-coin-input[data-coin-type="${coinType}"]`);
+                const input = el.querySelector(`.af-pi-coin-take-amount[data-coin-type="${coinType}"]`);
                 const amount = parseInt(input?.value) || 0;
                 if (amount <= 0) {
                     ui.notifications.warn("Enter an amount to take.");
@@ -308,6 +359,25 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
         const transferableTypes = ["loot", "weapon", "equipment", "consumable", "tool", "backpack", "container"];
         if (!transferableTypes.includes(item.type)) {
             ui.notifications.warn(`Cannot transfer ${item.type} items to party inventory.`);
+            return;
+        }
+
+        // Players proxy through GM socket for world item creation
+        if (!game.user.isGM) {
+            game.socket.emit(SOCKET_NAME, {
+                action: "playerAddItemToPartyInventory",
+                itemData: item.toObject(),
+                actorId: actor.id,
+                embeddedItemId: item.id,
+                itemName: item.name,
+                qty: item.system?.quantity || 1,
+                actorName: actor.name,
+            });
+            // Remove from character (player can do this on their own actor)
+            await actor.deleteEmbeddedDocuments("Item", [item.id]);
+            const qty = item.system?.quantity || 1;
+            const countText = qty > 1 ? `${qty}× ` : "";
+            ui.notifications.info(`Moved ${countText}${item.name} from ${actor.name} to party inventory.`);
             return;
         }
 

@@ -48,7 +48,7 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
         this.mode      = "loot";       // "loot" or "gathering"
         this.lootType  = "hoard";      // "hoard" or "individual"
         this.crTier    = "CR0-4";
-        this.lootResult = null;        // { coins, items } from last roll
+        this.lootResults = [];        // Array of { coins, items } from rolls (newest first)
     }
 
     // ─── Computed DC ────────────────────────────────────────────────────────────
@@ -105,22 +105,22 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
         const abundanceMods = getAbundanceModifiers();
         const timeUnits = getTimeUnits();
 
-        // Format loot result for template
-        let lootResult = null;
-        if (this.lootResult) {
-            const coinLabels = { cp: "Copper", sp: "Silver", ep: "Electrum", gp: "Gold", pp: "Platinum" };
-            const coinOrder = ["pp", "gp", "ep", "sp", "cp"];
+        // Format loot results for template (multiple rolls)
+        const coinLabels = { cp: "Copper", sp: "Silver", ep: "Electrum", gp: "Gold", pp: "Platinum" };
+        const coinOrder = ["pp", "gp", "ep", "sp", "cp"];
+        const lootResults = this.lootResults.map((lr, idx) => {
             const coins = coinOrder
-                .filter(c => (this.lootResult.coins?.[c] || 0) > 0)
-                .map(c => ({ type: c, label: coinLabels[c], amount: this.lootResult.coins[c] }));
-
-            lootResult = {
+                .filter(c => (lr.coins?.[c] || 0) > 0)
+                .map(c => ({ type: c, label: coinLabels[c], amount: lr.coins[c] }));
+            return {
+                rollIndex: idx,
                 coins,
                 hasCoins: coins.length > 0,
-                items: this.lootResult.items || [],
-                hasItems: (this.lootResult.items || []).length > 0,
+                items: lr.items || [],
+                hasItems: (lr.items || []).length > 0,
             };
-        }
+        });
+        const hasLootResults = lootResults.length > 0;
 
         Object.assign(context, {
             // Mode
@@ -131,7 +131,8 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
             lootTypes: getLootTypes(),
             crTier:    this.crTier,
             lootType:  this.lootType,
-            lootResult,
+            lootResults,
+            hasLootResults,
 
             // Gathering
             sceneActors,
@@ -183,10 +184,12 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
         // Reroll individual items
         el.querySelectorAll('.af-lg-reroll-item').forEach(btn => {
             btn.addEventListener('click', (e) => {
+                e.preventDefault();
                 e.stopPropagation();
+                const rollIndex = parseInt(btn.closest('[data-roll-index]').dataset.rollIndex);
                 const itemId = btn.dataset.itemId;
                 const rarity = btn.dataset.rarity;
-                this._onRerollItem(itemId, rarity);
+                this._onRerollItem(rollIndex, itemId, rarity);
             });
         });
 
@@ -195,14 +198,31 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
             row.addEventListener('click', (e) => {
                 // Ignore if clicked on the reroll button
                 if (e.target.closest('.af-lg-reroll-item')) return;
+                if (e.target.closest('.af-lg-send-item-to-party')) return;
                 const itemId = row.dataset.itemId;
                 const item = game.items.get(itemId);
                 if (item) item.sheet.render(true);
             });
         });
 
-        // Send to party inventory
-        el.querySelector('.af-lg-send-to-party')?.addEventListener('click', () => this._onSendToParty());
+        // Send individual item to party inventory
+        el.querySelectorAll('.af-lg-send-item-to-party').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const rollIndex = parseInt(btn.closest('[data-roll-index]').dataset.rollIndex);
+                const itemId = btn.dataset.itemId;
+                this._onSendItemToParty(rollIndex, itemId);
+            });
+        });
+
+        // Send all loot from a roll to party inventory
+        el.querySelectorAll('.af-lg-send-to-party').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const rollIndex = parseInt(btn.closest('[data-roll-index]').dataset.rollIndex);
+                this._onSendToParty(rollIndex);
+            });
+        });
 
         // ── Gathering controls (same as before) ──
 
@@ -325,7 +345,7 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
                 rolledLoot.items = worldItems;
             }
 
-            this.lootResult = rolledLoot;
+            this.lootResults.unshift(rolledLoot);
             this.render(true);
         } catch (err) {
             console.error("Artificer Foundry | Loot roll error:", err);
@@ -333,9 +353,10 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
         }
     }
 
-    async _onRerollItem(itemId, rarity) {
-        if (!this.lootResult?.items) return;
-        const idx = this.lootResult.items.findIndex(i => i.id === itemId);
+    async _onRerollItem(rollIndex, itemId, rarity) {
+        const roll = this.lootResults[rollIndex];
+        if (!roll?.items) return;
+        const idx = roll.items.findIndex(i => i.id === itemId);
         if (idx === -1) return;
 
         // Delete the old world Item document
@@ -349,7 +370,7 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
         if (newItem) {
             const createdItem = await PartyInventory._createItemInWorld(newItem);
             if (createdItem) {
-                this.lootResult.items[idx] = {
+                roll.items[idx] = {
                     id: createdItem.id,
                     name: createdItem.name,
                     img: createdItem.img || "icons/svg/item-bag.svg",
@@ -361,31 +382,51 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
         }
     }
 
-    async _onSendToParty() {
-        if (!this.lootResult) return;
+    async _onSendItemToParty(rollIndex, itemId) {
+        const roll = this.lootResults[rollIndex];
+        if (!roll?.items) return;
+        const idx = roll.items.findIndex(i => i.id === itemId);
+        if (idx === -1) return;
 
-        await PartyInventory.addLoot(this.lootResult);
+        const item = roll.items[idx];
+        await PartyInventory.addItems([{ id: item.id }]);
+        roll.items.splice(idx, 1);
+
+        ui.notifications.info(`${item.name} sent to Party Inventory!`);
+        await ChatMessage.create({
+            content: `<p><strong><i class="fas fa-treasure-chest"></i> ${item.name}</strong> <em>(${item.rarity})</em> added to Party Inventory.</p>`,
+            speaker: { alias: "Loot Generator" },
+        });
+
+        this.render(true);
+    }
+
+    async _onSendToParty(rollIndex) {
+        const roll = this.lootResults[rollIndex];
+        if (!roll) return;
+
+        await PartyInventory.addLoot(roll);
         ui.notifications.info("Loot sent to Party Inventory!");
 
         // Post to chat
         let msg = `<p><strong><i class="fas fa-treasure-chest"></i> Loot added to Party Inventory</strong></p>`;
         const coinLabels = { cp: "Copper", sp: "Silver", ep: "Electrum", gp: "Gold", pp: "Platinum" };
-        if (this.lootResult.coins) {
-            const coinEntries = Object.entries(this.lootResult.coins).filter(([, v]) => v > 0);
+        if (roll.coins) {
+            const coinEntries = Object.entries(roll.coins).filter(([, v]) => v > 0);
             if (coinEntries.length) {
                 msg += `<p><strong>Coins:</strong> ${coinEntries.map(([t, a]) => `${a} ${coinLabels[t] || t}`).join(", ")}</p>`;
             }
         }
-        if (this.lootResult.items?.length) {
+        if (roll.items?.length) {
             msg += `<p><strong>Items:</strong></p><ul>`;
-            for (const item of this.lootResult.items) {
+            for (const item of roll.items) {
                 msg += `<li>${item.name} <em>(${item.rarity})</em></li>`;
             }
             msg += `</ul>`;
         }
         await ChatMessage.create({ content: msg, speaker: { alias: "Loot Generator" } });
 
-        this.lootResult = null;
+        this.lootResults.splice(rollIndex, 1);
         this.render(true);
     }
 

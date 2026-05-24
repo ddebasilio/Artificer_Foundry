@@ -15,18 +15,24 @@
     {{/if}}
 
     {{!-- ── Coins ── --}}
-    {{#if hasCoins}}
     <section class="gathering-section af-pi-coins-section">
         <h3 class="gathering-section-title"><i class="fas fa-coins"></i> Coins</h3>
-        <div class="af-pi-coin-list">
+        <div class="af-pi-coin-grid">
+            <div class="af-pi-coin-header">
+                <span class="af-pi-coin-hdr-icon"></span>
+                <span class="af-pi-coin-hdr-total">Total</span>
+                <span class="af-pi-coin-hdr-take">Take</span>
+                <span class="af-pi-coin-hdr-btn"></span>
+            </div>
             {{#each coins}}
-            <div class="af-pi-coin-row">
-                <span class="af-pi-coin-amount">{{this.amount}}</span>
-                <span class="af-pi-coin-label">{{this.label}} ({{this.type}})</span>
-                <input type="number" class="af-pi-coin-input" data-coin-type="{{this.type}}"
-                       min="1" max="{{this.amount}}" value="{{this.amount}}" placeholder="Amt">
-                <button class="af-pi-coin-take-btn" data-coin-type="{{this.type}}" title="Take coins">
-                    <i class="fas fa-arrow-right"></i> Take
+            <div class="af-pi-coin-row" data-coin-type="{{this.type}}">
+                <img class="af-pi-coin-icon" src="{{this.icon}}" alt="{{this.label}}" title="{{this.label}} ({{this.abbr}})">
+                <input type="number" class="af-pi-coin-total" data-coin-type="{{this.type}}"
+                       min="0" value="{{this.amount}}" title="Edit {{this.label}} total">
+                <input type="number" class="af-pi-coin-take-amount" data-coin-type="{{this.type}}"
+                       min="0" max="{{this.amount}}" value="" placeholder="0" title="Amount to take">
+                <button class="af-pi-coin-take-btn" data-coin-type="{{this.type}}" title="Take {{this.label}}">
+                    <i class="fas fa-arrow-right"></i>
                 </button>
             </div>
             {{/each}}
@@ -35,7 +41,6 @@
             <button class="af-pi-take-all-coins"><i class="fas fa-coins"></i> Take All Coins</button>
         </div>
     </section>
-    {{/if}}
 
     {{!-- ── Items (draggable, Foundry-native style) ── --}}
     {{#if hasItems}}
