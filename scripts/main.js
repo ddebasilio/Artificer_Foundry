@@ -341,24 +341,24 @@ Hooks.once('ready', async function () {
                 // Roll the skill check using Foundry's native dialog (includes modifiers)
                 let rollTotal;
                 try {
-                    const result = await actor.rollSkill(dndSkill, {});
+                    // dnd5e 5.x uses { skill } object syntax
+                    const result = await actor.rollSkill({ skill: dndSkill });
                     if (!result) return; // user cancelled the dialog
-                    // dnd5e v4+ returns an array of rolls; v3 returns a single roll
                     const roll = Array.isArray(result) ? result[0] : result;
                     if (!roll) return;
                     rollTotal = roll.total;
                 } catch (err) {
-                    console.warn(`${MODULE} | rollSkill failed, trying rollSkillCheck:`, err);
+                    console.warn(`${MODULE} | rollSkill({ skill }) failed, trying legacy:`, err);
                     try {
-                        // Some dnd5e versions use rollSkillCheck instead
-                        const result = await actor.rollSkillCheck?.({ skill: dndSkill });
+                        // Legacy dnd5e versions use positional args
+                        const result = await actor.rollSkill(dndSkill, {});
                         if (!result) return;
                         const roll = Array.isArray(result) ? result[0] : result;
                         if (!roll) return;
                         rollTotal = roll.total;
                     } catch (err2) {
                         // Last resort: manual d20 + skill modifier
-                        console.warn(`${MODULE} | rollSkillCheck also failed, using manual roll:`, err2);
+                        console.warn(`${MODULE} | rollSkill legacy also failed, using manual roll:`, err2);
                         const skillData = actor.system?.skills?.[dndSkill];
                         const mod = skillData?.total ?? skillData?.mod ?? 0;
                         const roll = await new Roll(`1d20 + ${mod}`).evaluate();
