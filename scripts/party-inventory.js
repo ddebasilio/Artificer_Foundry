@@ -419,7 +419,12 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
         const currencyPath = `system.currency.${coinType}`;
         const current = foundry.utils.getProperty(actor, currencyPath) || 0;
         await actor.update({ [currencyPath]: current + amount });
-        await PartyInventory.removeCoins(coinType, amount);
+
+        if (game.user.isGM) {
+            await PartyInventory.removeCoins(coinType, amount);
+        } else {
+            game.socket.emit(SOCKET_NAME, { action: "takeCoinsFromPartyInventory", coinType, amount });
+        }
 
         const coinLabels = { cp: "Copper", sp: "Silver", ep: "Electrum", gp: "Gold", pp: "Platinum" };
         ui.notifications.info(`${actor.name} took ${amount} ${coinLabels[coinType] || coinType}.`);
@@ -436,10 +441,19 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
             const current = foundry.utils.getProperty(actor, currencyPath) || 0;
             await actor.update({ [currencyPath]: current + amount });
         }
-        const inv2 = PartyInventory._getInventory();
-        inv2.coins = {};
-        await PartyInventory._setInventory(inv2);
-        PartyInventory._broadcastRefresh();
+
+        if (game.user.isGM) {
+            const inv2 = PartyInventory._getInventory();
+            inv2.coins = {};
+            await PartyInventory._setInventory(inv2);
+            PartyInventory._broadcastRefresh();
+        } else {
+            // Proxy each coin removal through GM socket
+            for (const [coinType, amount] of Object.entries(inv.coins || {})) {
+                if (amount <= 0) continue;
+                game.socket.emit(SOCKET_NAME, { action: "takeCoinsFromPartyInventory", coinType, amount });
+            }
+        }
         ui.notifications.info(`${actor.name} took all coins from party inventory.`);
     }
 
