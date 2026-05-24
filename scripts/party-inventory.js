@@ -439,23 +439,24 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
 }
 
 // ─── Global drop handler: clean up party inventory after items are dropped on actor sheets ──
-// We use TWO complementary mechanisms for maximum compatibility:
-// 1. dropActorSheetData hook — for V1 (Application-based) actor sheets
-// 2. document-level capture listener — for V2 (ApplicationV2-based) actor sheets
-// Both use a per-itemId deduplication flag to prevent double processing.
+// We let Foundry handle the drop natively — it reads the {type: "Item", uuid} payload from
+// text/plain and creates the embedded item on the actor. We use a document-level capture
+// listener to detect party-inventory drops and clean up (remove from inventory, delete world
+// item) after Foundry has finished processing.
+//
+// IMPORTANT: We do NOT use the dropActorSheetData hook because it doesn't fire for
+// ApplicationV2 sheets, and async hooks cannot return false synchronously (Hooks.call
+// sees a Promise, which is truthy, so Foundry proceeds with its own default handling too).
 
-const _afPendingTakes = new Set();  // Track itemIds currently being processed
+const _afPendingTakes = new Set();  // Deduplication: track itemIds currently being processed
 
 async function _handlePartyInventoryTake(actor, itemId) {
-    if (_afPendingTakes.has(itemId)) return;  // Already being processed
+    if (_afPendingTakes.has(itemId)) return;
     _afPendingTakes.add(itemId);
 
     try {
         const realItem = game.items.get(itemId);
-        if (!realItem) {
-            ui.notifications.warn("Item no longer in party inventory.");
-            return;
-        }
+        if (!realItem) return;  // Already cleaned up
 
         // Remove from party inventory and delete world item
         if (game.user.isGM) {
@@ -480,38 +481,8 @@ async function _handlePartyInventoryTake(actor, itemId) {
 }
 
 Hooks.once('ready', () => {
-
-    // ── Path 1: V1 ActorSheet hook ──
-    // dropActorSheetData fires for Application-based (V1) actor sheets.
-    // Return false to prevent Foundry from ALSO creating the item (we create it ourselves).
-    Hooks.on('dropActorSheetData', async (actor, sheet, data) => {
-        if (!data.afPartyLoot || !data.itemId) return true;
-
-        const realItem = game.items.get(data.itemId);
-        if (!realItem) {
-            ui.notifications.warn("Item no longer in party inventory.");
-            return false;
-        }
-
-        // Create the item on the actor ourselves
-        try {
-            await actor.createEmbeddedDocuments("Item", [realItem.toObject()]);
-        } catch (err) {
-            console.error("Artificer Foundry | Failed to create item on actor sheet:", err);
-            ui.notifications.error(`Failed to add ${realItem.name} to ${actor.name}.`);
-            return false;
-        }
-
-        // Clean up party inventory
-        await _handlePartyInventoryTake(actor, data.itemId);
-        return false;
-    });
-
-    // ── Path 2: Document-level listener for V2 sheets ──
-    // ApplicationV2 sheets don't fire dropActorSheetData. They natively resolve
-    // the UUID from text/plain, create the embedded item, and finish.
-    // We intercept the drop in capture phase, let it proceed, then clean up
-    // the party inventory asynchronously after Foundry has finished its work.
+    // Capture-phase listener reads dataTransfer before it's cleared by the browser,
+    // does NOT block Foundry's native processing, then cleans up after a short delay.
     document.addEventListener('drop', (event) => {
         let data;
         try {
@@ -522,12 +493,12 @@ Hooks.once('ready', () => {
 
         if (!data.afPartyLoot || !data.itemId) return;
 
-        // DON'T call stopImmediatePropagation — let Foundry handle the drop natively!
-        // Wait for Foundry to process the drop, then clean up.
-        // Use a small delay to let Foundry's async drop handlers finish creating the item.
+        // Let Foundry handle the drop natively — do NOT call stopImmediatePropagation!
+        // After Foundry's async handlers finish creating the item on the actor, clean up.
         setTimeout(async () => {
-            // Find which actor the item was dropped on by checking instances
             let actor = null;
+
+            // Find which actor sheet the item was dropped on
             if (foundry.applications?.instances) {
                 for (const app of foundry.applications.instances.values()) {
                     const el = app.element instanceof HTMLElement ? app.element : app.element?.[0];
@@ -556,7 +527,6 @@ Hooks.once('ready', () => {
             if (actor) {
                 await _handlePartyInventoryTake(actor, data.itemId);
             }
-        }, 500);  // 500ms delay to let Foundry's async handlers complete
-    }, true);  // Capture phase to read dataTransfer before it's cleared
+        }, 500);
+    }, true);
 });
-
