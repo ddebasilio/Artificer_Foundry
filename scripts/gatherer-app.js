@@ -254,14 +254,37 @@ export class GathererApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
         const flavorText = `<strong>Foraging Roll</strong> (${getBiomes()[this.forageBiome]?.name}, ${getAbundanceModifiers()[this.forageAbundance]?.name}, ${this.forageTimeAmount} ${getTimeUnits()[this.forageTimeUnit]?.name.toLowerCase()})`;
 
-        // Roll d20
-        const roll = await new Roll("1d20").evaluate();
-        await roll.toMessage({
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            flavor: flavorText,
-        });
+        // Roll using Foundry's native skill dialog (includes modifiers, advantage, etc.)
+        let rollTotal;
+        try {
+            const rollResult = await this.actor.rollSkill("sur");
+            if (!rollResult) return; // user cancelled the dialog
+            const roll = Array.isArray(rollResult) ? rollResult[0] : rollResult;
+            if (!roll) return;
+            rollTotal = roll.total;
+        } catch (err) {
+            console.warn("Artificer Foundry | rollSkill failed, trying rollSkillCheck:", err);
+            try {
+                const rollResult = await this.actor.rollSkillCheck?.({ skill: "sur" });
+                if (!rollResult) return;
+                const roll = Array.isArray(rollResult) ? rollResult[0] : rollResult;
+                if (!roll) return;
+                rollTotal = roll.total;
+            } catch (err2) {
+                // Last resort: manual d20 + survival modifier
+                console.warn("Artificer Foundry | rollSkillCheck also failed, using manual roll:", err2);
+                const skillData = this.actor.system?.skills?.sur;
+                const mod = skillData?.total ?? skillData?.mod ?? 0;
+                const roll = await new Roll(`1d20 + ${mod}`).evaluate();
+                await roll.toMessage({
+                    speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                    flavor: flavorText,
+                });
+                rollTotal = roll.total;
+            }
+        }
 
-        const result = resolveForaging(this.forageBiome, this.forageAbundance, this.forageTimeAmount, this.forageTimeUnit, roll.total);
+        const result = resolveForaging(this.forageBiome, this.forageAbundance, this.forageTimeAmount, this.forageTimeUnit, rollTotal);
 
         let msg = "";
 

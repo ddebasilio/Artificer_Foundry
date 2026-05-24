@@ -302,18 +302,33 @@ Hooks.once('ready', async function () {
                 const skillMap = { sur: "sur", nat: "nat", arc: "arc", inv: "inv", per: "prc", med: "med" };
                 const dndSkill = skillMap[skillKey] ?? "sur";
 
-                // Roll the skill check
+                // Roll the skill check using Foundry's native dialog (includes modifiers)
                 let rollTotal;
                 try {
-                    const roll = await actor.rollSkill(dndSkill);
-                    if (!roll) return; // user cancelled
+                    const result = await actor.rollSkill(dndSkill);
+                    if (!result) return; // user cancelled the dialog
+                    // dnd5e v4+ returns an array of rolls; v3 returns a single roll
+                    const roll = Array.isArray(result) ? result[0] : result;
+                    if (!roll) return;
                     rollTotal = roll.total;
                 } catch (err) {
-                    // Fallback: manual d20 roll
-                    console.warn(`${MODULE} | rollSkill failed, using manual roll:`, err);
-                    const roll = await new Roll("1d20").evaluate();
-                    await roll.toMessage({ speaker: ChatMessage.getSpeaker({ actor }) });
-                    rollTotal = roll.total;
+                    console.warn(`${MODULE} | rollSkill failed, trying rollSkillCheck:`, err);
+                    try {
+                        // Some dnd5e versions use rollSkillCheck instead
+                        const result = await actor.rollSkillCheck?.({ skill: dndSkill });
+                        if (!result) return;
+                        const roll = Array.isArray(result) ? result[0] : result;
+                        if (!roll) return;
+                        rollTotal = roll.total;
+                    } catch (err2) {
+                        // Last resort: manual d20 + skill modifier
+                        console.warn(`${MODULE} | rollSkillCheck also failed, using manual roll:`, err2);
+                        const skillData = actor.system?.skills?.[dndSkill];
+                        const mod = skillData?.total ?? skillData?.mod ?? 0;
+                        const roll = await new Roll(`1d20 + ${mod}`).evaluate();
+                        await roll.toMessage({ speaker: ChatMessage.getSpeaker({ actor }), flavor: `Skill Check` });
+                        rollTotal = roll.total;
+                    }
                 }
 
                 // Disable the button after rolling

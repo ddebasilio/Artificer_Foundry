@@ -62,4 +62,15 @@
     </div>
     {{/if}}
 
+    {{!-- ── GM: Clear Inventory ── --}}
+    {{#if isGM}}
+    {{#unless isEmpty}}
+    <section class="gathering-section af-pi-admin-section">
+        <button class="af-pi-clear-btn" title="Permanently delete all party inventory contents">
+            <i class="fas fa-trash"></i> Clear Inventory
+        </button>
+    </section>
+    {{/unless}}
+    {{/if}}
+
 </div>

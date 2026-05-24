@@ -781,3 +781,25 @@
     padding: 12px 0;
     color: var(--color-text-light-primary, #b4b0a8);
 }
+.af-pi-item-row {
+    cursor: pointer;
+}
+.af-pi-item-row:hover {
+    background: rgba(255,255,255,0.05);
+}
+.af-pi-clear-btn {
+    width: 100%;
+    padding: 4px 8px;
+    font-size: 11px;
+    cursor: pointer;
+    border: 1px solid rgba(200,50,50,0.4);
+    border-radius: 4px;
+    background: transparent;
+    color: #cc4444;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.af-pi-clear-btn:hover {
+    color: #ff4444;
+    border-color: #ff4444;
+    background: rgba(200,50,50,0.1);
+}

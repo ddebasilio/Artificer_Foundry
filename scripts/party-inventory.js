@@ -166,7 +166,7 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
         el.querySelectorAll('.af-pi-item-row[draggable="true"]').forEach(row => {
             row.addEventListener('dragstart', (e) => {
                 const itemId = row.dataset.itemId;
-                e.dataTransfer.setData("text/plain", JSON.stringify({
+                e.dataTransfer.setData("application/af-party-inventory", JSON.stringify({
                     type: "af-party-inventory-item",
                     itemId,
                 }));
@@ -176,6 +176,38 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
             row.addEventListener('dragend', () => {
                 row.classList.remove('dragging');
             });
+        });
+
+        // ── Click on item: view item details ──
+        el.querySelectorAll('.af-pi-item-row').forEach(row => {
+            row.addEventListener('click', (e) => {
+                const itemId = row.dataset.itemId;
+                const inv = PartyInventory._getInventory();
+                const item = inv.items?.find(i => i.id === itemId);
+                if (!item) return;
+                this._viewItem(item);
+            });
+        });
+
+        // ── Clear inventory button ──
+        el.querySelector('.af-pi-clear-btn')?.addEventListener('click', async () => {
+            const first = await foundry.applications.api.DialogV2.confirm({
+                window: { title: "Clear Party Inventory" },
+                content: "<p>Are you sure you want to delete <strong>all items and coins</strong> from the party inventory?</p>",
+                yes: { label: "Yes, Clear It" },
+                no: { label: "Cancel" },
+            });
+            if (!first) return;
+            const second = await foundry.applications.api.DialogV2.confirm({
+                window: { title: "Final Confirmation" },
+                content: "<p><strong>This cannot be undone.</strong> All party inventory contents will be permanently deleted. Are you absolutely sure?</p>",
+                yes: { label: "Delete Everything" },
+                no: { label: "Cancel" },
+            });
+            if (!second) return;
+            await PartyInventory._setInventory({ coins: {}, items: [] });
+            PartyInventory._broadcastRefresh();
+            ui.notifications.info("Party inventory cleared.");
         });
 
         // ── Coin take: input + take button ──
@@ -216,6 +248,10 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
         });
         el.addEventListener('drop', async (e) => {
             e.preventDefault();
+            // Check for party inventory items first (ignore if dropped back on self)
+            const afData = e.dataTransfer.getData("application/af-party-inventory");
+            if (afData) return;
+
             let data;
             try {
                 data = JSON.parse(e.dataTransfer.getData("text/plain"));
@@ -308,6 +344,26 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
         ui.notifications.info(`${actor.name} took all coins from party inventory.`);
     }
 
+    /** View item details in a dialog */
+    _viewItem(item) {
+        const rarityLabel = item.rarity ? item.rarity.charAt(0).toUpperCase() + item.rarity.slice(1) : "Common";
+        const html = `
+            <div style="display:flex; gap:12px; align-items:flex-start;">
+                <img src="${item.img || 'icons/svg/item-bag.svg'}" width="64" height="64" style="border:none; border-radius:4px;">
+                <div>
+                    <p><strong>Type:</strong> ${item.type || 'loot'}</p>
+                    <p><strong>Rarity:</strong> ${rarityLabel}</p>
+                    ${item.price ? `<p><strong>Price:</strong> ${item.price} gp</p>` : ''}
+                    ${item.text ? `<div style="margin-top:8px;">${item.text}</div>` : '<p><em>No description available.</em></p>'}
+                </div>
+            </div>`;
+        new foundry.applications.api.DialogV2({
+            window: { title: item.name },
+            content: html,
+            buttons: [{ action: "close", label: "Close" }],
+        }).render(true);
+    }
+
     /** Import item to actor using Plutonium (like forge-app), fallback to compendium */
     async _createItemOnActor(actor, itemData) {
         // Try Plutonium first (same pattern as forge-app.js)
@@ -351,23 +407,41 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
 // Use a document-level drop listener for maximum compatibility with ApplicationV2 sheets.
 Hooks.once('ready', () => {
     document.addEventListener('drop', async (event) => {
+        const raw = event.dataTransfer.getData("application/af-party-inventory");
+        if (!raw) return;
+
         let data;
         try {
-            data = JSON.parse(event.dataTransfer.getData("text/plain"));
+            data = JSON.parse(raw);
         } catch { return; }
 
         if (data.type !== "af-party-inventory-item") return;
+
+        // Stop Foundry from interpreting this as a real Item drop
+        event.stopImmediatePropagation();
+        event.preventDefault();
 
         // Prevent duplicate processing
         if (event._afPiHandled) return;
         event._afPiHandled = true;
 
-        // Find the actor sheet this was dropped on (supports both v1 and v2 app windows)
-        const sheet = Object.values(ui.windows).find(w => {
-            const el = w.element instanceof HTMLElement ? w.element : w.element?.[0];
-            return el?.contains(event.target);
-        });
-        const actor = sheet?.document ?? sheet?.object ?? sheet?.actor;
+        // Find the actor sheet this was dropped on
+        // Check AppV2 instances first, then legacy ui.windows
+        let actor = null;
+        for (const app of foundry.applications.instances.values()) {
+            const el = app.element instanceof HTMLElement ? app.element : app.element?.[0];
+            if (el?.contains(event.target) && app.document?.documentName === "Actor") {
+                actor = app.document;
+                break;
+            }
+        }
+        if (!actor) {
+            const sheet = Object.values(ui.windows).find(w => {
+                const el = w.element instanceof HTMLElement ? w.element : w.element?.[0];
+                return el?.contains(event.target);
+            });
+            actor = sheet?.document ?? sheet?.object ?? sheet?.actor;
+        }
         if (!actor || actor.documentName !== "Actor") {
             ui.notifications.warn("Drop items onto a character sheet.");
             return;
@@ -395,5 +469,5 @@ Hooks.once('ready', () => {
             content: `<p><strong>${actor.name}</strong> took <strong>${item.name}</strong> from the party inventory.</p>`,
             speaker: { alias: "Party Inventory" },
         });
-    });
+    }, true);  // Use capture phase to intercept before Foundry's handlers
 });
