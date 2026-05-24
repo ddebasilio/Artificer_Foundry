@@ -461,42 +461,34 @@ Hooks.once('ready', () => {
         if (event._afPiHandled) return;
         event._afPiHandled = true;
 
-        // Find the actor sheet this was dropped on
-        // Check AppV2 instances first, then legacy ui.windows
+        // Find the actor sheet this was dropped on using robust containment search
         let actor = null;
-        const sheetEl = event.target.closest?.(".window-app, .application");
-        if (sheetEl) {
-            // Check ApplicationV2 instances
+
+        // 1. Check ApplicationV2 instances first (Foundry v12+)
+        if (foundry.applications?.instances) {
             for (const app of foundry.applications.instances.values()) {
                 const el = app.element instanceof HTMLElement ? app.element : app.element?.[0];
-                if ((el === sheetEl || el?.contains(event.target)) && (app.document?.documentName === "Actor" || app.actor?.documentName === "Actor")) {
-                    actor = app.document ?? app.actor;
-                    break;
+                if (el && (el === event.target || el.contains(event.target))) {
+                    const doc = app.document ?? app.actor ?? app.object;
+                    if (doc && (doc.documentName === "Actor" || (typeof doc.uuid === "string" && doc.uuid.startsWith("Actor.")))) {
+                        actor = doc;
+                        break;
+                    }
                 }
             }
-            // Check legacy ui.windows
-            if (!actor) {
-                const sheet = Object.values(ui.windows).find(w => {
-                    const el = w.element instanceof HTMLElement ? w.element : w.element?.[0];
-                    return el === sheetEl || el?.contains(event.target);
-                });
-                actor = sheet?.document ?? sheet?.object ?? sheet?.actor;
-            }
-        } else {
-            // Fallback: search by containment
-            for (const app of foundry.applications.instances.values()) {
+        }
+
+        // 2. Check legacy/V1 ui.windows
+        if (!actor && ui.windows) {
+            for (const app of Object.values(ui.windows)) {
                 const el = app.element instanceof HTMLElement ? app.element : app.element?.[0];
-                if (el?.contains(event.target) && (app.document?.documentName === "Actor" || app.actor?.documentName === "Actor")) {
-                    actor = app.document ?? app.actor;
-                    break;
+                if (el && (el === event.target || el.contains(event.target))) {
+                    const doc = app.document ?? app.actor ?? app.object;
+                    if (doc && (doc.documentName === "Actor" || (typeof doc.uuid === "string" && doc.uuid.startsWith("Actor.")))) {
+                        actor = doc;
+                        break;
+                    }
                 }
-            }
-            if (!actor) {
-                const sheet = Object.values(ui.windows).find(w => {
-                    const el = w.element instanceof HTMLElement ? w.element : w.element?.[0];
-                    return el?.contains(event.target);
-                });
-                actor = sheet?.document ?? sheet?.object ?? sheet?.actor;
             }
         }
 
@@ -522,11 +514,15 @@ Hooks.once('ready', () => {
         }
 
         // Successfully created, now safe to remove from party inventory tracking and delete the world Item
-        await PartyInventory.removeItem(data.itemId);
-        try {
-            await realItem.delete();
-        } catch (e) {
-            console.warn("Artificer Foundry | Failed to delete world item after transfer:", e);
+        if (game.user.isGM) {
+            await PartyInventory.removeItem(data.itemId);
+            try {
+                await realItem.delete();
+            } catch (e) {
+                console.warn("Artificer Foundry | Failed to delete world item after transfer:", e);
+            }
+        } else {
+            game.socket.emit(SOCKET_NAME, { action: "takePartyInventoryItem", itemId: data.itemId });
         }
 
         ui.notifications.info(`${actor.name} took ${realItem.name} from party inventory.`);

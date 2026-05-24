@@ -199,6 +199,12 @@ Hooks.once('ready', async function () {
             await forgeRecipeManager.learnRecipe(data.actorId, data.recipeId);
         } else if (data.action === "forgetForgeRecipe") {
             await forgeRecipeManager.forgetRecipe(data.actorId, data.recipeId);
+        } else if (data.action === "takePartyInventoryItem") {
+            const realItem = game.items.get(data.itemId);
+            if (realItem) {
+                await realItem.delete();
+            }
+            await PartyInventory.removeItem(data.itemId);
         }
         // Note: refreshPartyInventory is handled by PartyInventory.registerSocketListeners()
     });

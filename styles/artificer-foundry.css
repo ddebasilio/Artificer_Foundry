@@ -846,8 +846,8 @@
 }
 
 /* Sidebar tab height constraint and flex scroll fixes */
-.af-gathering-tab,
-.af-party-inventory-tab {
+.af-gathering-tab.active,
+.af-party-inventory-tab.active {
     height: 100%;
     overflow: hidden;
     display: flex;
