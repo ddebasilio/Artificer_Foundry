@@ -179,6 +179,9 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
                 const item = game.items.get(itemId);
                 if (!item) return;
 
+                // Set standard Foundry Item drag payload with our custom markers.
+                // Foundry's native ActorSheet drop handlers will parse this from text/plain
+                // and fire the dropActorSheetData hook, where we detect afPartyLoot.
                 const dragData = {
                     type: "Item",
                     uuid: item.uuid,
@@ -187,11 +190,7 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
                 };
 
                 e.dataTransfer.setData("text/plain", JSON.stringify(dragData));
-                e.dataTransfer.setData("application/af-party-inventory", JSON.stringify({
-                    type: "af-party-inventory-item",
-                    itemId,
-                }));
-                e.dataTransfer.effectAllowed = "move";
+                e.dataTransfer.effectAllowed = "copyMove";
                 row.classList.add('dragging');
             });
             row.addEventListener('dragend', () => {
@@ -272,14 +271,14 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
             panel.addEventListener('drop', async (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                // Check for party inventory items first (ignore if dropped back on self)
-                const afData = e.dataTransfer.getData("application/af-party-inventory");
-                if (afData) return;
 
                 let data;
                 try {
                     data = JSON.parse(e.dataTransfer.getData("text/plain"));
                 } catch { return; }
+
+                // Ignore items dragged from party inventory back onto itself
+                if (data.afPartyLoot) return;
 
                 // Handle drops from character sheets (Foundry Item type)
                 if (data.type === "Item" && data.uuid) {
@@ -439,90 +438,35 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
     }
 }
 
-// ─── Global drop handler: handle party inventory items dropped on actor sheets ──
-// Use a document-level drop listener for maximum compatibility with ApplicationV2 sheets.
-Hooks.once('ready', () => {
-    document.addEventListener('drop', async (event) => {
-        const raw = event.dataTransfer.getData("application/af-party-inventory");
-        if (!raw) return;
+// ─── Global drop handler: clean up party inventory after items are dropped on actor sheets ──
+// We use TWO complementary mechanisms for maximum compatibility:
+// 1. dropActorSheetData hook — for V1 (Application-based) actor sheets
+// 2. document-level capture listener — for V2 (ApplicationV2-based) actor sheets
+// Both use a per-itemId deduplication flag to prevent double processing.
 
-        let data;
-        try {
-            data = JSON.parse(raw);
-        } catch { return; }
+const _afPendingTakes = new Set();  // Track itemIds currently being processed
 
-        if (data.type !== "af-party-inventory-item") return;
+async function _handlePartyInventoryTake(actor, itemId) {
+    if (_afPendingTakes.has(itemId)) return;  // Already being processed
+    _afPendingTakes.add(itemId);
 
-        // Stop Foundry from interpreting this as a real Item drop
-        event.stopImmediatePropagation();
-        event.preventDefault();
-
-        // Prevent duplicate processing
-        if (event._afPiHandled) return;
-        event._afPiHandled = true;
-
-        // Find the actor sheet this was dropped on using robust containment search
-        let actor = null;
-
-        // 1. Check ApplicationV2 instances first (Foundry v12+)
-        if (foundry.applications?.instances) {
-            for (const app of foundry.applications.instances.values()) {
-                const el = app.element instanceof HTMLElement ? app.element : app.element?.[0];
-                if (el && (el === event.target || el.contains(event.target))) {
-                    const doc = app.document ?? app.actor ?? app.object;
-                    if (doc && (doc.documentName === "Actor" || (typeof doc.uuid === "string" && doc.uuid.startsWith("Actor.")))) {
-                        actor = doc;
-                        break;
-                    }
-                }
-            }
-        }
-
-        // 2. Check legacy/V1 ui.windows
-        if (!actor && ui.windows) {
-            for (const app of Object.values(ui.windows)) {
-                const el = app.element instanceof HTMLElement ? app.element : app.element?.[0];
-                if (el && (el === event.target || el.contains(event.target))) {
-                    const doc = app.document ?? app.actor ?? app.object;
-                    if (doc && (doc.documentName === "Actor" || (typeof doc.uuid === "string" && doc.uuid.startsWith("Actor.")))) {
-                        actor = doc;
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (!actor || actor.documentName !== "Actor") {
-            ui.notifications.warn("Drop items onto a character sheet.");
-            return;
-        }
-
-        // Retrieve real world Item document
-        const realItem = game.items.get(data.itemId);
+    try {
+        const realItem = game.items.get(itemId);
         if (!realItem) {
             ui.notifications.warn("Item no longer in party inventory.");
             return;
         }
 
-        // Import/copy to actor
-        try {
-            await actor.createEmbeddedDocuments("Item", [realItem.toObject()]);
-        } catch (err) {
-            console.error("Artificer Foundry | Failed to create item on actor sheet:", err);
-            ui.notifications.error(`Failed to add ${realItem.name} to ${actor.name}.`);
-            return;
-        }
-
-        // Successfully created, now safe to remove from party inventory tracking and delete the world Item
+        // Remove from party inventory and delete world item
         if (game.user.isGM) {
-            await PartyInventory.removeItem(data.itemId);
+            await PartyInventory.removeItem(itemId);
             try {
                 await realItem.delete();
             } catch (e) {
                 console.warn("Artificer Foundry | Failed to delete world item after transfer:", e);
             }
         } else {
-            game.socket.emit(SOCKET_NAME, { action: "takePartyInventoryItem", itemId: data.itemId });
+            game.socket.emit(SOCKET_NAME, { action: "takePartyInventoryItem", itemId });
         }
 
         ui.notifications.info(`${actor.name} took ${realItem.name} from party inventory.`);
@@ -530,5 +474,89 @@ Hooks.once('ready', () => {
             content: `<p><strong>${actor.name}</strong> took <strong>${realItem.name}</strong> from the party inventory.</p>`,
             speaker: { alias: "Party Inventory" },
         });
-    }, true);  // Use capture phase to intercept before Foundry's handlers
+    } finally {
+        _afPendingTakes.delete(itemId);
+    }
+}
+
+Hooks.once('ready', () => {
+
+    // ── Path 1: V1 ActorSheet hook ──
+    // dropActorSheetData fires for Application-based (V1) actor sheets.
+    // Return false to prevent Foundry from ALSO creating the item (we create it ourselves).
+    Hooks.on('dropActorSheetData', async (actor, sheet, data) => {
+        if (!data.afPartyLoot || !data.itemId) return true;
+
+        const realItem = game.items.get(data.itemId);
+        if (!realItem) {
+            ui.notifications.warn("Item no longer in party inventory.");
+            return false;
+        }
+
+        // Create the item on the actor ourselves
+        try {
+            await actor.createEmbeddedDocuments("Item", [realItem.toObject()]);
+        } catch (err) {
+            console.error("Artificer Foundry | Failed to create item on actor sheet:", err);
+            ui.notifications.error(`Failed to add ${realItem.name} to ${actor.name}.`);
+            return false;
+        }
+
+        // Clean up party inventory
+        await _handlePartyInventoryTake(actor, data.itemId);
+        return false;
+    });
+
+    // ── Path 2: Document-level listener for V2 sheets ──
+    // ApplicationV2 sheets don't fire dropActorSheetData. They natively resolve
+    // the UUID from text/plain, create the embedded item, and finish.
+    // We intercept the drop in capture phase, let it proceed, then clean up
+    // the party inventory asynchronously after Foundry has finished its work.
+    document.addEventListener('drop', (event) => {
+        let data;
+        try {
+            const raw = event.dataTransfer?.getData("text/plain");
+            if (!raw) return;
+            data = JSON.parse(raw);
+        } catch { return; }
+
+        if (!data.afPartyLoot || !data.itemId) return;
+
+        // DON'T call stopImmediatePropagation — let Foundry handle the drop natively!
+        // Wait for Foundry to process the drop, then clean up.
+        // Use a small delay to let Foundry's async drop handlers finish creating the item.
+        setTimeout(async () => {
+            // Find which actor the item was dropped on by checking instances
+            let actor = null;
+            if (foundry.applications?.instances) {
+                for (const app of foundry.applications.instances.values()) {
+                    const el = app.element instanceof HTMLElement ? app.element : app.element?.[0];
+                    if (el?.contains(event.target)) {
+                        const doc = app.document ?? app.actor ?? app.object;
+                        if (doc?.documentName === "Actor") {
+                            actor = doc;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (!actor && ui.windows) {
+                for (const app of Object.values(ui.windows)) {
+                    const el = app.element instanceof HTMLElement ? app.element : app.element?.[0];
+                    if (el?.contains(event.target)) {
+                        const doc = app.document ?? app.actor ?? app.object;
+                        if (doc?.documentName === "Actor") {
+                            actor = doc;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (actor) {
+                await _handlePartyInventoryTake(actor, data.itemId);
+            }
+        }, 500);  // 500ms delay to let Foundry's async handlers complete
+    }, true);  // Capture phase to read dataTransfer before it's cleared
 });
+

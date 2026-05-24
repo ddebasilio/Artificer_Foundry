@@ -93,12 +93,24 @@ export class PlutoniumHelper {
                 return null;
             }
 
+            // Snapshot existing world item IDs before import
+            const beforeIds = new Set(game.items.map(i => i.id));
+
             // Import directly to the world (no actor)
             const importOpts = new api.importer.ImportOpts({});
             await importer.pImportEntry(ent, importOpts);
 
-            // Find the created world item
-            const created = game.items.contents.find(i => i.name.toLowerCase() === target && (!i.folder || i.folder.id === folderId));
+            // Find the newly created item(s) by diffing against the snapshot
+            const newItems = game.items.filter(i => !beforeIds.has(i.id));
+            let created = null;
+
+            if (newItems.length === 1) {
+                created = newItems[0];
+            } else if (newItems.length > 1) {
+                // Multiple items were created — pick the one matching by name
+                created = newItems.find(i => i.name.toLowerCase() === target) ?? newItems[0];
+            }
+
             if (created && folderId) {
                 await created.update({ folder: folderId });
             }
