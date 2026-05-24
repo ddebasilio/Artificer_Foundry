@@ -781,12 +781,13 @@
 }
 .af-pi-item-list .thumbnail,
 .af-lg-item-list .thumbnail {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     flex-shrink: 0;
-    border: none;
-    border-radius: 2px;
+    border: 1px solid var(--color-border-dark-tertiary, rgba(255,255,255,0.15));
+    border-radius: 3px;
     object-fit: cover;
+    margin-right: 8px;
 }
 .af-pi-item-row.dragging {
     opacity: 0.4;
@@ -798,10 +799,34 @@
     color: var(--color-text-light-primary, #b4b0a8);
 }
 .af-pi-item-row {
+    display: flex !important;
+    align-items: center;
+    padding: 6px 8px;
+    border: 1px solid var(--color-border-dark-tertiary, rgba(255,255,255,0.1));
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.15);
+    margin-bottom: 2px;
     cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    height: 38px;
+    box-sizing: border-box;
 }
 .af-pi-item-row:hover {
-    background: rgba(255,255,255,0.05);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--color-border-highlight, #ff6400);
+}
+.af-pi-item-row .entry-name {
+    font-size: 13px;
+    font-weight: bold;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+}
+.af-pi-item-row .entry-name:hover {
+    text-shadow: 0 0 4px currentColor;
 }
 .af-pi-clear-btn {
     width: 100%;
@@ -818,4 +843,13 @@
     color: #ff4444;
     border-color: #ff4444;
     background: rgba(200,50,50,0.1);
+}
+
+/* Sidebar tab height constraint and flex scroll fixes */
+.af-gathering-tab,
+.af-party-inventory-tab {
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }

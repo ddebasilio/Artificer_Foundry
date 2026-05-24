@@ -242,26 +242,33 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
         });
 
         // ── Drop zone: allow dropping items from character sheets onto party inventory ──
-        el.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = "move";
-        });
-        el.addEventListener('drop', async (e) => {
-            e.preventDefault();
-            // Check for party inventory items first (ignore if dropped back on self)
-            const afData = e.dataTransfer.getData("application/af-party-inventory");
-            if (afData) return;
+        const panel = el.querySelector('.af-party-inventory-panel');
+        if (panel) {
+            panel.addEventListener('dragenter', (e) => {
+                e.preventDefault();
+            });
+            panel.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = "move";
+            });
+            panel.addEventListener('drop', async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                // Check for party inventory items first (ignore if dropped back on self)
+                const afData = e.dataTransfer.getData("application/af-party-inventory");
+                if (afData) return;
 
-            let data;
-            try {
-                data = JSON.parse(e.dataTransfer.getData("text/plain"));
-            } catch { return; }
+                let data;
+                try {
+                    data = JSON.parse(e.dataTransfer.getData("text/plain"));
+                } catch { return; }
 
-            // Handle drops from character sheets (Foundry Item type)
-            if (data.type === "Item" && data.uuid) {
-                await this._handleItemDrop(data);
-            }
-        });
+                // Handle drops from character sheets (Foundry Item type)
+                if (data.type === "Item" && data.uuid) {
+                    await this._handleItemDrop(data);
+                }
+            });
+        }
     }
 
     // ─── Actions ─────────────────────────────────────────────────────────────────
@@ -352,24 +359,55 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
         ui.notifications.info(`${actor.name} took all coins from party inventory.`);
     }
 
-    /** View item details in a dialog */
-    _viewItem(item) {
-        const rarityLabel = item.rarity ? item.rarity.charAt(0).toUpperCase() + item.rarity.slice(1) : "Common";
-        const html = `
-            <div style="display:flex; gap:12px; align-items:flex-start;">
-                <img src="${item.img || 'icons/svg/item-bag.svg'}" width="64" height="64" style="border:none; border-radius:4px;">
-                <div>
-                    <p><strong>Type:</strong> ${item.type || 'loot'}</p>
-                    <p><strong>Rarity:</strong> ${rarityLabel}</p>
-                    ${item.price ? `<p><strong>Price:</strong> ${item.price} gp</p>` : ''}
-                    ${item.text ? `<div style="margin-top:8px;">${item.text}</div>` : '<p><em>No description available.</em></p>'}
-                </div>
-            </div>`;
-        new foundry.applications.api.DialogV2({
-            window: { title: item.name },
-            content: html,
-            buttons: [{ action: "close", label: "Close" }],
-        }).render(true);
+    /** View item details - tries to show real sheet */
+    async _viewItem(itemData) {
+        // 1. Search compendiums for matching real item
+        for (const pack of game.packs) {
+            if (pack.documentName !== "Item") continue;
+            try {
+                const index = await pack.getIndex();
+                const entry = index.find(e => e.name.toLowerCase() === itemData.name.toLowerCase());
+                if (entry) {
+                    const realItem = await pack.getDocument(entry._id);
+                    realItem.sheet.render(true);
+                    return;
+                }
+            } catch (e) {}
+        }
+
+        // 2. Fallback: create transient item and render its sheet
+        try {
+            const tempItem = new Item({
+                name: itemData.name,
+                type: itemData.type || "loot",
+                img: itemData.img || "icons/svg/item-bag.svg",
+                system: {
+                    description: { value: itemData.text || "" },
+                    rarity: itemData.rarity || "common",
+                    price: { value: itemData.price || 0, denomination: "gp" }
+                }
+            });
+            tempItem.sheet.render(true);
+        } catch (err) {
+            console.error("Artificer Foundry | Failed to render transient sheet, falling back to dialog:", err);
+            // 3. Last resort: render basic DialogV2
+            const rarityLabel = itemData.rarity ? itemData.rarity.charAt(0).toUpperCase() + itemData.rarity.slice(1) : "Common";
+            const html = `
+                <div style="display:flex; gap:12px; align-items:flex-start;">
+                    <img src="${itemData.img || 'icons/svg/item-bag.svg'}" width="64" height="64" style="border:none; border-radius:4px;">
+                    <div>
+                        <p><strong>Type:</strong> ${itemData.type || 'loot'}</p>
+                        <p><strong>Rarity:</strong> ${rarityLabel}</p>
+                        ${itemData.price ? `<p><strong>Price:</strong> ${itemData.price} gp</p>` : ''}
+                        ${itemData.text ? `<div style="margin-top:8px;">${itemData.text}</div>` : '<p><em>No description available.</em></p>'}
+                    </div>
+                </div>`;
+            new foundry.applications.api.DialogV2({
+                window: { title: itemData.name },
+                content: html,
+                buttons: [{ action: "close", label: "Close" }],
+            }).render(true);
+        }
     }
 
     /** Import item to actor using Plutonium (like forge-app), fallback to compendium */

@@ -146,7 +146,7 @@ Hooks.once('init', function () {
 
     // Register the Loot Generator sidebar tab (renamed from Gathering)
     CONFIG.ui.sidebar.TABS["af-gathering"] = {
-        icon: "fa-solid fa-sack",
+        icon: "fa-solid fa-gem",
         tooltip: "Loot Generator",
         gmOnly: true,
     };
@@ -154,7 +154,7 @@ Hooks.once('init', function () {
 
     // Register the Party Inventory sidebar tab
     CONFIG.ui.sidebar.TABS["af-party-inventory"] = {
-        icon: "fa-solid fa-treasure-chest",
+        icon: "fa-solid fa-boxes-stacked",
         tooltip: "Party Inventory",
         gmOnly: false,
     };
