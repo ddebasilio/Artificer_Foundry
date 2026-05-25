@@ -207,7 +207,14 @@ export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
         const recipe = allRecipes.find(r => r.id === this.selectedRecipeId);
         if (!recipe) return;
 
-        const required = recipe.ingredients.find(i => canSubstitute(item.name, i.name, recipe.rarity));
+        const isSatisfied = (ing) => (this.providedIngredients[ing.name] || 0) >= ing.quantity;
+        const isExact = (ing) => item.name.toLowerCase() === ing.name.toLowerCase();
+        const isSub = (ing) => canSubstitute(item.name, ing.name, recipe.rarity);
+        const required =
+            recipe.ingredients.find(i => isExact(i) && !isSatisfied(i)) ||
+            recipe.ingredients.find(i => isSub(i) && !isSatisfied(i)) ||
+            recipe.ingredients.find(i => isExact(i)) ||
+            recipe.ingredients.find(i => isSub(i));
         if (!required) { ui.notifications.warn(`"${item.name}" is not needed for this recipe.`); return; }
 
         const totalInInventory = (this.actor?.items?.contents ?? [])

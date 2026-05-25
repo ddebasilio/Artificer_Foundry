@@ -229,19 +229,34 @@ Hooks.once('ready', async function () {
             await PartyInventory._setInventory(inv);
             PartyInventory._broadcastRefresh();
         } else if (data.action === "playerAddItemToPartyInventory") {
-            const folder = await PartyInventory._getOrCreatePartyLootFolder();
-            const itemData = data.itemData;
-            delete itemData._id;
-            itemData.folder = folder.id;
-            const createdWorldItem = await Item.create(itemData);
-            if (createdWorldItem) {
-                await PartyInventory.addItems([{ id: createdWorldItem.id }]);
-                const qty = data.qty || 1;
-                const countText = qty > 1 ? `${qty}× ` : "";
-                await ChatMessage.create({
-                    content: `<p><strong>${data.actorName}</strong> added <strong>${countText}${data.itemName}</strong> to the party inventory.</p>`,
-                    speaker: { alias: "Party Inventory" },
-                });
+            try {
+                const folder = await PartyInventory._getOrCreatePartyLootFolder();
+                const itemData = data.itemData;
+                delete itemData._id;
+                itemData.folder = folder.id;
+                const createdWorldItem = await Item.create(itemData);
+                if (createdWorldItem) {
+                    await PartyInventory.addItems([{ id: createdWorldItem.id }]);
+                    // GM removes the item from the player's character (atomic operation)
+                    const actor = game.actors.get(data.actorId);
+                    if (actor && data.embeddedItemId) {
+                        try {
+                            await actor.deleteEmbeddedDocuments("Item", [data.embeddedItemId]);
+                        } catch (e) {
+                            console.warn("Artificer Foundry | Failed to remove item from character:", e);
+                        }
+                    }
+                    const qty = data.qty || 1;
+                    const countText = qty > 1 ? `${qty}× ` : "";
+                    await ChatMessage.create({
+                        content: `<p><strong>${data.actorName}</strong> added <strong>${countText}${data.itemName}</strong> to the party inventory.</p>`,
+                        speaker: { alias: "Party Inventory" },
+                    });
+                } else {
+                    console.error("Artificer Foundry | Failed to create world item for party inventory");
+                }
+            } catch (err) {
+                console.error("Artificer Foundry | Error handling playerAddItemToPartyInventory:", err);
             }
         }
         // Note: refreshPartyInventory is handled by PartyInventory.registerSocketListeners()

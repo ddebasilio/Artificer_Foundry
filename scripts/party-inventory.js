@@ -367,7 +367,8 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
         });
 
         // ── Drop zone: allow dropping items from character sheets onto party inventory ──
-        const panel = el.querySelector('.af-party-inventory-panel');
+        // Use el.matches() to handle case where el IS the panel root (V12 sidebar tabs)
+        const panel = el.matches?.('.af-party-inventory-panel') ? el : el.querySelector('.af-party-inventory-panel');
         if (panel) {
             panel.addEventListener('dragenter', (e) => {
                 e.preventDefault();
@@ -419,22 +420,20 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
             return;
         }
 
-        // Players proxy through GM socket for world item creation
+        // Players proxy through GM socket for world item creation + removal
         if (!game.user.isGM) {
+            const qty = item.system?.quantity || 1;
+            const countText = qty > 1 ? `${qty}× ` : "";
             game.socket.emit(SOCKET_NAME, {
                 action: "playerAddItemToPartyInventory",
                 itemData: item.toObject(),
                 actorId: actor.id,
                 embeddedItemId: item.id,
                 itemName: item.name,
-                qty: item.system?.quantity || 1,
+                qty,
                 actorName: actor.name,
             });
-            // Remove from character (player can do this on their own actor)
-            await actor.deleteEmbeddedDocuments("Item", [item.id]);
-            const qty = item.system?.quantity || 1;
-            const countText = qty > 1 ? `${qty}× ` : "";
-            ui.notifications.info(`Moved ${countText}${item.name} from ${actor.name} to party inventory.`);
+            ui.notifications.info(`Sending ${countText}${item.name} from ${actor.name} to party inventory…`);
             return;
         }
 
