@@ -145,6 +145,26 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
                 this._refreshLocal();
             }
         });
+
+        // Also refresh when the partyInventory setting is synced from the server.
+        // This is more reliable than socket-based refresh because the hook only
+        // fires AFTER the local settings cache has been updated, avoiding the
+        // race condition where a socket refresh message arrives before the
+        // setting data has propagated.
+        Hooks.on('updateSetting', (setting) => {
+            if (setting.key === `${MODULE_ID}.partyInventory`) {
+                this._scheduleRefresh();
+            }
+        });
+    }
+
+    /** Debounced refresh — collapses multiple rapid refresh triggers into one render */
+    static _scheduleRefresh() {
+        if (this._refreshTimer) clearTimeout(this._refreshTimer);
+        this._refreshTimer = setTimeout(() => {
+            this._refreshTimer = null;
+            this._refreshLocal();
+        }, 50);
     }
 
     // ─── Template data ───────────────────────────────────────────────────────────
