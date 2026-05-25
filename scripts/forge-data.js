@@ -86,6 +86,14 @@ export function canForgeSubstitute(ingredientName, requiredName, recipeRarity) {
     return false;
 }
 
+export function getBiomeMaterials() {
+    return _forgeData?.biomeMaterials ?? {};
+}
+
+export function getMaterialRarityWeights() {
+    return _forgeData?.materialRarityWeights ?? {};
+}
+
 export function getForgeSubstitutes(ingredientName, recipeRarity) {
     const rarityOrder = ["common", "uncommon", "rare", "very_rare", "legendary"];
     const recipeIdx = rarityOrder.indexOf(recipeRarity);
@@ -104,6 +112,52 @@ export function getForgeSubstitutes(ingredientName, recipeRarity) {
         }
     }
     return results;
+}
+
+/**
+ * Resolve forge material gathering by a pre-computed DC (used by gathering panel).
+ */
+export function resolveForgeForagingByDC(dc, biomeKey, rollTotal) {
+    const critFail = rollTotal === 1;
+    const critSuccess = rollTotal === 20;
+
+    if (critFail) return { success: false, dc, items: [], critFail: true };
+    if (rollTotal < dc && !critSuccess) return { success: false, dc, items: [], critFail: false };
+
+    const margin = rollTotal - dc;
+    let itemCount = Math.max(1, Math.floor(1 + margin / 3));
+    if (critSuccess) itemCount += 2;
+
+    const biomePool = getBiomeMaterials()[biomeKey] ?? {};
+    const rarityWeights = getMaterialRarityWeights();
+    const items = [];
+    const weightedPool = [];
+
+    for (const [tier, names] of Object.entries(biomePool)) {
+        const weight = rarityWeights[tier] ?? 0;
+        for (const name of names) {
+            weightedPool.push({ name, type: tier, weight });
+        }
+    }
+
+    if (weightedPool.length === 0) return { success: true, dc, items: [], critFail: false };
+
+    const totalWeight = weightedPool.reduce((sum, e) => sum + e.weight, 0);
+
+    for (let i = 0; i < itemCount; i++) {
+        let roll = Math.random() * totalWeight;
+        for (const entry of weightedPool) {
+            roll -= entry.weight;
+            if (roll <= 0) {
+                const existing = items.find(it => it.name === entry.name);
+                if (existing) existing.qty++;
+                else items.push({ name: entry.name, type: entry.type, qty: 1 });
+                break;
+            }
+        }
+    }
+
+    return { success: true, dc, items, critFail: false };
 }
 
 /**

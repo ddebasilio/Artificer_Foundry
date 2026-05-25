@@ -256,8 +256,43 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
         // ── Click on item: view item details ──
         el.querySelectorAll('.af-pi-item-row').forEach(row => {
             row.addEventListener('click', (e) => {
+                // Don't open item sheet if a button was clicked
+                if (e.target.closest('.af-pi-item-actions')) return;
                 const itemId = row.dataset.itemId;
                 this._viewItem(itemId);
+            });
+        });
+
+        // ── Take item button: add to selected character and remove from party ──
+        el.querySelectorAll('.af-pi-take-item-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                const itemId = btn.dataset.itemId;
+                const actorSelect = el.querySelector('.af-pi-actor-select');
+                const actorId = actorSelect?.value;
+                if (!actorId) {
+                    ui.notifications.warn("Select a character first.");
+                    return;
+                }
+                await this._takeItem(itemId, actorId);
+            });
+        });
+
+        // ── Remove item button: discard from party inventory ──
+        el.querySelectorAll('.af-pi-remove-item-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                const itemId = btn.dataset.itemId;
+                const item = game.items.get(itemId);
+                const name = item?.name || "this item";
+                const confirmed = await foundry.applications.api.DialogV2.confirm({
+                    window: { title: "Remove Item" },
+                    content: `<p>Remove <strong>${name}</strong> from the party inventory? This will delete it.</p>`,
+                    yes: { label: "Remove" },
+                    no: { label: "Cancel" },
+                });
+                if (!confirmed) return;
+                await this._removeItemFromInventory(itemId);
             });
         });
 
@@ -487,6 +522,59 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
         }
     }
 
+    /** Take an item from party inventory and add it to a character */
+    async _takeItem(itemId, actorId) {
+        const actor = game.actors.get(actorId);
+        if (!actor) { ui.notifications.warn("Character not found."); return; }
+        if (!actor.isOwner) { ui.notifications.warn("You don't own this character."); return; }
+
+        const worldItem = game.items.get(itemId);
+        if (!worldItem) { ui.notifications.warn("Item no longer exists."); return; }
+
+        const itemName = worldItem.name;
+
+        // Create item on character (player has permission on their own actor)
+        const itemData = worldItem.toObject();
+        delete itemData._id;
+        delete itemData.folder;
+        await actor.createEmbeddedDocuments("Item", [itemData]);
+
+        // Remove from party inventory and delete world item
+        if (game.user.isGM) {
+            await PartyInventory.removeItem(itemId);
+            try { await worldItem.delete(); } catch (e) {
+                console.warn("Artificer Foundry | Failed to delete world item:", e);
+            }
+        } else {
+            game.socket.emit(SOCKET_NAME, { action: "takePartyInventoryItem", itemId });
+        }
+
+        ui.notifications.info(`${actor.name} took ${itemName} from party inventory.`);
+        await ChatMessage.create({
+            content: `<p><strong>${actor.name}</strong> took <strong>${itemName}</strong> from the party inventory.</p>`,
+            speaker: { alias: "Party Inventory" },
+        });
+    }
+
+    /** Remove an item from party inventory without giving it to anyone */
+    async _removeItemFromInventory(itemId) {
+        const worldItem = game.items.get(itemId);
+        const name = worldItem?.name || "Unknown item";
+
+        if (game.user.isGM) {
+            await PartyInventory.removeItem(itemId);
+            if (worldItem) {
+                try { await worldItem.delete(); } catch (e) {
+                    console.warn("Artificer Foundry | Failed to delete world item:", e);
+                }
+            }
+        } else {
+            game.socket.emit(SOCKET_NAME, { action: "takePartyInventoryItem", itemId });
+        }
+
+        ui.notifications.info(`Removed ${name} from party inventory.`);
+    }
+
     /** Helper to get or create the Party Loot directory folder */
     static async _getOrCreatePartyLootFolder() {
         let folder = game.folders.find(f => f.name === "Party Loot" && f.type === "Item");
@@ -599,37 +687,40 @@ Hooks.once('ready', () => {
 
         if (!data.afPartyLoot || !data.itemId) return;
 
+        // Identify the target actor NOW, before the actor sheet re-renders and
+        // detaches the original event.target node from the DOM.
+        let actorId = null;
+        if (foundry.applications?.instances) {
+            for (const app of foundry.applications.instances.values()) {
+                const el = app.element instanceof HTMLElement ? app.element : app.element?.[0];
+                if (el?.contains(event.target)) {
+                    const doc = app.document ?? app.actor ?? app.object;
+                    if (doc?.documentName === "Actor") {
+                        actorId = doc.id;
+                        break;
+                    }
+                }
+            }
+        }
+        if (!actorId && ui.windows) {
+            for (const app of Object.values(ui.windows)) {
+                const el = app.element instanceof HTMLElement ? app.element : app.element?.[0];
+                if (el?.contains(event.target)) {
+                    const doc = app.document ?? app.actor ?? app.object;
+                    if (doc?.documentName === "Actor") {
+                        actorId = doc.id;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (!actorId) return;
+
         // Let Foundry handle the drop natively — do NOT call stopImmediatePropagation!
         // After Foundry's async handlers finish creating the item on the actor, clean up.
         setTimeout(async () => {
-            let actor = null;
-
-            // Find which actor sheet the item was dropped on
-            if (foundry.applications?.instances) {
-                for (const app of foundry.applications.instances.values()) {
-                    const el = app.element instanceof HTMLElement ? app.element : app.element?.[0];
-                    if (el?.contains(event.target)) {
-                        const doc = app.document ?? app.actor ?? app.object;
-                        if (doc?.documentName === "Actor") {
-                            actor = doc;
-                            break;
-                        }
-                    }
-                }
-            }
-            if (!actor && ui.windows) {
-                for (const app of Object.values(ui.windows)) {
-                    const el = app.element instanceof HTMLElement ? app.element : app.element?.[0];
-                    if (el?.contains(event.target)) {
-                        const doc = app.document ?? app.actor ?? app.object;
-                        if (doc?.documentName === "Actor") {
-                            actor = doc;
-                            break;
-                        }
-                    }
-                }
-            }
-
+            const actor = game.actors.get(actorId);
             if (actor) {
                 await _handlePartyInventoryTake(actor, data.itemId);
             }

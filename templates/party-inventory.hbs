@@ -46,12 +46,20 @@
     {{#if hasItems}}
     <section class="gathering-section af-pi-items-section">
         <h3 class="gathering-section-title"><i class="fas fa-magic"></i> Items</h3>
-        <p class="af-pi-drag-hint"><i class="fas fa-arrows-alt"></i> Drag items to a character sheet to take them</p>
+        <p class="af-pi-drag-hint"><i class="fas fa-arrows-alt"></i> Drag items to a character sheet, or use the buttons below</p>
         <ol class="subdirectory plain af-pi-item-list">
             {{#each items}}
             <li class="directory-item entry document item flexrow af-pi-item-row" data-item-id="{{this.id}}" draggable="true" style="display: flex;">
                 <img class="thumbnail" src="{{this.img}}" alt="{{this.name}}" loading="lazy">
                 <a class="entry-name ellipsis af-rarity-{{this.rarity}}">{{this.name}}</a>
+                <div class="af-pi-item-actions">
+                    <button class="af-pi-take-item-btn" data-item-id="{{this.id}}" title="Take to character">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button class="af-pi-remove-item-btn" data-item-id="{{this.id}}" title="Remove from inventory">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
             </li>
             {{/each}}
         </ol>

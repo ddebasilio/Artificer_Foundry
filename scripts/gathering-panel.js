@@ -4,7 +4,7 @@ import {
     getWeatherModifiers, getSeasonModifiers, getSkillOptions,
     resolveForagingByDC, addIngredientToActor
 } from "./ingredient-data.js";
-import { addForgeMaterialToActor } from "./forge-data.js";
+import { addForgeMaterialToActor, resolveForgeForagingByDC } from "./forge-data.js";
 import {
     loadLootTables, getCRTiers, getLootTypes,
     rollIndividualTreasure, rollTreasureHoard, rerollItem, normalizeRarity
@@ -507,7 +507,9 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
         if (!actor) return;
 
         const gatherMode = req.gatherMode ?? "ingredients";
-        const result = resolveForagingByDC(req.dc, req.biomeKey, rollTotal);
+        const result = gatherMode === "materials"
+            ? resolveForgeForagingByDC(req.dc, req.biomeKey, rollTotal)
+            : resolveForagingByDC(req.dc, req.biomeKey, rollTotal);
 
         let msgContent;
         if (result.critFail) {

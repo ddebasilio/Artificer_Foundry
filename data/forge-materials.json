@@ -192,5 +192,95 @@
         "Hardwood Plank"
       ]
     }
+  },
+  "materialRarityWeights": {
+    "metal": 35,
+    "crafting_supply": 30,
+    "wood": 25,
+    "hide": 25,
+    "natural": 20,
+    "cloth": 15,
+    "paper": 10,
+    "tool": 10,
+    "essence": 10,
+    "gem": 8,
+    "monster_part": 5,
+    "rare_metal": 4,
+    "arcane": 3,
+    "rare_essence": 2,
+    "rare_gem": 2,
+    "divine": 1,
+    "elemental": 1,
+    "rare_monster_part": 1,
+    "very_rare_component": 0,
+    "legendary_component": 0
+  },
+  "biomeMaterials": {
+    "forest": {
+      "metal": ["Iron Ingot"],
+      "wood": ["Hardwood Plank", "Mystic Wood"],
+      "hide": ["Leather Strips"],
+      "natural": ["Feathers"],
+      "essence": ["Arcane Dust"],
+      "monster_part": ["Ogre Knucklebone"]
+    },
+    "swamp": {
+      "hide": ["Leather Strips"],
+      "natural": ["Feathers"],
+      "essence": ["Arcane Dust", "Arcane Essence"],
+      "monster_part": ["Ogre Knucklebone", "Displacer Beast Tentacle"],
+      "rare_essence": ["Greater Arcane Essence"]
+    },
+    "mountain": {
+      "metal": ["Iron Ingot", "Steel Ingot"],
+      "tool": ["Whetstone"],
+      "rare_metal": ["Mithral Ore", "Adamantine Shard"],
+      "gem": ["Gemstone Chip"],
+      "rare_gem": ["Moonstone", "Ruby", "Sapphire"]
+    },
+    "coast": {
+      "cloth": ["Silk Thread"],
+      "natural": ["Feathers"],
+      "hide": ["Leather Strips"],
+      "gem": ["Gemstone Chip"],
+      "essence": ["Arcane Dust"]
+    },
+    "desert": {
+      "metal": ["Gold Ingot", "Gold Band"],
+      "hide": ["Leather Strips"],
+      "gem": ["Gemstone Chip", "Ruby"],
+      "essence": ["Arcane Dust"],
+      "rare_gem": ["Moonstone"]
+    },
+    "arctic": {
+      "hide": ["Leather Strips"],
+      "cloth": ["Padding"],
+      "natural": ["Feathers"],
+      "rare_metal": ["Star Metal Fragment"],
+      "monster_part": ["Frost Giant Knuckle"],
+      "essence": ["Arcane Dust"]
+    },
+    "underdark": {
+      "rare_metal": ["Adamantine Shard", "Mithral Ore"],
+      "essence": ["Arcane Essence", "Arcane Crystal"],
+      "monster_part": ["Ogre Knucklebone"],
+      "rare_gem": ["Moonstone", "Sapphire"],
+      "rare_essence": ["Greater Arcane Essence"]
+    },
+    "plains": {
+      "metal": ["Iron Ingot"],
+      "hide": ["Leather Strips"],
+      "natural": ["Feathers"],
+      "cloth": ["Padding"],
+      "essence": ["Arcane Dust"],
+      "monster_part": ["Ogre Knucklebone"]
+    },
+    "urban": {
+      "metal": ["Iron Ingot", "Steel Ingot", "Gold Band"],
+      "cloth": ["Silk Thread", "Padding"],
+      "paper": ["Blank Scroll", "Enchanted Ink"],
+      "tool": ["Whetstone"],
+      "essence": ["Arcane Dust", "Enchanting Dust"]
+    }
   }
 }

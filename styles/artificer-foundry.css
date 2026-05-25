@@ -883,6 +883,37 @@
 .af-pi-item-row .entry-name:hover {
     text-shadow: 0 0 4px currentColor;
 }
+.af-pi-item-actions {
+    display: flex;
+    gap: 2px;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+.af-pi-item-actions button {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+    background: transparent;
+    color: var(--color-text-light-primary, #b4b0a8);
+    cursor: pointer;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.af-pi-take-item-btn:hover {
+    color: #44cc44;
+    border-color: #44cc44;
+    background: rgba(68, 204, 68, 0.1);
+}
+.af-pi-remove-item-btn:hover {
+    color: #cc4444;
+    border-color: #cc4444;
+    background: rgba(204, 68, 68, 0.1);
+}
 .af-pi-clear-btn {
     width: 100%;
     padding: 4px 8px;
