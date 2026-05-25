@@ -231,6 +231,7 @@ Hooks.once('ready', async function () {
         } else if (data.action === "playerAddItemToPartyInventory") {
             const folder = await PartyInventory._getOrCreatePartyLootFolder();
             const itemData = data.itemData;
+            delete itemData._id;
             itemData.folder = folder.id;
             const createdWorldItem = await Item.create(itemData);
             if (createdWorldItem) {
