@@ -27,6 +27,6 @@
   ],
   "socket": true,
   "url": "https://github.com/ddebasilio/Artificer_Foundry",
-  "manifest": "https://raw.githubusercontent.com/ddebasilio/Artificer_Foundry/refs/heads/new_tab/module.json",
-  "download": "https://github.com/ddebasilio/Artificer_Foundry/archive/refs/heads/new_tab.zip"
+  "manifest": "https://raw.githubusercontent.com/ddebasilio/Artificer_Foundry/refs/heads/main/module.json",
+  "download": "https://github.com/ddebasilio/Artificer_Foundry/archive/refs/heads/main.zip"
 }
