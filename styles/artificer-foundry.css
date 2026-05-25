@@ -640,22 +640,39 @@
 }
 .af-lg-item-actions {
     display: flex;
-    gap: 2px;
+    gap: 4px;
     margin-left: auto;
+    flex-shrink: 0;
+    align-items: center;
 }
+.af-lg-send-item-to-party,
 .af-lg-reroll-item,
 .af-lg-item-info {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    box-sizing: border-box;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
     background: transparent;
-    border: none;
+    color: var(--color-text-light-primary, #b4b0a8);
     cursor: pointer;
     font-size: 11px;
-    padding: 2px 5px;
-    color: var(--color-text-light-primary, #b4b0a8);
-    transition: color 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.af-lg-send-item-to-party:hover {
+    color: #4499ff;
+    border-color: #4499ff;
+    background: rgba(68, 153, 255, 0.1);
 }
 .af-lg-reroll-item:hover,
 .af-lg-item-info:hover {
     color: var(--color-text-hyperlink, #ff6400);
+    border-color: var(--color-text-hyperlink, #ff6400);
+    background: rgba(255, 100, 0, 0.1);
 }
 .af-lg-item-desc {
     margin-top: 4px;
@@ -836,11 +853,13 @@
 }
 .af-pi-item-list .thumbnail,
 .af-lg-item-list .thumbnail {
-    width: 28px;
-    height: 28px;
+    align-self: stretch;
+    width: 36px;
+    height: auto;
     flex-shrink: 0;
-    border: 1px solid var(--color-border-dark-tertiary, rgba(255,255,255,0.15));
-    border-radius: 3px;
+    border: none;
+    border-right: 1px solid var(--color-border-dark-tertiary, rgba(255,255,255,0.15));
+    border-radius: 3px 0 0 3px;
     object-fit: cover;
     margin-right: 8px;
 }
@@ -856,7 +875,7 @@
 .af-pi-item-row {
     display: flex !important;
     align-items: center;
-    padding: 6px 8px;
+    padding: 0 8px 0 0;
     border: 1px solid var(--color-border-dark-tertiary, rgba(255,255,255,0.1));
     border-radius: 4px;
     background: rgba(0, 0, 0, 0.15);
@@ -865,6 +884,7 @@
     transition: background 0.15s, border-color 0.15s;
     height: 38px;
     box-sizing: border-box;
+    overflow: hidden;
 }
 .af-pi-item-row:hover {
     background: rgba(255, 255, 255, 0.05);
@@ -885,14 +905,16 @@
 }
 .af-pi-item-actions {
     display: flex;
-    gap: 2px;
+    gap: 4px;
     margin-left: auto;
     flex-shrink: 0;
+    align-items: center;
 }
 .af-pi-item-actions button {
     width: 24px;
     height: 24px;
     padding: 0;
+    box-sizing: border-box;
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 3px;
     background: transparent;
@@ -943,7 +965,7 @@
 .af-lg-item-row {
     display: flex !important;
     align-items: center;
-    padding: 6px 8px;
+    padding: 0 8px 0 0;
     border: 1px solid var(--color-border-dark-tertiary, rgba(255,255,255,0.1));
     border-radius: 4px;
     background: rgba(0, 0, 0, 0.15);
@@ -952,6 +974,7 @@
     transition: background 0.15s, border-color 0.15s;
     height: 38px;
     box-sizing: border-box;
+    overflow: hidden;
 }
 .af-lg-item-row:hover {
     background: rgba(255, 255, 255, 0.05);
