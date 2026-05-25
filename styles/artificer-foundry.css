@@ -639,7 +639,6 @@
     flex: 1;
 }
 .af-lg-item-actions {
-    display: flex;
     gap: 4px;
     margin-left: auto;
     flex-shrink: 0;
@@ -972,9 +971,10 @@
     margin-bottom: 2px;
     cursor: pointer;
     transition: background 0.15s, border-color 0.15s;
-    height: 38px;
+    height: 100px;
     box-sizing: border-box;
     overflow: hidden;
+    align-content: center;
 }
 .af-lg-item-row:hover {
     background: rgba(255, 255, 255, 0.05);
