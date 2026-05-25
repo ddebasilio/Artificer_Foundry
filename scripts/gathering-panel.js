@@ -7,7 +7,7 @@ import {
 import { addForgeMaterialToActor } from "./forge-data.js";
 import {
     loadLootTables, getCRTiers, getLootTypes,
-    rollIndividualTreasure, rollTreasureHoard, rerollItem
+    rollIndividualTreasure, rollTreasureHoard, rerollItem, normalizeRarity
 } from "./loot-generator.js";
 import { PartyInventory } from "./party-inventory.js";
 
@@ -337,7 +337,7 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
                             id: createdItem.id,
                             name: createdItem.name,
                             img: createdItem.img || "icons/svg/item-bag.svg",
-                            rarity: createdItem.system?.rarity || itemData.rarity || "common",
+                            rarity: normalizeRarity(createdItem.system?.rarity || itemData.rarity || "common"),
                             text: createdItem.system?.description?.value || itemData.text || ""
                         });
                     }
@@ -374,7 +374,7 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
                     id: createdItem.id,
                     name: createdItem.name,
                     img: createdItem.img || "icons/svg/item-bag.svg",
-                    rarity: createdItem.system?.rarity || newItem.rarity || "common",
+                    rarity: normalizeRarity(createdItem.system?.rarity || newItem.rarity || "common"),
                     text: createdItem.system?.description?.value || newItem.text || ""
                 };
             }

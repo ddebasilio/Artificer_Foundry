@@ -8,6 +8,18 @@ import { getItemData } from "./item-data.js";
 let _lootTables = null;
 let _itemsByRarity = null;
 
+/** Normalize dnd5e camelCase rarity keys to items.json format (space-separated lowercase) */
+const _rarityMap = {
+    "veryRare": "very rare",
+    "veryrare": "very rare",
+    "very_rare": "very rare",
+};
+
+export function normalizeRarity(rarity) {
+    if (!rarity) return "common";
+    return _rarityMap[rarity] || rarity.toLowerCase().replace(/[_]+/g, " ").trim();
+}
+
 export async function loadLootTables() {
     if (_lootTables) return _lootTables;
     const resp = await fetch("modules/artificer-foundry/data/loot-tables.json");
@@ -131,7 +143,8 @@ export async function rollTreasureHoard(crTier) {
  * @returns {{id, name, rarity, type, text, price, source}}
  */
 export function rerollItem(rarity) {
-    const itemName = _pickRandomItem(rarity);
+    const normalized = normalizeRarity(rarity);
+    const itemName = _pickRandomItem(normalized);
     if (!itemName) return null;
     const details = getItemDetails(itemName);
     return {

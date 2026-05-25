@@ -6,6 +6,7 @@
  */
 
 import { PlutoniumHelper } from "./plutonium-helper.js";
+import { normalizeRarity } from "./loot-generator.js";
 
 const MODULE_ID = "artificer-foundry";
 const SOCKET_NAME = `module.${MODULE_ID}`;
@@ -165,6 +166,8 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
         }));
 
         const rarityOrder = { common: 0, uncommon: 1, rare: 2, "very rare": 3, legendary: 4, artifact: 5 };
+        // Also handle dnd5e camelCase keys for sorting
+        const rarityRank = (r) => rarityOrder[normalizeRarity(r)] ?? 9;
         
         const items = [];
         for (const itemRef of inv.items || []) {
@@ -174,13 +177,13 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
                     id: realItem.id,
                     name: realItem.name,
                     img: realItem.img || "icons/svg/item-bag.svg",
-                    rarity: realItem.system?.rarity || "common",
+                    rarity: normalizeRarity(realItem.system?.rarity || "common"),
                     type: realItem.type,
                     text: realItem.system?.description?.value || ""
                 });
             }
         }
-        items.sort((a, b) => (rarityOrder[a.rarity] ?? 9) - (rarityOrder[b.rarity] ?? 9));
+        items.sort((a, b) => rarityRank(a.rarity) - rarityRank(b.rarity));
 
         const ownedActors = game.actors.filter(a => a.isOwner && a.type === "character");
         const hasCoins = coins.some(c => c.amount > 0);
