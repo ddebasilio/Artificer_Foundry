@@ -7,6 +7,25 @@ import { getItemData } from "./item-data.js";
 
 let _lootTables = null;
 let _itemsByRarity = null;
+let _itemsByCategory = null;
+
+// ─── Item Category Definitions ────────────────────────────────────────────────
+
+/** Ordered matchers – first match wins; unmatched items fall into "general" */
+const _CATEGORY_MATCHERS = [
+    { key: "potions",  test: (t) => /potion/i.test(t) },
+    { key: "scrolls",  test: (t) => /scroll/i.test(t) },
+    { key: "rings",    test: (t) => /\bring\b/i.test(t) },
+    { key: "weapons",  test: (t) => /weapon|wand|shield|staff/i.test(t) },
+    { key: "armor",    test: (t) => /\barmou?r\b/i.test(t) },
+];
+
+function _categoryForType(type) {
+    for (const { key, test } of _CATEGORY_MATCHERS) {
+        if (test(type)) return key;
+    }
+    return "general";
+}
 
 /** Normalize dnd5e camelCase rarity keys to items.json format (space-separated lowercase) */
 const _rarityMap = {
@@ -39,12 +58,35 @@ function _buildRarityIndex() {
     for (const [name, data] of Object.entries(items)) {
         const r = (data.rarity || "").toLowerCase().replace(/\s+/g, " ").trim();
         if (!r || r === "varies" || r.startsWith("unknown")) continue;
-        // Normalise "very rare" → "very rare"
         const key = r;
         if (!_itemsByRarity[key]) _itemsByRarity[key] = [];
         _itemsByRarity[key].push(name);
     }
     return _itemsByRarity;
+}
+
+/** Build a { category: { rarity: [itemName, …] } } index from items.json */
+function _buildCategoryIndex() {
+    if (_itemsByCategory) return _itemsByCategory;
+    const items = getItemData();
+    _itemsByCategory = {};
+    for (const [name, data] of Object.entries(items)) {
+        const r = (data.rarity || "").toLowerCase().replace(/\s+/g, " ").trim();
+        if (!r || r === "varies" || r.startsWith("unknown")) continue;
+        const cat = _categoryForType(data.type || "");
+        if (!_itemsByCategory[cat]) _itemsByCategory[cat] = {};
+        if (!_itemsByCategory[cat][r]) _itemsByCategory[cat][r] = [];
+        _itemsByCategory[cat][r].push(name);
+    }
+    return _itemsByCategory;
+}
+
+/** Pick a random item of the given rarity within a specific category */
+function _pickRandomItemInCategory(rarity, category) {
+    const index = _buildCategoryIndex();
+    const pool = index[category]?.[rarity];
+    if (!pool || pool.length === 0) return null;
+    return pool[Math.floor(Math.random() * pool.length)];
 }
 
 /** Evaluate a dice formula like "4d6*100" and return the numeric result */
@@ -160,6 +202,63 @@ export function rerollItem(rarity) {
 }
 
 /**
+ * Roll only the coin portion of a treasure hoard (no items).
+ * @param {string} crTier
+ * @returns {Promise<{coins: Object, items: []}>}
+ */
+export async function rollCurrencyOnly(crTier) {
+    const tables = getLootTables();
+    const tier = tables.treasureHoard[crTier];
+    if (!tier) throw new Error(`Unknown CR tier: ${crTier}`);
+    const coins = {};
+    for (const [coinType, formula] of Object.entries(tier.baseCoins)) {
+        coins[coinType] = await _evalFormula(formula);
+    }
+    return { coins, items: [] };
+}
+
+/**
+ * Roll magic items from a specific category using the hoard item rarity table.
+ * Coins are not included.
+ * @param {string} crTier
+ * @param {string} category – one of the keys from getItemCategories()
+ * @returns {Promise<{coins: {}, items: Array}>}
+ */
+export async function rollItemsByCategory(crTier, category) {
+    const tables = getLootTables();
+    const tier = tables.treasureHoard[crTier];
+    if (!tier) throw new Error(`Unknown CR tier: ${crTier}`);
+
+    const d100 = Math.floor(Math.random() * 100) + 1;
+    const row = tier.magicItems.find(r => d100 >= r.min && d100 <= r.max);
+    const rolledItems = [];
+
+    if (row && row.items.length > 0) {
+        for (const entry of row.items) {
+            const count = await _evalFormula(entry.count);
+            for (let i = 0; i < count; i++) {
+                const itemName = _pickRandomItemInCategory(entry.rarity, category);
+                if (itemName) {
+                    const details = getItemDetails(itemName);
+                    rolledItems.push({
+                        id: foundry.utils.randomID(),
+                        name: itemName,
+                        rarity: entry.rarity,
+                        type: details?.type ?? "",
+                        text: details?.text ?? "",
+                        price: details?.price ?? 0,
+                        source: details?.source ?? "",
+                        img: "icons/svg/item-bag.svg",
+                    });
+                }
+            }
+        }
+    }
+
+    return { coins: {}, items: rolledItems };
+}
+
+/**
  * Get the CR tier options for UI dropdowns.
  */
 export function getCRTiers() {
@@ -178,5 +277,21 @@ export function getLootTypes() {
     return [
         { value: "hoard",      label: "Treasure Hoard" },
         { value: "individual", label: "Individual Treasure" },
+        { value: "currency",   label: "Currency Only" },
+        { value: "category",   label: "Items by Category" },
+    ];
+}
+
+/**
+ * Get item category options for the category roll mode.
+ */
+export function getItemCategories() {
+    return [
+        { value: "potions", label: "Potions" },
+        { value: "scrolls", label: "Scrolls" },
+        { value: "weapons", label: "Weapons, Wands, Staves & Shields" },
+        { value: "armor",   label: "Armor" },
+        { value: "rings",   label: "Rings" },
+        { value: "general", label: "General Magic Items" },
     ];
 }

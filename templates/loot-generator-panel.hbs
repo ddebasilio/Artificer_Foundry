@@ -35,6 +35,15 @@
                     {{/each}}
                 </select>
             </div>
+
+            <div class="gather-row af-lg-category-row" style="{{#unless showCategorySelect}}display:none{{/unless}}">
+                <label>Category</label>
+                <select class="af-lg-item-category">
+                    {{#each itemCategories}}
+                        <option value="{{this.value}}" {{#if (eq ../itemCategory this.value)}}selected{{/if}}>{{this.label}}</option>
+                    {{/each}}
+                </select>
+            </div>
         </section>
 
         <div class="gathering-action">

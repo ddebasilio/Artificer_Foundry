@@ -6,8 +6,9 @@ import {
 } from "./ingredient-data.js";
 import { addForgeMaterialToActor, resolveForgeForagingByDC } from "./forge-data.js";
 import {
-    loadLootTables, getCRTiers, getLootTypes,
-    rollIndividualTreasure, rollTreasureHoard, rerollItem, normalizeRarity
+    loadLootTables, getCRTiers, getLootTypes, getItemCategories,
+    rollIndividualTreasure, rollTreasureHoard, rollCurrencyOnly, rollItemsByCategory,
+    rerollItem, normalizeRarity
 } from "./loot-generator.js";
 import { PartyInventory } from "./party-inventory.js";
 
@@ -45,10 +46,11 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
         this.selectedActorIds = new Set();
 
         // Loot generator state
-        this.mode      = "loot";       // "loot" or "gathering"
-        this.lootType  = "hoard";      // "hoard" or "individual"
-        this.crTier    = "CR0-4";
-        this.lootResults = [];        // Array of { coins, items } from rolls (newest first)
+        this.mode         = "loot";      // "loot" or "gathering"
+        this.lootType     = "hoard";     // "hoard" | "individual" | "currency" | "category"
+        this.crTier       = "CR0-4";
+        this.itemCategory = "potions";   // active category when lootType === "category"
+        this.lootResults  = [];          // Array of { coins, items } from rolls (newest first)
     }
 
     // ─── Computed DC ────────────────────────────────────────────────────────────
@@ -127,10 +129,13 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
             mode: this.mode,
 
             // Loot generator
-            crTiers:   getCRTiers(),
-            lootTypes: getLootTypes(),
-            crTier:    this.crTier,
-            lootType:  this.lootType,
+            crTiers:            getCRTiers(),
+            lootTypes:          getLootTypes(),
+            itemCategories:     getItemCategories(),
+            crTier:             this.crTier,
+            lootType:           this.lootType,
+            itemCategory:       this.itemCategory,
+            showCategorySelect: this.lootType === "category",
             lootResults,
             hasLootResults,
 
@@ -177,8 +182,13 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
         });
 
         // ── Loot generator controls ──
-        el.querySelector('.af-lg-loot-type')?.addEventListener('change', e => { this.lootType = e.target.value; });
+        el.querySelector('.af-lg-loot-type')?.addEventListener('change', e => {
+            this.lootType = e.target.value;
+            const catRow = el.querySelector('.af-lg-category-row');
+            if (catRow) catRow.style.display = this.lootType === 'category' ? '' : 'none';
+        });
         el.querySelector('.af-lg-cr-tier')?.addEventListener('change', e => { this.crTier = e.target.value; });
+        el.querySelector('.af-lg-item-category')?.addEventListener('change', e => { this.itemCategory = e.target.value; });
         el.querySelector('.af-lg-roll-btn')?.addEventListener('click', () => this._onRollLoot());
 
         // Reroll individual items
@@ -324,6 +334,10 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
             let rolledLoot;
             if (this.lootType === "individual") {
                 rolledLoot = await rollIndividualTreasure(this.crTier);
+            } else if (this.lootType === "currency") {
+                rolledLoot = await rollCurrencyOnly(this.crTier);
+            } else if (this.lootType === "category") {
+                rolledLoot = await rollItemsByCategory(this.crTier, this.itemCategory);
             } else {
                 rolledLoot = await rollTreasureHoard(this.crTier);
             }
