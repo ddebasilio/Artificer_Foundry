@@ -160,24 +160,42 @@
   },
   "craftingTimes": {
     "common": {
+      "days": 2.5,
+      "cost": 25
+    },
+    "uncommon": {
+      "days": 5,
+      "cost": 100
+    },
+    "rare": {
+      "days": 25,
+      "cost": 1000
+    },
+    "very_rare": {
+      "days": 62.5,
+      "cost": 10000
+    },
+    "legendary": {
+      "days": 125,
+      "cost": 50000
+    }
+  },
+  "craftingTimesHealingPotions": {
+    "common": {
       "days": 1,
       "cost": 25
     },
     "uncommon": {
-      "days": 3,
+      "days": 5,
       "cost": 100
     },
     "rare": {
-      "days": 7,
+      "days": 15,
       "cost": 1000
     },
     "very_rare": {
-      "days": 14,
+      "days": 62,
       "cost": 10000
-    },
-    "legendary": {
-      "days": 28,
-      "cost": 50000
     }
   },
   "costs": {

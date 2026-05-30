@@ -1,5 +1,5 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
-import { getTypeLabels, getIngredientIcon, canSubstitute, getSubstitutes, getCraftingTime, formatCraftingTime, getCraftingTimes } from "./ingredient-data.js";
+import { getTypeLabels, getIngredientIcon, canSubstitute, getSubstitutes, getCraftingTime, formatCraftingTime, getCraftingTimes, getCraftingTimesHealingPotions } from "./ingredient-data.js";
 import { PlutoniumHelper } from "./plutonium-helper.js";
 
 export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
@@ -48,7 +48,8 @@ export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
             if (this.searchQuery && !r.name.toLowerCase().includes(this.searchQuery.toLowerCase())) return false;
             return true;
         }).map(r => {
-            const ct = getCraftingTime(r.rarity, isAlchemist);
+            const isHealingPotion = /healing/i.test(r.name);
+            const ct = getCraftingTime(r.rarity, isAlchemist, isHealingPotion);
             return { ...r, craftingTimeLabel: formatCraftingTime(ct.days), craftingCost: ct.cost };
         });
 
@@ -58,7 +59,8 @@ export class CraftingApp extends HandlebarsApplicationMixin(ApplicationV2) {
         if (this.selectedRecipeId) {
             selectedRecipe = allRecipes.find(r => r.id === this.selectedRecipeId);
             if (selectedRecipe) {
-                const ct = getCraftingTime(selectedRecipe.rarity, isAlchemist);
+                const isHealingPotion = /healing/i.test(selectedRecipe.name);
+                const ct = getCraftingTime(selectedRecipe.rarity, isAlchemist, isHealingPotion);
                 selectedRecipe = { ...selectedRecipe, craftingTimeLabel: formatCraftingTime(ct.days), craftingCost: ct.cost };
                 mappedIngredients = selectedRecipe.ingredients.map(ing => {
                     const provided = this.providedIngredients[ing.name] || 0;

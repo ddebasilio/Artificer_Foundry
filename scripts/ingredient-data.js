@@ -50,6 +50,10 @@ export function getCraftingTimes() {
     return _ingredientData?.craftingTimes ?? {};
 }
 
+export function getCraftingTimesHealingPotions() {
+    return _ingredientData?.craftingTimesHealingPotions ?? {};
+}
+
 export function getIngredientCosts() {
     return _ingredientData?.costs ?? {};
 }
@@ -130,8 +134,8 @@ export function getSubstitutes(ingredientName, recipeRarity) {
 
 // ─── Crafting time helpers ───────────────────────────────────────────────────
 
-export function getCraftingTime(rarity, isAlchemist = false) {
-    const times = getCraftingTimes();
+export function getCraftingTime(rarity, isAlchemist = false, isHealingPotion = false) {
+    const times = isHealingPotion ? getCraftingTimesHealingPotions() : getCraftingTimes();
     const base = times[rarity] ?? times.common ?? { days: 1, cost: 25 };
     const days = isAlchemist ? Math.max(1, Math.ceil(base.days / 2)) : base.days;
     return { days, cost: base.cost };

@@ -593,7 +593,10 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
 
         // 1. Try Plutonium Importer to World
         const plutoniumItem = await PlutoniumHelper.pImportItemToWorld(itemData.name, folder.id);
-        if (plutoniumItem) return plutoniumItem;
+        if (plutoniumItem) {
+            await plutoniumItem.update({ ownership: { default: 1 } });
+            return plutoniumItem;
+        }
 
         // 2. Try Compendium
         let compendiumItem = null;
@@ -612,6 +615,7 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
         if (compendiumItem) {
             const data = compendiumItem.toObject();
             data.folder = folder.id;
+            data.ownership = { default: 1 };
             return await Item.create(data);
         }
 
@@ -620,6 +624,7 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
             name: itemData.name,
             type: "loot",
             folder: folder.id,
+            ownership: { default: 1 },
             system: {
                 description: { value: itemData.text || "" },
                 rarity: itemData.rarity || "common",

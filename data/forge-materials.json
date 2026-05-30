@@ -105,23 +105,23 @@
   "defaultIcon": "icons/svg/item-bag.svg",
   "craftingTimes": {
     "common": {
-      "days": 1,
+      "days": 5,
       "cost": 50
     },
     "uncommon": {
-      "days": 5,
+      "days": 10,
       "cost": 200
     },
     "rare": {
-      "days": 10,
+      "days": 50,
       "cost": 2000
     },
     "very_rare": {
-      "days": 25,
+      "days": 125,
       "cost": 20000
     },
     "legendary": {
-      "days": 50,
+      "days": 250,
       "cost": 100000
     }
   },

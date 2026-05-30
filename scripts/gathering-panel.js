@@ -226,11 +226,40 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
             });
         });
 
+        // Remove individual item from roll
+        el.querySelectorAll('.af-lg-remove-item').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const rollIndex = parseInt(btn.closest('[data-roll-index]').dataset.rollIndex);
+                const itemId = btn.dataset.itemId;
+                this._onRemoveItem(rollIndex, itemId);
+            });
+        });
+
         // Send all loot from a roll to party inventory
         el.querySelectorAll('.af-lg-send-to-party').forEach(btn => {
             btn.addEventListener('click', () => {
                 const rollIndex = parseInt(btn.closest('[data-roll-index]').dataset.rollIndex);
                 this._onSendToParty(rollIndex);
+            });
+        });
+
+        // Discard an entire roll
+        el.querySelectorAll('.af-lg-discard-roll').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const rollIndex = parseInt(btn.closest('[data-roll-index]').dataset.rollIndex);
+                this._onDiscardRoll(rollIndex);
+            });
+        });
+
+        // Coin amount edits
+        el.querySelectorAll('.af-lg-coin-amount').forEach(input => {
+            input.addEventListener('change', () => {
+                const rollIndex = parseInt(input.closest('[data-roll-index]').dataset.rollIndex);
+                const coinType = input.dataset.coinType;
+                const value = Math.max(0, parseInt(input.value) || 0);
+                this._onEditCoinAmount(rollIndex, coinType, value);
             });
         });
 
@@ -442,6 +471,51 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
 
         this.lootResults.splice(rollIndex, 1);
         this.render(true);
+    }
+
+    async _onRemoveItem(rollIndex, itemId) {
+        const roll = this.lootResults[rollIndex];
+        if (!roll?.items) return;
+        const idx = roll.items.findIndex(i => i.id === itemId);
+        if (idx === -1) return;
+
+        try {
+            await game.items.get(itemId)?.delete();
+        } catch (e) {
+            console.warn("Artificer Foundry | Failed to delete removed world item:", e);
+        }
+
+        roll.items.splice(idx, 1);
+        this.render(true);
+    }
+
+    async _onDiscardRoll(rollIndex) {
+        const roll = this.lootResults[rollIndex];
+        if (!roll) return;
+
+        // Delete all world items created for this roll
+        for (const item of roll.items || []) {
+            try {
+                await game.items.get(item.id)?.delete();
+            } catch (e) {
+                console.warn("Artificer Foundry | Failed to delete world item on discard:", e);
+            }
+        }
+
+        this.lootResults.splice(rollIndex, 1);
+        this.render(true);
+    }
+
+    _onEditCoinAmount(rollIndex, coinType, value) {
+        const roll = this.lootResults[rollIndex];
+        if (!roll) return;
+        if (!roll.coins) roll.coins = {};
+        if (value <= 0) {
+            delete roll.coins[coinType];
+        } else {
+            roll.coins[coinType] = value;
+        }
+        // No re-render needed — the input already shows the new value
     }
 
     // ─── Request Roll (gathering) ────────────────────────────────────────────────

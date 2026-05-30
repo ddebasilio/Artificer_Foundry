@@ -65,7 +65,7 @@
                 <ul class="af-lg-coin-list">
                     {{#each this.coins}}
                         <li class="af-lg-coin-row">
-                            <span class="af-lg-coin-amount">{{this.amount}}</span>
+                            <input class="af-lg-coin-amount" type="number" min="0" value="{{this.amount}}" data-coin-type="{{this.type}}" title="Edit amount">
                             <span class="af-lg-coin-type">{{this.label}}</span>
                         </li>
                     {{/each}}
@@ -89,6 +89,9 @@
                             <button class="af-lg-reroll-item" data-item-id="{{this.id}}" data-rarity="{{this.rarity}}" title="Reroll this item">
                                 <i class="fas fa-sync-alt"></i>
                             </button>
+                            <button class="af-lg-remove-item" data-item-id="{{this.id}}" title="Remove this item">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </span>
                     </li>
                     {{/each}}
@@ -105,6 +108,9 @@
             <div class="gathering-action af-lg-send-actions">
                 <button class="af-lg-send-to-party">
                     <i class="fas fa-users"></i> Send All to Party Inventory
+                </button>
+                <button class="af-lg-discard-roll">
+                    <i class="fas fa-trash"></i> Discard Roll
                 </button>
             </div>
         </section>
