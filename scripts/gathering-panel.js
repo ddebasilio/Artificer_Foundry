@@ -2,9 +2,10 @@ import {
     loadIngredientData,
     getBiomes, getAbundanceModifiers, getTimeUnits,
     getWeatherModifiers, getSeasonModifiers, getSkillOptions,
-    resolveForagingByDC, addIngredientToActor
+    resolveForagingByDC, addIngredientToActor,
+    getBiomeIngredients, getRarityWeights
 } from "./ingredient-data.js";
-import { addForgeMaterialToActor, resolveForgeForagingByDC } from "./forge-data.js";
+import { loadForgeData, getBiomeMaterials, getMaterialRarityWeights, addForgeMaterialToActor, resolveForgeForagingByDC } from "./forge-data.js";
 import {
     loadLootTables, getCRTiers, getLootTypes, getItemCategories,
     rollIndividualTreasure, rollTreasureHoard, rollCurrencyOnly, rollItemsByCategory,
@@ -40,6 +41,7 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
         this.timeUnit   = "hours";
         this.weatherMod = 0;
         this.seasonMod  = 0;
+        this.rarityMod  = 0; // GM Rarity Modifier Override (-5 to +5)
         this.manualDC   = null;
         this.skillKey   = "sur";
         this.gatherMode = "ingredients"; // "ingredients" or "materials"
@@ -84,6 +86,7 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
 
         // Ensure data is loaded
         await loadIngredientData();
+        await loadForgeData();
         await loadLootTables();
 
         const scene = game.scenes?.active;
@@ -106,6 +109,81 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
         const biomes = getBiomes();
         const abundanceMods = getAbundanceModifiers();
         const timeUnits = getTimeUnits();
+
+        // Expected Yield Preview Calculation
+        const hours = this.timeAmount * (timeUnits[this.timeUnit]?.hours ?? 1);
+        const minutes = hours * 60;
+        const abundance = abundanceMods[this.abundance] ?? { qtyMul: 1.0, name: "Medium" };
+        const baseYieldPerMinute = 0.05;
+        const expectedQty = minutes * baseYieldPerMinute * abundance.qtyMul;
+
+        let expectedQtyLabel = "";
+        if (expectedQty <= 0) {
+            expectedQtyLabel = "0 items";
+        } else if (expectedQty < 1) {
+            expectedQtyLabel = `${(expectedQty * 100).toFixed(0)}% chance of 1 item (+1/2 on success)`;
+        } else {
+            const minQty = Math.floor(expectedQty);
+            const maxQty = Math.ceil(expectedQty);
+            if (minQty === maxQty) {
+                expectedQtyLabel = `${minQty} items (+1/2 on success)`;
+            } else {
+                expectedQtyLabel = `${minQty}–${maxQty} items (+1/2 on success)`;
+            }
+        }
+
+        // Rarity Distribution calculation for selected Biome
+        const isMaterials = this.gatherMode === "materials";
+        const biomePool = isMaterials
+            ? (getBiomeMaterials()[this.biome] ?? {})
+            : (getBiomeIngredients()[this.biome] ?? {});
+
+        const rarityWeights = isMaterials
+            ? getMaterialRarityWeights()
+            : getRarityWeights();
+
+        const getGroup = (typeOrTier) => {
+            if (isMaterials) {
+                if (["metal", "crafting_supply", "wood", "hide", "natural", "cloth", "paper", "tool"].includes(typeOrTier)) return "C";
+                if (["essence", "gem", "monster_part", "arcane"].includes(typeOrTier)) return "U";
+                if (["divine", "elemental"].includes(typeOrTier)) return "R";
+                return "VR";
+            } else {
+                if (["common_herb", "common_component", "liquid"].includes(typeOrTier)) return "C";
+                if (["uncommon_herb", "uncommon_component"].includes(typeOrTier)) return "U";
+                if (["monster_part", "rare_component"].includes(typeOrTier)) return "R";
+                return "VR";
+            }
+        };
+
+        const timeRarityMult = Math.min(2.5, 1.0 + Math.max(0, Math.log10(hours)));
+        const previewMargin = 5 + parseInt(this.rarityMod || 0);
+        let multipliers = { C: 1.0, U: 1.0, R: 1.0, VR: 1.0 };
+        if (previewMargin >= 10) {
+            multipliers = { C: 0.2, U: 0.6 * timeRarityMult, R: 1.0 * timeRarityMult, VR: 0.8 * timeRarityMult };
+        } else if (previewMargin >= 5) {
+            multipliers = { C: 0.5, U: 0.8 * timeRarityMult, R: 0.8 * timeRarityMult, VR: 0.2 * timeRarityMult };
+        } else {
+            multipliers = { C: 1.0, U: 0.8 * timeRarityMult, R: 0.4 * timeRarityMult, VR: 0.02 * timeRarityMult };
+        }
+
+        let totalBaseWeight = 0;
+        const groupWeights = { C: 0, U: 0, R: 0, VR: 0 };
+        for (const [tier, names] of Object.entries(biomePool)) {
+            const weight = rarityWeights[tier] ?? 0;
+            const group = getGroup(tier);
+            const mult = multipliers[group];
+            const totalTierWeight = weight * names.length * mult;
+            groupWeights[group] += totalTierWeight;
+            totalBaseWeight += totalTierWeight;
+        }
+
+        const previewRarities = {
+            common: totalBaseWeight > 0 ? ((groupWeights.C / totalBaseWeight) * 100).toFixed(1) : "0.0",
+            uncommon: totalBaseWeight > 0 ? ((groupWeights.U / totalBaseWeight) * 100).toFixed(1) : "0.0",
+            rare: totalBaseWeight > 0 ? ((groupWeights.R / totalBaseWeight) * 100).toFixed(1) : "0.0",
+            veryRare: totalBaseWeight > 0 ? ((groupWeights.VR / totalBaseWeight) * 100).toFixed(1) : "0.0"
+        };
 
         // Format loot results for template (multiple rolls)
         const coinLabels = { cp: "Copper", sp: "Silver", ep: "Electrum", gp: "Gold", pp: "Platinum" };
@@ -153,11 +231,14 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
             timeUnit:   this.timeUnit,
             weatherMod: String(this.weatherMod),
             seasonMod:  String(this.seasonMod),
+            rarityMod:  String(this.rarityMod),
             skillKey:   this.skillKey,
             gatherMode: this.gatherMode,
             autoDC,
             displayDC,
             isManualDC: this.manualDC !== null,
+            expectedQtyLabel,
+            previewRarities,
         });
 
         return context;
@@ -284,36 +365,38 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
 
         el.querySelector('.gather-biome')?.addEventListener('change', e => {
             this.biome = e.target.value;
-            updateDC();
+            this.render();
         });
         el.querySelector('.gather-abundance')?.addEventListener('change', e => {
             this.abundance = e.target.value;
-            updateDC();
+            this.render();
         });
         el.querySelector('.gather-time-amount')?.addEventListener('change', e => {
             this.timeAmount = Number(e.target.value) || 1;
-            updateDC();
+            this.render();
         });
         el.querySelector('.gather-time-unit')?.addEventListener('change', e => {
             this.timeUnit = e.target.value;
-            updateDC();
+            this.render();
         });
         el.querySelector('.gather-weather')?.addEventListener('change', e => {
             this.weatherMod = Number(e.target.value);
-            updateDC();
+            this.render();
         });
         el.querySelector('.gather-season')?.addEventListener('change', e => {
             this.seasonMod = Number(e.target.value);
-            updateDC();
+            this.render();
+        });
+        el.querySelector('.gather-rarity-mod')?.addEventListener('change', e => {
+            this.rarityMod = Number(e.target.value) || 0;
+            this.render();
         });
 
         // Gather mode toggle (ingredients vs materials)
         el.querySelectorAll('.gather-mode-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                el.querySelectorAll('.gather-mode-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
                 this.gatherMode = btn.dataset.mode;
-                updateDC();
+                this.render();
             });
         });
 
@@ -536,7 +619,17 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
 
         // Persist request so players can roll even after page reload
         const active = game.settings.get(MODULE_ID, "activeGatherRequests");
-        active[reqId] = { dc, biomeKey: this.biome, actorIds, skillKey: this.skillKey, gatherMode: this.gatherMode };
+        active[reqId] = {
+            dc,
+            biomeKey: this.biome,
+            abundanceKey: this.abundance,
+            timeAmount: this.timeAmount,
+            timeUnit: this.timeUnit,
+            rarityMod: parseInt(this.rarityMod || 0),
+            actorIds,
+            skillKey: this.skillKey,
+            gatherMode: this.gatherMode
+        };
         await game.settings.set(MODULE_ID, "activeGatherRequests", active);
 
         // Build whisper list from actor owners
@@ -596,8 +689,8 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
 
         const gatherMode = req.gatherMode ?? "ingredients";
         const result = gatherMode === "materials"
-            ? resolveForgeForagingByDC(req.dc, req.biomeKey, rollTotal)
-            : resolveForagingByDC(req.dc, req.biomeKey, rollTotal);
+            ? resolveForgeForagingByDC(req.dc, req.biomeKey, rollTotal, req.timeAmount, req.timeUnit, req.abundanceKey, req.rarityMod || 0)
+            : resolveForagingByDC(req.dc, req.biomeKey, rollTotal, req.timeAmount, req.timeUnit, req.abundanceKey, req.rarityMod || 0);
 
         let msgContent;
         if (result.critFail) {

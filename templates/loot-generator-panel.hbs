@@ -210,6 +210,17 @@
                     {{/each}}
                 </select>
             </div>
+
+            <div class="gather-row">
+                <label>Rarity Focus</label>
+                <select class="gather-rarity-mod">
+                    <option value="-5" {{#if (eq rarityMod "-5")}}selected{{/if}}>-5 (Abundant Common)</option>
+                    <option value="-3" {{#if (eq rarityMod "-3")}}selected{{/if}}>-3 (Favor Common)</option>
+                    <option value="0" {{#if (eq rarityMod "0")}}selected{{/if}}>0 (Standard Biome)</option>
+                    <option value="3" {{#if (eq rarityMod "3")}}selected{{/if}}>+3 (Favor Rares)</option>
+                    <option value="5" {{#if (eq rarityMod "5")}}selected{{/if}}>+5 (Abundant Legends)</option>
+                </select>
+            </div>
         </section>
 
         {{!-- ── DC & Skill ── --}}
@@ -232,6 +243,44 @@
                         <option value="{{this.value}}" {{#if (eq ../skillKey this.value)}}selected{{/if}}>{{this.label}}</option>
                     {{/each}}
                 </select>
+            </div>
+        </section>
+
+        {{!-- ── Foraging Preview ── --}}
+        <section class="gathering-section foraging-preview-section">
+            <h3 class="gathering-section-title"><i class="fas fa-eye"></i> Foraging Preview</h3>
+            <div class="preview-row">
+                <span class="preview-label">Expected Yield:</span>
+                <span class="preview-value expected-yield-value">{{expectedQtyLabel}}</span>
+            </div>
+            <div class="preview-rarity-distribution">
+                <div class="rarity-distribution-title">Base Biome Composition:</div>
+                <div class="rarity-bar-wrapper">
+                    <div class="rarity-bar-item">
+                        <div class="rarity-bar-label">Common: {{previewRarities.common}}%</div>
+                        <div class="rarity-bar-progress-bg">
+                            <div class="rarity-bar-progress progress-common" style="width: {{previewRarities.common}}%"></div>
+                        </div>
+                    </div>
+                    <div class="rarity-bar-item">
+                        <div class="rarity-bar-label">Uncommon: {{previewRarities.uncommon}}%</div>
+                        <div class="rarity-bar-progress-bg">
+                            <div class="rarity-bar-progress progress-uncommon" style="width: {{previewRarities.uncommon}}%"></div>
+                        </div>
+                    </div>
+                    <div class="rarity-bar-item">
+                        <div class="rarity-bar-label">Rare: {{previewRarities.rare}}%</div>
+                        <div class="rarity-bar-progress-bg">
+                            <div class="rarity-bar-progress progress-rare" style="width: {{previewRarities.rare}}%"></div>
+                        </div>
+                    </div>
+                    <div class="rarity-bar-item">
+                        <div class="rarity-bar-label">Very Rare+: {{previewRarities.veryRare}}%</div>
+                        <div class="rarity-bar-progress-bg">
+                            <div class="rarity-bar-progress progress-veryrare" style="width: {{previewRarities.veryRare}}%"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 

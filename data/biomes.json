@@ -44,6 +44,16 @@
       "name": "Urban",
       "baseDC": 5,
       "icon": "fas fa-city"
+    },
+    "dungeon": {
+      "name": "Dungeon",
+      "baseDC": 5,
+      "icon": "fas fa-dungeon"
+    },
+    "underwater": {
+      "name": "Underwater",
+      "baseDC": 6,
+      "icon": "fas fa-fish"
     }
   },
   "abundanceModifiers": {
@@ -339,6 +349,56 @@
       "liquid": [
         "Pure Water",
         "Naphtha Oil"
+      ]
+    },
+    "dungeon": {
+      "common_herb": [
+        "Toadstool",
+        "Spidergrass"
+      ],
+      "uncommon_herb": [
+        "Mandrake Root"
+      ],
+      "common_component": [
+        "Charcoal Powder",
+        "Sulphur"
+      ],
+      "uncommon_component": [
+        "Magmin Ash"
+      ],
+      "monster_part": [
+        "Goblin Teeth"
+      ],
+      "rare_monster_part": [
+        "Beholder Eyestalk",
+        "Mindflayer Tentacle"
+      ],
+      "liquid": [
+        "Naphtha Oil"
+      ]
+    },
+    "underwater": {
+      "common_herb": [
+        "Sea Kelp"
+      ],
+      "uncommon_herb": [
+        "Moonpetal Flower"
+      ],
+      "common_component": [
+        "Rendered Fat"
+      ],
+      "uncommon_component": [
+        "Pixie Dust"
+      ],
+      "monster_part": [
+        "Merfolk Scale"
+      ],
+      "rare_monster_part": [
+        "Aboleth Slime",
+        "Mindflayer Tentacle"
+      ],
+      "liquid": [
+        "Pure Water"
       ]
     }
   },

@@ -281,6 +281,19 @@
       "paper": ["Blank Scroll", "Enchanted Ink"],
       "tool": ["Whetstone"],
       "essence": ["Arcane Dust", "Enchanting Dust"]
+    },
+    "dungeon": {
+      "metal": ["Iron Ingot", "Steel Ingot"],
+      "tool": ["Whetstone"],
+      "essence": ["Arcane Dust"],
+      "monster_part": ["Ogre Knucklebone"]
+    },
+    "underwater": {
+      "metal": ["Gold Ingot", "Gold Band"],
+      "gem": ["Gemstone Chip"],
+      "rare_gem": ["Sapphire"],
+      "monster_part": ["Dragon Scale"],
+      "essence": ["Arcane Dust"]
     }
   }
 }

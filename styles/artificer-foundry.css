@@ -12,9 +12,9 @@
 
 /* ── Panels ────────────────────────────────────────────────── */
 .artificer-foundry .panel { display: flex; flex-direction: column; overflow: hidden; background: var(--color-bg, #1a1a2e); }
-.artificer-foundry .recipe-list-panel { flex: 0 0 240px; border-right: 2px solid var(--color-border-highlight, #4a3080); }
+.artificer-foundry .recipe-list-panel { flex: 0 0 300px; border-right: 2px solid var(--color-border-highlight, #4a3080); }
 .artificer-foundry .crafting-station-panel { flex: 1 1 0; padding: 0 10px; overflow-y: auto; }
-.artificer-foundry .inventory-panel { flex: 0 0 210px; border-left: 2px solid var(--color-border-highlight, #4a3080); overflow-y: auto; }
+.artificer-foundry .inventory-panel { flex: 0 0 300px; border-left: 2px solid var(--color-border-highlight, #4a3080); overflow-y: auto; }
 
 /* ── Panel Headers ─────────────────────────────────────────── */
 .artificer-foundry .panel-header { padding: 8px 10px; background: linear-gradient(180deg, #2a1f4e 0%, #1a1535 100%); border-bottom: 2px solid #5a3fa0; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; }
@@ -129,12 +129,17 @@
 
 /* Ingredient Slots */
 .rune-slots { position: absolute; inset: 0; }
-.rune-slot { position: absolute; width: 36px; height: 36px; border-radius: 50%; background: rgba(30,20,60,0.8); border: 2px solid #4a3080; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
-.rune-slot.filled { border-color: #70e060; background: rgba(60,180,40,0.15); animation: slotFill 0.4s ease-out; }
-@keyframes slotFill { 0% { transform: scale(0.5); opacity:0; } 50% { transform: scale(1.2); } 100% { transform: scale(1); opacity:1; } }
-.rune-slot .slot-icon { width: 24px; height: 24px; border-radius: 50%; object-fit: contain; }
-.rune-slot .slot-empty { color: #5a4080; font-size: 0.9em; font-weight: bold; }
-.rune-slot .slot-remove { display: none; position: absolute; top: -6px; right: -6px; width: 16px; height: 16px; border-radius: 50%; background: #c03030; color: #fff; font-size: 0.8em; border: none; cursor: pointer; align-items: center; justify-content: center; }
+.rune-slot { position: absolute; width: 48px; height: 48px; border-radius: 50%; background: rgba(30,20,60,0.85); border: 2px solid #4a3080; display: flex; align-items: center; justify-content: center; transition: all 0.3s; box-shadow: 0 0 4px rgba(0,0,0,0.5); }
+.rune-slot.filled { background: rgba(60,180,40,0.1); border-width: 2px; animation: slotFill 0.4s ease-out; }
+.rune-slot.slot-rarity-common { border-color: #5a7040; box-shadow: 0 0 6px rgba(90,112,64,0.3); }
+.rune-slot.slot-rarity-uncommon { border-color: #2a7040; box-shadow: 0 0 6px rgba(42,112,64,0.4); }
+.rune-slot.slot-rarity-rare { border-color: #304090; box-shadow: 0 0 8px rgba(48,64,144,0.5); }
+.rune-slot.slot-rarity-very_rare { border-color: #701090; box-shadow: 0 0 10px rgba(112,16,144,0.6); }
+.rune-slot.slot-rarity-legendary { border-color: #a08000; box-shadow: 0 0 12px rgba(160,128,0,0.7); }
+@keyframes slotFill { 0% { transform: translate(-50%, -50%) scale(0.5); opacity:0; } 50% { transform: translate(-50%, -50%) scale(1.15); } 100% { transform: translate(-50%, -50%) scale(1); opacity:1; } }
+.rune-slot .slot-icon { width: 34px; height: 34px; border-radius: 50%; object-fit: contain; }
+.rune-slot .slot-empty { color: #5a4080; font-size: 1.1em; font-weight: bold; }
+.rune-slot .slot-remove { display: none; position: absolute; top: -4px; right: -4px; width: 18px; height: 18px; border-radius: 50%; background: #c03030; color: #fff; font-size: 0.8em; border: none; cursor: pointer; align-items: center; justify-content: center; z-index: 10; }
 .rune-slot:hover .slot-remove { display: flex; }
 
 /* Slot positions (up to 8 slots, arranged in circle) */
@@ -1000,4 +1005,1299 @@
 }
 .af-lg-item-row .entry-name:hover {
     text-shadow: 0 0 4px currentColor;
+}
+
+/* ── Foraging Preview Panel ── */
+.foraging-preview-section {
+    background: rgba(0, 0, 0, 0.2) !important;
+    border: 1px dashed var(--color-border-dark-tertiary, rgba(255, 255, 255, 0.15)) !important;
+    border-radius: 4px;
+    padding: 8px 10px !important;
+    margin-top: 6px;
+}
+.foraging-preview-section .preview-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 12px;
+}
+.foraging-preview-section .preview-label {
+    font-weight: bold;
+    color: var(--color-text-light-primary, #b4b0a8);
+}
+.foraging-preview-section .expected-yield-value {
+    color: #ff6400;
+    font-weight: bold;
+    text-shadow: 0 0 3px rgba(255, 100, 0, 0.2);
+}
+.foraging-preview-section .preview-rarity-distribution {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.foraging-preview-section .rarity-distribution-title {
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--color-text-light-primary, #b4b0a8);
+    margin-bottom: 2px;
+}
+.foraging-preview-section .rarity-bar-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.foraging-preview-section .rarity-bar-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.foraging-preview-section .rarity-bar-label {
+    font-size: 10px;
+    color: var(--color-text-light-primary, #b4b0a8);
+    display: flex;
+    justify-content: space-between;
+}
+.foraging-preview-section .rarity-bar-progress-bg {
+    background: rgba(0, 0, 0, 0.4);
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+    width: 100%;
+}
+.foraging-preview-section .rarity-bar-progress {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+.foraging-preview-section .progress-common {
+    background: #a0d080;
+    box-shadow: 0 0 4px rgba(160, 208, 128, 0.4);
+}
+.foraging-preview-section .progress-uncommon {
+    background: #4caa70;
+    box-shadow: 0 0 4px rgba(76, 170, 112, 0.4);
+}
+.foraging-preview-section .progress-rare {
+    background: #6090ff;
+    box-shadow: 0 0 4px rgba(96, 144, 255, 0.4);
+}
+.foraging-preview-section .progress-veryrare {
+    background: #c070e0;
+    box-shadow: 0 0 4px rgba(192, 112, 224, 0.4);
+}
+
+/* ── Persistent Queue (Cauldron / Anvil) ── */
+.active-projects-section {
+    margin-top: 20px;
+    padding: 10px 12px;
+    background: rgba(0, 0, 0, 0.25);
+    border-top: 2px solid #4a3080;
+    border-radius: 4px;
+}
+.active-projects-section .section-title {
+    margin: 0 0 10px 0;
+    font-size: 1.05em;
+    color: #c8a0ff;
+    border-bottom: 1px solid #3a2870;
+    padding-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: bold;
+}
+.projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.project-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 10px;
+    background: rgba(20, 15, 35, 0.65);
+    border: 1px solid #3a2870;
+    border-radius: 4px;
+    position: relative;
+    transition: all 0.2s;
+}
+.project-card:hover {
+    background: rgba(30, 20, 50, 0.85);
+    border-color: #5a3fa0;
+}
+.project-card.completed {
+    border-color: #2a8a50;
+    background: rgba(10, 35, 20, 0.45);
+}
+.project-img {
+    width: 44px;
+    height: 44px;
+    border-radius: 4px;
+    object-fit: contain;
+    border: 1px solid #4a3080;
+    background: #000;
+    flex-shrink: 0;
+}
+.project-card.completed .project-img {
+    border-color: #60d090;
+    box-shadow: 0 0 8px rgba(96, 208, 144, 0.4);
+}
+.project-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+.project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+.project-name {
+    font-weight: bold;
+    color: #d8c0f0;
+    font-size: 0.9em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.project-date {
+    font-size: 0.72em;
+    color: #8a70a0;
+}
+.project-progress-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.project-progress-bar {
+    flex: 1;
+    height: 8px;
+    background: #0d0a1a;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #3a2870;
+}
+.project-progress-bar .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #5a3fa0 0%, #a060ff 100%);
+    width: 0%;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+.project-card.completed .project-progress-bar .bar-fill {
+    background: linear-gradient(90deg, #2a7040 0%, #60d090 100%);
+}
+.progress-text {
+    font-size: 0.78em;
+    color: #b0a0cc;
+    font-weight: bold;
+    white-space: nowrap;
+    min-width: 75px;
+    text-align: right;
+}
+.project-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+.project-actions button {
+    padding: 3px 8px;
+    font-size: 0.8em;
+    font-weight: bold;
+    border-radius: 3px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.15s;
+    line-height: 1.3;
+}
+.btn-action {
+    background: linear-gradient(180deg, #4a3080 0%, #2a1555 100%);
+    color: #c8a0ff;
+    border-color: #5a3fa0 !important;
+}
+.btn-action:hover {
+    background: linear-gradient(180deg, #5a3fa0 0%, #351a6a 100%);
+}
+.btn-glowing {
+    background: linear-gradient(180deg, #2a7040 0%, #154525 100%);
+    color: #a0f5a0;
+    border-color: #2a8a50 !important;
+    animation: claimingGlow 1.5s infinite alternate;
+}
+@keyframes claimingGlow {
+    0% { box-shadow: 0 0 2px rgba(96, 208, 144, 0.2); }
+    100% { box-shadow: 0 0 10px rgba(96, 208, 144, 0.65); }
+}
+.btn-danger {
+    background: linear-gradient(180deg, #5a2020 0%, #3a1010 100%);
+    color: #e0a090;
+    border-color: #7a2020 !important;
+}
+.btn-danger:hover {
+    background: linear-gradient(180deg, #6a3030 0%, #4a2020 100%);
+}
+.empty-queue {
+    text-align: center;
+    color: #5a4080;
+    font-size: 0.86em;
+    padding: 12px;
+    font-style: italic;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    border: 1px dashed #3a2870;
+    margin: 0;
+}
+
+/* Requirement Indicators (Provided vs Inventory) */
+.provided-count {
+    color: #b0a0cc;
+}
+.inventory-count {
+    margin-left: 4px;
+    font-size: 0.85em;
+    font-weight: normal;
+}
+.inventory-count.has-some {
+    color: #60d090;
+}
+.inventory-count.has-none {
+    color: #e07050;
+    opacity: 0.85;
+}
+
+/* Left panel availability status styling */
+.availability-badge {
+    display: inline-block;
+    font-size: 0.76em;
+    padding: 1px 5px;
+    border-radius: 8px;
+    font-weight: bold;
+    margin-left: 3px;
+    white-space: nowrap;
+}
+.availability-badge.available {
+    background: rgba(42, 112, 64, 0.25);
+    color: #60d090;
+    border: 1px solid #2a7040;
+}
+.availability-badge.partial {
+    background: rgba(140, 100, 42, 0.2);
+    color: #d4b030;
+    border: 1px solid #7a6020;
+}
+
+/* --- Collapsible Category Groups --- */
+.category-group {
+    margin-bottom: 8px;
+    background: rgba(255,255,255,0.01);
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid rgba(100, 60, 200, 0.15);
+}
+.category-header {
+    background: rgba(42, 31, 78, 0.4);
+    padding: 6px 10px;
+    cursor: pointer;
+    user-select: none;
+    font-weight: bold;
+    color: #c8a0ff;
+    font-size: 0.95em;
+    border-bottom: 1px solid rgba(100, 60, 200, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.category-header:hover {
+    background: rgba(60, 45, 110, 0.6);
+}
+.category-name {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.toggle-icon {
+    font-size: 0.85em;
+    color: #9a7acc;
+    transition: transform 0.2s;
+}
+
+/* --- Right Panel Tabs --- */
+.right-panel-tabs {
+    display: flex;
+    border-bottom: 2px solid #4a3080;
+    background: rgba(0,0,0,0.2);
+}
+.right-panel-tabs .tab-btn {
+    flex: 1;
+    padding: 8px;
+    background: none;
+    border: none;
+    color: #9a7acc;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.95em;
+    transition: all 0.2s;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+}
+.right-panel-tabs .tab-btn:hover {
+    color: #c8a0ff;
+    background: rgba(255,255,255,0.02);
+}
+.right-panel-tabs .tab-btn.active {
+    color: #c8a0ff;
+    border-bottom-color: #a060ff;
+    background: rgba(140,80,255,0.06);
+}
+
+.artificer-panels-layout {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    min-height: 0;
+    width: 100%;
+    background: url('../assets/artificers_table.png') no-repeat center center;
+    background-size: cover;
+    color: #eed6ad;
+    font-family: 'Signika', 'Palatino Linotype', serif;
+    gap: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+/* --- Left Panel Ingredients Grid --- */
+.ingredients-panel {
+    flex: 0 0 320px;
+    border-right: 2px solid var(--color-border-highlight, #4a3080);
+}
+.panel-left {
+    flex: 0 0 320px !important;
+    width: 320px !important;
+}
+.panel-right {
+    flex: 0 0 320px !important;
+    width: 320px !important;
+}
+.panel-left, .panel-right {
+    display: flex;
+    flex-direction: column;
+    background: rgba(26, 16, 14, 0.93) !important;
+    border: 5px solid #3c2418 !important;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.9), 0 4px 8px rgba(0,0,0,0.6) !important;
+    padding: 10px;
+    height: 100%;
+    min-height: 0;
+    box-sizing: border-box;
+}
+.panel-header-banner {
+    background: linear-gradient(180deg, #5c2018 0%, #3a120d 100%);
+    border: 2px solid #7d3326;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    text-align: center;
+    padding: 6px 4px;
+    margin-bottom: 8px;
+}
+.banner-text {
+    color: #eed6ad;
+    font-weight: bold;
+    font-size: 1.05em;
+    text-shadow: 1px 1px 2px #000;
+    letter-spacing: 1px;
+}
+.panel-subheader {
+    background: #ecd4ab;
+    border: 2px solid #2e1503;
+    border-radius: 3px;
+    color: #2e1503;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.82em;
+    font-weight: bold;
+    padding: 3px 8px;
+    margin-bottom: 10px;
+    text-shadow: none;
+}
+.inventory-hover-detail {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+    margin-right: 6px;
+}
+.inventory-filter-checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    user-select: none;
+    color: #2e1503;
+    flex-shrink: 0;
+}
+.inventory-filter-checkbox.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+.inventory-filter-checkbox input[type="checkbox"] {
+    margin: 0;
+    cursor: pointer;
+}
+.inventory-grid-container {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+}
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    padding: 2px;
+}
+.inventory-slot {
+    aspect-ratio: 1;
+    position: relative;
+    cursor: grab;
+    background: #0a0605;
+    border: 2px solid #3c2418;
+    border-radius: 4px;
+    transition: all 0.15s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.inventory-slot:hover {
+    border-color: #ecd4ab;
+    box-shadow: 0 0 8px #ecd4ab;
+    background: #1c100e;
+}
+.slot-image {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+}
+.slot-qty {
+    position: absolute;
+    bottom: 2px;
+    right: 4px;
+    background: rgba(0, 0, 0, 0.85);
+    color: #ecd4ab;
+    font-size: 0.72em;
+    padding: 1px 4px;
+    border-radius: 3px;
+    border: 1px solid #3c2418;
+    font-weight: bold;
+}
+
+/* --- Center Panel Workstation --- */
+.artificer-center-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0 10px;
+    min-width: 0;
+    height: 100%;
+    min-height: 0;
+    box-sizing: border-box;
+}
+.workstation-scene {
+    height: 400px;
+    border: 6px solid #3c2418;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 15px;
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.9);
+}
+.workstation-scene.drag-over {
+    border-color: #ecd4ab;
+    box-shadow: inset 0 0 35px rgba(236, 212, 171, 0.25);
+}
+.scene-background-image {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    transition: opacity 0.3s;
+    z-index: 1;
+    opacity: 0;
+}
+.cauldron-active .cauldron-bg-image {
+    background-image: url('../assets/alchemy-lab-bg.jpg');
+    opacity: 1;
+}
+.anvil-active .forge-bg-image {
+    background-image: url('../assets/forge-anvil-bg.png');
+    opacity: 1;
+}
+.idle .idle-bg-image {
+    background: radial-gradient(circle, #251845 0%, #0d081b 100%);
+    opacity: 1;
+}
+.scene-visuals-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.staged-slots-hud {
+    position: absolute;
+    top: 130px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    z-index: 3;
+    pointer-events: none;
+}
+.staged-slots-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    pointer-events: auto;
+    background: rgba(26, 16, 14, 0.9);
+    border: 3px solid #3c2418;
+    border-radius: 6px;
+    padding: 12px 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.8);
+}
+.slots-plus-separator {
+    font-size: 2.2em;
+    font-weight: bold;
+    color: #eed6ad;
+    text-shadow: 2px 2px 4px #000;
+    margin: 0 4px;
+}
+.station-slot {
+    width: 58px;
+    height: 58px;
+    background: rgba(250, 245, 235, 0.95);
+    border: 3px solid #3c2418;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.2);
+    transition: all 0.2s;
+}
+.station-slot.slot-filled {
+    border-color: #60d090;
+    box-shadow: 0 0 10px rgba(96, 208, 144, 0.5);
+}
+.slot-item-icon {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+}
+.slot-item-placeholder {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #a29182;
+}
+.slot-badge {
+    position: absolute;
+    bottom: 2px;
+    right: 4px;
+    background: #1a100e;
+    color: #ecd4ab;
+    font-size: 0.7em;
+    padding: 1px 3px;
+    border-radius: 3px;
+    font-weight: bold;
+    border: 1px solid #3c2418;
+}
+.slot-remove {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #c63528;
+    border: 1px solid #ecd4ab;
+    color: #fff;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+.station-slot:hover .slot-remove {
+    opacity: 1;
+}
+
+.workstation-controls {
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+.unified-craft-btn {
+    width: 220px;
+    height: 50px;
+    border-radius: 25px;
+    background: linear-gradient(180deg, #8f52f8 0%, #5c28c8 100%);
+    border: 3px solid #ecd4ab;
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.3em;
+    cursor: pointer;
+    letter-spacing: 1.5px;
+    text-shadow: 1px 1px 3px #000;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.5), 0 0 10px rgba(143, 82, 248, 0.3);
+    transition: transform 0.1s, box-shadow 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.unified-craft-btn:hover {
+    background: linear-gradient(180deg, #9d68f9 0%, #6834d4 100%);
+    box-shadow: 0 6px 10px rgba(0,0,0,0.6), 0 0 15px rgba(143, 82, 248, 0.5);
+}
+.unified-craft-btn.disabled {
+    background: #555 !important;
+    border-color: #888;
+    color: #aaa;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.idle-message-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    background: rgba(10, 8, 20, 0.4);
+}
+.idle-message-overlay p {
+    color: #eed6ad;
+    font-size: 1.1em;
+    font-style: italic;
+    text-shadow: 1px 1px 3px #000;
+    background: rgba(0,0,0,0.7);
+    padding: 10px 20px;
+    border-radius: 4px;
+    border: 1px solid #3c2418;
+}
+
+/* Animations */
+.bubbles-animation {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 140px;
+    height: 80px;
+}
+.bubble {
+    position: absolute;
+    background: rgba(96, 208, 144, 0.3);
+    border: 1px solid rgba(160, 255, 200, 0.5);
+    border-radius: 50%;
+    bottom: 0;
+    animation: floatUp 3s infinite ease-in;
+}
+.b1 { left: 20px; width: 12px; height: 12px; animation-delay: 0.2s; animation-duration: 2.5s; }
+.b2 { left: 55px; width: 16px; height: 16px; animation-delay: 0.8s; animation-duration: 3.2s; }
+.b3 { left: 90px; width: 10px; height: 10px; animation-delay: 1.4s; animation-duration: 2.1s; }
+.b4 { left: 40px; width: 14px; height: 14px; animation-delay: 2.0s; animation-duration: 2.8s; }
+
+.sparks-animation {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 140px;
+    height: 80px;
+}
+.spark {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #ffb703;
+    border-radius: 50%;
+    box-shadow: 0 0 5px #ffb703;
+    opacity: 0;
+    animation: emitSpark 1.8s infinite linear;
+}
+.s1 { left: 30px; animation-delay: 0.1s; animation-duration: 1.5s; }
+.s2 { left: 70px; animation-delay: 0.6s; animation-duration: 2.0s; }
+.s3 { left: 110px; animation-delay: 1.2s; animation-duration: 1.7s; }
+
+@keyframes floatUp {
+    0% { transform: translateY(0) scale(0.6); opacity: 0; }
+    50% { opacity: 0.8; }
+    100% { transform: translateY(-90px) scale(1.1); opacity: 0; }
+}
+@keyframes emitSpark {
+    0% { transform: translate(0, 0) scale(0.5); opacity: 0; }
+    15% { opacity: 1; }
+    100% { transform: translate(15px, -60px) scale(1.2); opacity: 0; }
+}
+
+/* --- Queue styling --- */
+.active-projects-section {
+    margin-top: 10px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+.queue-header-banner {
+    background: linear-gradient(180deg, #5c2018 0%, #3a120d 100%);
+    border: 2px solid #7d3326;
+    border-radius: 4px;
+    padding: 5px;
+    text-align: center;
+    margin-bottom: 6px;
+}
+.queue-title {
+    color: #eed6ad;
+    font-weight: bold;
+    font-size: 0.95em;
+    letter-spacing: 0.5px;
+}
+.projects-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.project-card {
+    display: flex;
+    align-items: center;
+    background: #1a100e;
+    border: 2px solid #3c2418;
+    border-radius: 4px;
+    padding: 6px;
+    gap: 8px;
+}
+.project-img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    border: 1px solid #3c2418;
+    background: #0a0605;
+}
+.project-info {
+    flex: 1;
+}
+.project-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85em;
+    margin-bottom: 2px;
+}
+.project-name {
+    color: #ecd4ab;
+    font-weight: bold;
+}
+.project-date {
+    color: #8a7355;
+}
+.project-progress-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.project-progress-bar {
+    flex: 1;
+    height: 8px;
+    background: #0a0605;
+    border: 1px solid #3c2418;
+    border-radius: 4px;
+    overflow: hidden;
+}
+.bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #8f52f8 0%, #60d090 100%);
+}
+.progress-text {
+    font-size: 0.75em;
+    color: #ecd4ab;
+}
+.project-actions {
+    display: flex;
+    gap: 4px;
+}
+.btn-glowing {
+    background: #60d090;
+    color: #000;
+    border: 1px solid #ecd4ab;
+    font-weight: bold;
+    font-size: 0.8em;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.btn-action {
+    background: #8f52f8;
+    color: #fff;
+    border: 1px solid #ecd4ab;
+    font-weight: bold;
+    font-size: 0.8em;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.btn-danger {
+    background: #c63528;
+    color: #fff;
+    border: 1px solid #ecd4ab;
+    font-size: 0.85em;
+    padding: 4px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* --- Right Panel Recipes Tab list --- */
+.recipe-tabs {
+    display: flex;
+    border-bottom: 3px solid #3c2418 !important;
+    background: rgba(0,0,0,0.3);
+}
+.recipe-tabs .tab-btn {
+    flex: 1;
+    padding: 10px;
+    background: none;
+    border: none;
+    color: #8a7355;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1em;
+    transition: all 0.2s;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -3px;
+    letter-spacing: 1px;
+}
+.recipe-tabs .tab-btn:hover {
+    color: #eed6ad;
+}
+.recipe-tabs .tab-btn.active {
+    color: #eed6ad;
+    border-bottom-color: #eed6ad;
+    background: rgba(236,212,171,0.06);
+}
+
+.recipe-filters {
+    padding: 8px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.search-rarity-row {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+}
+.recipe-search-input {
+    flex: 1;
+    min-width: 0;
+    background: #0a0605 !important;
+    color: #ecd4ab !important;
+    border: 2px solid #3c2418 !important;
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 0.9em;
+}
+.recipe-rarity-filter {
+    flex: 0 0 110px;
+    background: #0a0605 !important;
+    color: #ecd4ab !important;
+    border: 2px solid #3c2418 !important;
+    border-radius: 4px;
+    padding: 5px;
+    font-size: 0.85em;
+}
+.filter-checkboxes-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.craftable-filter-checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 0.88em;
+    color: #eed6ad;
+    user-select: none;
+    font-weight: bold;
+}
+.craftable-filter-checkbox input[type="checkbox"] {
+    margin: 0;
+    cursor: pointer;
+}
+
+.recipe-list-container {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+}
+.recipe-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.category-group {
+    background: rgba(0,0,0,0.2);
+    border: 1px solid #3c2418;
+    border-radius: 4px;
+    overflow: hidden;
+}
+.category-header {
+    background: #251613;
+    padding: 8px 10px;
+    cursor: pointer;
+    user-select: none;
+    font-weight: bold;
+    color: #eed6ad;
+    font-size: 0.9em;
+    border-bottom: 1px solid #3c2418;
+}
+.category-header:hover {
+    background: #331e1a;
+}
+.category-recipes {
+    display: flex;
+    flex-direction: column;
+    padding: 4px;
+    gap: 4px;
+}
+.recipe-item {
+    background: #0a0605;
+    border: 1px solid #3c2418;
+    border-radius: 3px;
+    padding: 6px 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.recipe-item:hover {
+    background: #1c100e;
+    border-color: #ecd4ab;
+}
+.recipe-item.selected {
+    background: #3c2418;
+    border-color: #ecd4ab;
+}
+.recipe-name {
+    font-size: 0.9em;
+    color: #ecd4ab;
+    font-weight: bold;
+}
+
+/* --- Selected Recipe details card --- */
+.recipe-details-card {
+    background: #ecd4ab;
+    border: 4px solid #3c2418;
+    border-radius: 4px;
+    padding: 10px;
+    color: #2e1503;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    height: 360px;
+    flex-shrink: 0;
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.15);
+    box-sizing: border-box;
+}
+.details-card-header h4 {
+    margin: 0 0 6px 0;
+    color: #5c2018;
+    font-size: 1.15em;
+    font-weight: bold;
+    border-bottom: 2px solid #3c2418;
+    padding-bottom: 4px;
+}
+.details-description {
+    font-size: 0.88em;
+    margin: 0 0 8px 0;
+    font-style: italic;
+    line-height: 1.25;
+    flex: 1;
+    overflow-y: auto;
+}
+.details-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85em;
+    font-weight: bold;
+    color: #5c2018;
+    border-top: 1px dashed #3c2418;
+    padding-top: 4px;
+}
+.details-card-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    font-style: italic;
+    color: #8a7355;
+    font-size: 0.95em;
+}
+
+/* --- Ghost Placeholders & Rarity Highlights --- */
+.ghost-icon {
+    opacity: 0.35;
+    filter: grayscale(100%);
+}
+.rarity-uncommon {
+    border-color: #60d090 !important;
+    box-shadow: inset 0 0 6px rgba(96, 208, 144, 0.4);
+}
+.rarity-rare {
+    border-color: #3a86ff !important;
+    box-shadow: inset 0 0 6px rgba(58, 134, 255, 0.4);
+}
+.rarity-very_rare {
+    border-color: #8f52f8 !important;
+    box-shadow: inset 0 0 6px rgba(143, 82, 248, 0.4);
+}
+.rarity-legendary {
+    border-color: #ffb703 !important;
+    box-shadow: inset 0 0 6px rgba(255, 183, 3, 0.4);
+}
+
+/* --- Recipe Details Ingredients & Workstation Checklist --- */
+.details-card-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
+.details-description {
+    font-size: 0.88em;
+    margin: 0 0 6px 0;
+    font-style: italic;
+    line-height: 1.25;
+    flex-shrink: 0;
+}
+.details-ingredients-section {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 6px;
+    min-height: 0;
+}
+.details-ingredients-list {
+    margin: 0;
+    padding-left: 15px;
+    font-size: 0.85em;
+    color: #3c2418;
+}
+.details-ingredients-list li {
+    margin-bottom: 2px;
+}
+.details-ingredients-list li.has-enough {
+    color: #1b6035;
+    font-weight: bold;
+}
+.details-ingredients-list li.missing-some {
+    color: #7d2015;
+}
+.details-ingredients-list .substitutes-note {
+    font-style: italic;
+    font-size: 0.9em;
+    color: #555;
+}
+.workstation-checklist-container {
+    margin-top: 190px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    z-index: 3;
+    box-sizing: border-box;
+    padding: 5px;
+}
+.workstation-checklist {
+    background: rgba(26, 16, 14, 0.95);
+    border: 3px solid #3c2418;
+    border-radius: 5px;
+    padding: 8px 12px;
+    max-width: 480px;
+    width: 100%;
+    color: #eed6ad;
+    font-size: 0.9em;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.7);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.checklist-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.checklist-row.completed {
+    color: #60d090;
+    font-weight: bold;
+}
+.checklist-row.pending {
+    color: #ff6b6b;
+}
+.checklist-icon {
+    font-size: 0.95em;
+}
+.checklist-text {
+    flex: 1;
+    text-align: left;
+}
+.substitutes-text {
+    font-style: italic;
+    font-size: 0.85em;
+    color: #c8a0ff;
+    margin-left: 6px;
+}
+.checklist-qty {
+    font-weight: bold;
+}
+
+/* --- Many Ingredients Scaling for Workstation --- */
+.staged-slots-row.slots-many {
+    gap: 6px;
+    padding: 8px 12px;
+}
+.staged-slots-row.slots-many .station-slot {
+    width: 44px;
+    height: 44px;
+    border-width: 2px;
+}
+.staged-slots-row.slots-many .slot-item-icon {
+    width: 32px;
+    height: 32px;
+}
+.staged-slots-row.slots-many .slot-badge {
+    font-size: 0.65em;
+    padding: 0px 2px;
+    bottom: -4px;
+    right: -4px;
+}
+.staged-slots-row.slots-many .slots-plus-separator {
+    font-size: 1.6em;
+    margin: 0 2px;
+}
+
+.substitute-badge {
+    font-size: 0.75em;
+    background: rgba(143, 82, 248, 0.25);
+    border: 1px solid #a875ff;
+    color: #dcbfff;
+    padding: 1px 4px;
+    border-radius: 3px;
+    margin-left: 6px;
+    font-weight: bold;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* --- Drag and Drop Visual Feedback on Slots --- */
+.station-slot.valid-drag-over {
+    border-color: #60d090 !important;
+    box-shadow: 0 0 12px #60d090 !important;
+    transform: scale(1.08);
+}
+.station-slot.invalid-drag-over {
+    border-color: #ff6b6b !important;
+    box-shadow: 0 0 12px #ff6b6b !important;
+    opacity: 0.75;
+}
+
+/* --- Multi-Craft Quantity Controls --- */
+.workstation-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+.craft-multiplier-container {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(26, 16, 14, 0.9);
+    border: 2px solid #3c2418;
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: #eed6ad;
+    font-size: 0.88em;
+    font-weight: bold;
+}
+.qty-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.qty-btn {
+    width: 24px;
+    height: 24px;
+    background: #3c2418;
+    border: 1px solid #5a3c28;
+    color: #ecd4ab;
+    border-radius: 3px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background 0.15s, border-color 0.15s;
+    font-size: 0.8em;
+}
+.qty-btn:hover {
+    background: #5a3c28;
+    color: #fff;
+    border-color: #785032;
+}
+.qty-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: #2a160d;
+}
+.craft-quantity {
+    width: 40px !important;
+    height: 24px !important;
+    background: #0a0605 !important;
+    border: 1px solid #3c2418 !important;
+    color: #ecd4ab !important;
+    text-align: center;
+    border-radius: 3px;
+    font-weight: bold;
+    padding: 0 !important;
+    margin: 0 !important;
+    -moz-appearance: textfield;
+}
+.craft-quantity::-webkit-outer-spin-button,
+.craft-quantity::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.project-batch-label {
+    font-size: 0.78em;
+    background: rgba(236, 212, 171, 0.12);
+    border: 1px solid #ecd4ab;
+    color: #ecd4ab;
+    padding: 1px 6px;
+    border-radius: 10px;
+    margin-left: 6px;
+    font-weight: bold;
+    display: inline-block;
+    vertical-align: middle;
+    letter-spacing: 0.5px;
+    text-shadow: none;
 }

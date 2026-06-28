@@ -20,31 +20,45 @@ export class RecipeManager {
         const actorId = actor?.id;
         if (!actorId) return this.recipes.map(r => ({...r, isLearned: r.learned}));
 
+        const flagRecipes = actor.getFlag("artificer-foundry", "learnedRecipes") ?? [];
         const recipeData = game.settings.get("artificer-foundry", "recipeData") ?? {};
         const learnedIds = recipeData[actorId] ?? [];
 
         return this.recipes.map(r => ({
             ...r,
-            isLearned: r.learned || learnedIds.includes(r.id)
+            isLearned: r.learned || flagRecipes.includes(r.id) || learnedIds.includes(r.id)
         }));
     }
 
-    async learnRecipe(actorId, recipeId) {
-        let recipeData = game.settings.get("artificer-foundry", "recipeData");
-        let newData = foundry.utils.duplicate(recipeData);
-        if (!newData[actorId]) newData[actorId] = [];
-        if (!newData[actorId].includes(recipeId)) {
-            newData[actorId].push(recipeId);
-            await game.settings.set("artificer-foundry", "recipeData", newData);
+    async learnRecipe(actorOrId, recipeId) {
+        const actor = typeof actorOrId === "string" ? game.actors.get(actorOrId) : actorOrId;
+        if (!actor) return;
+
+        const flagRecipes = actor.getFlag("artificer-foundry", "learnedRecipes") ?? [];
+        if (!flagRecipes.includes(recipeId)) {
+            const newFlags = [...flagRecipes, recipeId];
+            await actor.setFlag("artificer-foundry", "learnedRecipes", newFlags);
         }
     }
 
-    async forgetRecipe(actorId, recipeId) {
-        let recipeData = game.settings.get("artificer-foundry", "recipeData");
-        let newData = foundry.utils.duplicate(recipeData);
-        if (newData[actorId]) {
-            newData[actorId] = newData[actorId].filter(id => id !== recipeId);
-            await game.settings.set("artificer-foundry", "recipeData", newData);
+    async forgetRecipe(actorOrId, recipeId) {
+        const actor = typeof actorOrId === "string" ? game.actors.get(actorOrId) : actorOrId;
+        if (!actor) return;
+
+        const flagRecipes = actor.getFlag("artificer-foundry", "learnedRecipes") ?? [];
+        if (flagRecipes.includes(recipeId)) {
+            const newFlags = flagRecipes.filter(id => id !== recipeId);
+            await actor.setFlag("artificer-foundry", "learnedRecipes", newFlags);
+        }
+
+        // Keep legacy data clean if GM is online and updating
+        if (game.user.isGM) {
+            let recipeData = game.settings.get("artificer-foundry", "recipeData") ?? {};
+            if (recipeData[actor.id]) {
+                let newData = foundry.utils.duplicate(recipeData);
+                newData[actor.id] = newData[actor.id].filter(id => id !== recipeId);
+                await game.settings.set("artificer-foundry", "recipeData", newData);
+            }
         }
     }
 }

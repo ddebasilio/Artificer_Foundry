@@ -1,0 +1,326 @@
+<div class="artificer-panels-layout">
+
+    {{!-- LEFT PANEL — Ingredients & Materials Inventory --}}
+    <div class="artificer-wood-panel panel-left">
+        <div class="panel-header-banner">
+            <span class="banner-text">EXOTIC INGREDIENTS</span>
+        </div>
+        <div class="panel-subheader">
+            <span class="inventory-hover-detail">SELECT AN INGREDIENT</span>
+            <label class="inventory-filter-checkbox {{#unless selectedRecipe}}disabled{{/unless}}" title="Show only ingredients needed for this recipe">
+                <input type="checkbox" class="inventory-recipe-filter" {{#if inventoryRecipeFilter}}checked{{/if}} {{#unless selectedRecipe}}disabled{{/unless}}>
+                <span>Recipe Fit</span>
+            </label>
+        </div>
+
+        <div class="inventory-grid-container">
+            <div class="inventory-grid">
+                {{#each inventoryItems}}
+                    <div class="inventory-slot rarity-{{this.rarity}}" data-item-id="{{this.id}}" data-name="{{this.name}}" data-img="{{this.img}}" data-uuid="{{this.uuid}}" draggable="true" title="{{this.name}} (×{{this.quantity}})">
+                        <img class="slot-image" src="{{this.img}}" alt="">
+                        <span class="slot-qty">{{this.quantity}}</span>
+                    </div>
+                {{else}}
+                    <div class="no-ingredients">
+                        <i class="fas fa-box-open fa-2x"></i>
+                        <p>No materials in inventory.</p>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+
+    {{!-- CENTER PANEL — Cauldron / Forge Workstation --}}
+    <div class="artificer-center-panel">
+        <div class="panel-header-banner">
+            <span class="banner-text">LAB WORKSTATION</span>
+        </div>
+
+        <div class="workstation-scene {{#if selectedRecipe}}active-recipe{{else}}idle{{/if}} {{#if (eq selectedRecipe.recipeType "alchemy")}}cauldron-active{{/if}} {{#if (eq selectedRecipe.recipeType "forge")}}anvil-active{{/if}} {{#if crafting}}crafting{{/if}}">
+            
+            {{!-- Background Scenes (Pixel Art) --}}
+            <div class="scene-background-image cauldron-bg-image"></div>
+            <div class="scene-background-image forge-bg-image"></div>
+            <div class="scene-background-image idle-bg-image"></div>
+
+            {{!-- Cauldron/Forge Overlay Visual Elements --}}
+            <div class="scene-visuals-container">
+                {{#if (eq selectedRecipe.recipeType "alchemy")}}
+                    <div class="bubbles-animation">
+                        <span class="bubble b1"></span>
+                        <span class="bubble b2"></span>
+                        <span class="bubble b3"></span>
+                        <span class="bubble b4"></span>
+                    </div>
+                {{/if}}
+                {{#if (eq selectedRecipe.recipeType "forge")}}
+                    <div class="sparks-animation">
+                        <span class="spark s1"></span>
+                        <span class="spark s2"></span>
+                        <span class="spark s3"></span>
+                    </div>
+                {{/if}}
+            </div>
+
+            {{!-- Centered Staged Slots --}}
+            {{#if selectedRecipe}}
+                <div class="staged-slots-hud">
+                    <div class="staged-slots-row {{#if isManyIngredients}}slots-many{{/if}}">
+                        {{#each mappedIngredients}}
+                            {{#if @index}}
+                                <span class="slots-plus-separator">+</span>
+                            {{/if}}
+                            <div class="station-slot slot-{{#if this.fulfilled}}filled{{else}}empty{{/if}} rarity-{{this.rarity}}" data-ingredient-name="{{this.name}}" title="{{this.name}} ({{this.provided}}/{{this.quantity}})">
+                                <img src="{{this.icon}}" alt="" class="slot-item-icon {{#unless this.provided}}ghost-icon{{/unless}}">
+                                <span class="slot-badge">{{this.provided}}/{{this.quantity}}</span>
+                                <button class="remove-ingredient-btn slot-remove" data-ingredient-name="{{this.name}}" title="Remove">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+ 
+                {{!-- Workstation Checklist --}}
+                <div class="workstation-checklist-container">
+                    <div class="workstation-checklist">
+                        {{#each mappedIngredients}}
+                            <div class="checklist-row {{#if this.fulfilled}}completed{{else}}pending{{/if}}">
+                                <i class="fas {{#if this.fulfilled}}fa-check-circle{{else}}fa-circle{{/if}} checklist-icon"></i>
+                                <span class="checklist-text">
+                                    <strong>{{this.displayName}}</strong>
+                                    {{#if (ne this.name this.displayName)}}
+                                        <span class="substitute-badge">(substitute)</span>
+                                    {{/if}}
+                                    {{#if this.substitutes.length}}
+                                        <span class="substitutes-text" title="Allowed substitutes: {{#each this.substitutes}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}">
+                                            (or: {{#each this.substitutes}}{{this}}{{#unless @last}}, {{/unless}}{{/each}})
+                                        </span>
+                                    {{/if}}
+                                </span>
+                                <span class="checklist-qty">{{this.provided}} / {{this.quantity}}</span>
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+
+                <div class="workstation-controls">
+                    <div class="craft-multiplier-container" title="Brew/forge multiple copies of this item at once.">
+                        <label>Qty:</label>
+                        <div class="qty-controls">
+                            <button type="button" class="qty-btn qty-minus" title="Decrease Quantity"><i class="fas fa-minus"></i></button>
+                            <input type="number" class="craft-quantity" value="{{craftQuantity}}" min="1" max="{{maxQuantity}}">
+                            <button type="button" class="qty-btn qty-plus" title="Increase Quantity"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </div>
+                    <button class="craft-btn unified-craft-btn {{#unless canCraft}}disabled{{/unless}}">
+                        CRAFT
+                    </button>
+                </div>
+            {{else}}
+                <div class="idle-message-overlay">
+                    <p>Select a recipe from the right panel to begin crafting.</p>
+                </div>
+            {{/if}}
+        </div>
+
+        {{!-- ACTIVE PROJECTS QUEUE --}}
+        <div class="active-projects-section">
+            <div class="queue-header-banner">
+                <span class="queue-title"><i class="fas fa-hourglass-half"></i> LAB QUEUE</span>
+            </div>
+            <div class="projects-list">
+                {{#each projects}}
+                    <div class="project-card {{#if this.completed}}completed{{/if}}" data-project-id="{{this.id}}">
+                        <img class="project-img" src="{{this.output.img}}" alt="">
+                        <div class="project-info">
+                            <div class="project-header">
+                                <span class="project-name">
+                                    <i class="fas {{#if this.isPotion}}fa-flask{{else}}fa-hammer{{/if}} project-type-icon"></i>
+                                    {{this.recipeName}}
+                                    {{#if (gt this.output.quantity 1)}}
+                                        <span class="project-batch-label" title="Multiple items crafted in this batch">Batch of {{this.output.quantity}}</span>
+                                    {{/if}}
+                                </span>
+                                <span class="project-date">Started: {{this.dateStarted}}</span>
+                            </div>
+                            <div class="project-progress-container">
+                                <div class="project-progress-bar">
+                                    <div class="bar-fill" style="width: {{this.progress}}%;"></div>
+                                </div>
+                                <span class="progress-text">{{this.spentHours}} / {{this.requiredHours}} hrs ({{this.progress}}%)</span>
+                            </div>
+                        </div>
+                        <div class="project-actions">
+                            {{#if this.completed}}
+                                <button class="claim-project-btn btn-glowing" data-project-id="{{this.id}}">
+                                    CLAIM
+                                </button>
+                            {{else}}
+                                <button class="advance-project-btn btn-action" data-project-id="{{this.id}}">
+                                    CRAFT
+                                </button>
+                            {{/if}}
+                            <button class="cancel-project-btn btn-danger" data-project-id="{{this.id}}" title="Discard project">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                {{else}}
+                    <p class="empty-queue">Workstation is idle.</p>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+
+    {{!-- RIGHT PANEL — Recipes & Blueprints tabs --}}
+    <div class="artificer-wood-panel panel-right">
+        <div class="right-panel-tabs recipe-tabs">
+            <button class="tab-btn recipe-tab-btn {{#if isAlchemyTab}}active{{/if}}" data-tab="alchemy">
+                ALCHEMY
+            </button>
+            <button class="tab-btn recipe-tab-btn {{#if isForgeTab}}active{{/if}}" data-tab="forge">
+                FORGE
+            </button>
+        </div>
+
+        <div class="recipe-filters">
+            <div class="search-rarity-row">
+                <input class="recipe-search-input" type="text" placeholder="Search recipe..." value="{{recipeSearchQuery}}">
+                <select class="recipe-rarity-filter">
+                    <option value="all" {{#if (eq recipeRarityFilter "all")}}selected{{/if}}>All Rarities</option>
+                    <option value="common" {{#if (eq recipeRarityFilter "common")}}selected{{/if}}>Common</option>
+                    <option value="uncommon" {{#if (eq recipeRarityFilter "uncommon")}}selected{{/if}}>Uncommon</option>
+                    <option value="rare" {{#if (eq recipeRarityFilter "rare")}}selected{{/if}}>Rare</option>
+                    <option value="very_rare" {{#if (eq recipeRarityFilter "very_rare")}}selected{{/if}}>Very Rare</option>
+                    <option value="legendary" {{#if (eq recipeRarityFilter "legendary")}}selected{{/if}}>Legendary</option>
+                </select>
+            </div>
+            <div class="filter-checkboxes-row">
+                <label class="craftable-filter-checkbox">
+                    <input type="checkbox" class="recipe-craftable-filter" {{#if recipeCraftableFilter}}checked{{/if}}>
+                    <span>Craftable Only</span>
+                </label>
+                <label class="craftable-filter-checkbox" title="Show learned recipes">
+                    <input type="checkbox" class="recipe-known-filter" {{#if recipeShowKnown}}checked{{/if}}>
+                    <span>Known</span>
+                </label>
+                <label class="craftable-filter-checkbox" title="Show locked/unlearned recipes">
+                    <input type="checkbox" class="recipe-unknown-filter" {{#if recipeShowUnknown}}checked{{/if}}>
+                    <span>Unknown</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="recipe-list-container">
+            <div class="recipe-list">
+                {{#if isAlchemyTab}}
+                    {{#each alchemyCategories}}
+                        <div class="category-group {{#if this.collapsed}}collapsed{{/if}}" data-category-id="{{this.id}}">
+                            <div class="category-header" data-category-id="{{this.id}}">
+                                <span class="category-name">
+                                    <i class="fas {{#if this.collapsed}}fa-chevron-right{{else}}fa-chevron-down{{/if}} toggle-icon"></i>
+                                    {{this.name}} ({{this.recipes.length}})
+                                </span>
+                            </div>
+                            <div class="category-recipes" style="{{#if this.collapsed}}display: none;{{/if}}">
+                                {{#each this.recipes}}
+                                    <div class="recipe-item rarity-{{this.rarity}} {{#unless this.isLearned}}unknown{{/unless}} {{#if (eq ../../selectedRecipe.id this.id)}}selected{{/if}}" data-recipe-id="{{this.id}}">
+                                        <div class="recipe-item-header">
+                                            <span class="recipe-name">
+                                                {{#unless this.isLearned}}<i class="fas fa-lock" title="Unknown"></i> {{/unless}}
+                                                {{this.name}}
+                                            </span>
+                                            <div class="recipe-actions">
+                                                {{#if this.isLearned}}
+                                                    <i class="fas fa-check-circle known-badge" title="Known"></i>
+                                                    <a class="forget-recipe-btn" data-recipe-id="{{this.id}}" title="Forget"><i class="fas fa-trash-alt"></i></a>
+                                                {{else}}
+                                                    <a class="learn-recipe-btn" data-recipe-id="{{this.id}}" title="Teach"><i class="fas fa-graduation-cap"></i></a>
+                                                {{/if}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                    {{else}}
+                        <p class="empty-list">No recipes found.</p>
+                    {{/each}}
+                {{/if}}
+
+                {{#if isForgeTab}}
+                    {{#each forgeCategories}}
+                        <div class="category-group {{#if this.collapsed}}collapsed{{/if}}" data-category-id="{{this.id}}">
+                            <div class="category-header" data-category-id="{{this.id}}">
+                                <span class="category-name">
+                                    <i class="fas {{#if this.collapsed}}fa-chevron-right{{else}}fa-chevron-down{{/if}} toggle-icon"></i>
+                                    {{this.name}} ({{this.recipes.length}})
+                                </span>
+                            </div>
+                            <div class="category-recipes" style="{{#if this.collapsed}}display: none;{{/if}}">
+                                {{#each this.recipes}}
+                                    <div class="recipe-item rarity-{{this.rarity}} {{#unless this.isLearned}}unknown{{/unless}} {{#if (eq ../../selectedRecipe.id this.id)}}selected{{/if}}" data-recipe-id="{{this.id}}">
+                                        <div class="recipe-item-header">
+                                            <span class="recipe-name">
+                                                {{#unless this.isLearned}}<i class="fas fa-lock" title="Unknown"></i> {{/unless}}
+                                                {{this.name}}
+                                            </span>
+                                            <div class="recipe-actions">
+                                                {{#if this.isLearned}}
+                                                    <i class="fas fa-check-circle known-badge" title="Known"></i>
+                                                    <a class="forget-recipe-btn" data-recipe-id="{{this.id}}" title="Forget"><i class="fas fa-trash-alt"></i></a>
+                                                {{else}}
+                                                    <a class="learn-recipe-btn" data-recipe-id="{{this.id}}" title="Teach"><i class="fas fa-graduation-cap"></i></a>
+                                                {{/if}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                    {{else}}
+                        <p class="empty-list">No blueprints found.</p>
+                    {{/each}}
+                {{/if}}
+            </div>
+        </div>
+
+        {{!-- Selected Recipe details card --}}
+        <div class="recipe-details-card">
+            {{#if selectedRecipe}}
+                <div class="details-card-header">
+                    <h4>{{selectedRecipe.name}}</h4>
+                </div>
+                <div class="details-card-body">
+                    <p class="details-description">{{selectedRecipe.description}}</p>
+                    
+                    <div class="details-ingredients-section">
+                        <ul class="details-ingredients-list">
+                            {{#each mappedIngredients}}
+                                <li class="{{#if (gte this.inventoryCount this.quantity)}}has-enough{{else}}missing-some{{/if}}">
+                                    <strong>{{this.name}}</strong>: {{this.inventoryCount}} / {{this.quantity}}
+                                    {{#if this.substitutes.length}}
+                                        <span class="substitutes-note" title="Allowed substitutes: {{#each this.substitutes}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}">
+                                            (or: {{#each this.substitutes}}{{this}}{{#unless @last}}, {{/unless}}{{/each}})
+                                        </span>
+                                    {{/if}}
+                                </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+
+                    <div class="details-stats">
+                        <span><strong>Cost:</strong> {{selectedRecipe.craftingCost}} gp</span>
+                        <span><strong>Time:</strong> {{selectedRecipe.craftingTimeLabel}}</span>
+                    </div>
+                </div>
+            {{else}}
+                <div class="details-card-empty">
+                    <p>Select a recipe to view details.</p>
+                </div>
+            {{/if}}
+        </div>
+    </div>
+
+</div>

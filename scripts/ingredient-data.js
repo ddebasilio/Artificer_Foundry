@@ -177,7 +177,7 @@ function calculateTimeModifiers(amount, unit) {
     return { dcMod, maxItems, label: `${amount} ${(timeUnits[unit]?.name ?? unit).toLowerCase()}` };
 }
 
-export function resolveForaging(biomeKey, abundanceKey, timeAmount, timeUnit, rollResult) {
+export function resolveForaging(biomeKey, abundanceKey, timeAmount, timeUnit, rollResult, rarityMod = 0) {
     const biomes = getBiomes();
     const abundanceMods = getAbundanceModifiers();
     const biome = biomes[biomeKey];
@@ -189,24 +189,98 @@ export function resolveForaging(biomeKey, abundanceKey, timeAmount, timeUnit, ro
     const dc = Math.max(1, biome.baseDC + abundance.dcMod + timeModifiers.dcMod);
     const critFail = rollResult === 1;
     const critSuccess = rollResult === 20;
+    const success = rollResult >= dc || critSuccess;
 
     if (critFail) return { success: false, dc, items: [], critFail: true };
-    if (rollResult < dc && !critSuccess) return { success: false, dc, items: [], critFail: false };
 
-    const margin = rollResult - dc;
-    let itemCount = Math.min(timeModifiers.maxItems, Math.max(1, Math.floor(1 + margin / 3)));
-    itemCount = Math.ceil(itemCount * abundance.qtyMul);
-    if (critSuccess) itemCount = Math.min(timeModifiers.maxItems, itemCount + 2);
+    // Calculate time-scaled quantity (0.05 items per minute base yield)
+    const timeUnits = getTimeUnits();
+    const hours = timeAmount * (timeUnits[timeUnit]?.hours ?? 1);
+    const minutes = hours * 60;
+    const baseYieldPerMinute = 0.05;
+    const expectedQty = minutes * baseYieldPerMinute * abundance.qtyMul;
 
-    const biomePool = getBiomeIngredients()[biomeKey] ?? {};
-    const rarityWeights = getRarityWeights();
+    let itemCount = Math.floor(expectedQty);
+    const fraction = expectedQty - itemCount;
+    if (fraction > 0 && Math.random() < fraction) {
+        itemCount += 1;
+    }
+
+    if (success) {
+        if (itemCount === 0) itemCount = 1; // Guarantee at least 1 item on success
+        itemCount += critSuccess ? 2 : 1; // Success bonus
+    }
+
+    if (itemCount === 0) return { success: false, dc, items: [], critFail: false };
+
+    // Calculate time-scaled rarity multiplier (spending more time increases chances of rare things!)
+    const timeRarityMult = Math.min(2.5, 1.0 + Math.max(0, Math.log10(hours)));
+
+    // Rarity distribution based on roll margin + GM rarityMod
+    const margin = (rollResult - dc) + rarityMod;
+    let multipliers = { C: 1.0, U: 1.0, R: 1.0, VR: 1.0 };
+
+    if (!success) {
+        multipliers = { C: 1.0, U: 0.02 * timeRarityMult, R: 0.0, VR: 0.0 };
+    } else if (critSuccess) {
+        multipliers = { C: 0.1, U: 0.5 * timeRarityMult, R: 1.0 * timeRarityMult, VR: 1.0 * timeRarityMult };
+    } else if (margin >= 10) {
+        multipliers = { C: 0.2, U: 0.6 * timeRarityMult, R: 1.0 * timeRarityMult, VR: 0.8 * timeRarityMult };
+    } else if (margin >= 5) {
+        multipliers = { C: 0.5, U: 0.8 * timeRarityMult, R: 0.8 * timeRarityMult, VR: 0.2 * timeRarityMult };
+    } else {
+        const vrBase = 0.02 * timeRarityMult;
+        multipliers = { C: 1.0, U: 0.8 * timeRarityMult, R: 0.4 * timeRarityMult, VR: vrBase };
+    }
+
+    const getGroup = (tier) => {
+        if (["common_herb", "common_component", "liquid"].includes(tier)) return "C";
+        if (["uncommon_herb", "uncommon_component"].includes(tier)) return "U";
+        if (["monster_part", "rare_component"].includes(tier)) return "R";
+        return "VR";
+    };
+
+    const rarityWeights = { ...getRarityWeights() };
+    if ((rarityWeights["very_rare_component"] ?? 0) === 0) rarityWeights["very_rare_component"] = 0.5;
+    if ((rarityWeights["legendary_component"] ?? 0) === 0) rarityWeights["legendary_component"] = 0.1;
+    if ((rarityWeights["rare_monster_part"] ?? 0) === 0) rarityWeights["rare_monster_part"] = 1.0;
+
+    const biomePool = { ...getBiomeIngredients()[biomeKey] };
+    const allIngredientsByTier = {};
+    for (const bPool of Object.values(getBiomeIngredients())) {
+        for (const [t, names] of Object.entries(bPool)) {
+            if (!allIngredientsByTier[t]) allIngredientsByTier[t] = new Set();
+            for (const name of names) allIngredientsByTier[t].add(name);
+        }
+    }
+
+    const rareTiers = ["monster_part", "rare_monster_part", "rare_component", "very_rare_component", "legendary_component"];
+    for (const t of rareTiers) {
+        const globalNames = Array.from(allIngredientsByTier[t] || []);
+        if (globalNames.length > 0) {
+            if (!biomePool[t]) {
+                biomePool[t] = globalNames;
+            } else {
+                const existing = new Set(biomePool[t]);
+                for (const name of globalNames) {
+                    if (!existing.has(name)) biomePool[t].push(name);
+                }
+            }
+        }
+    }
+
     const items = [];
     const weightedPool = [];
 
     for (const [tier, names] of Object.entries(biomePool)) {
-        const weight = rarityWeights[tier] ?? 0;
-        for (const name of names) {
-            weightedPool.push({ name, type: tier, weight });
+        const baseWeight = rarityWeights[tier] ?? 0;
+        const group = getGroup(tier);
+        const mult = multipliers[group];
+        const finalWeight = baseWeight * mult;
+        if (finalWeight > 0) {
+            for (const name of names) {
+                weightedPool.push({ name, type: tier, weight: finalWeight });
+            }
         }
     }
 
@@ -233,16 +307,61 @@ export function resolveForaging(biomeKey, abundanceKey, timeAmount, timeUnit, ro
 /**
  * Resolve foraging by a pre-computed DC (used by gathering panel).
  */
-export function resolveForagingByDC(dc, biomeKey, rollTotal) {
+export function resolveForagingByDC(dc, biomeKey, rollTotal, timeAmount = 1, timeUnit = "hours", abundanceKey = "medium", rarityMod = 0) {
+    const abundanceMods = getAbundanceModifiers();
+    const abundance = abundanceMods[abundanceKey] ?? { qtyMul: 1.0 };
     const critFail = rollTotal === 1;
     const critSuccess = rollTotal === 20;
+    const success = rollTotal >= dc || critSuccess;
 
     if (critFail) return { success: false, dc, items: [], critFail: true };
-    if (rollTotal < dc && !critSuccess) return { success: false, dc, items: [], critFail: false };
 
-    const margin = rollTotal - dc;
-    let itemCount = Math.max(1, Math.floor(1 + margin / 3));
-    if (critSuccess) itemCount += 2;
+    // Calculate time-scaled quantity
+    const timeUnits = getTimeUnits();
+    const hours = timeAmount * (timeUnits[timeUnit]?.hours ?? 1);
+    const minutes = hours * 60;
+    const baseYieldPerMinute = 0.05;
+    const expectedQty = minutes * baseYieldPerMinute * abundance.qtyMul;
+
+    let itemCount = Math.floor(expectedQty);
+    const fraction = expectedQty - itemCount;
+    if (fraction > 0 && Math.random() < fraction) {
+        itemCount += 1;
+    }
+
+    if (success) {
+        if (itemCount === 0) itemCount = 1; // Guarantee at least 1 item on success
+        itemCount += critSuccess ? 2 : 1; // Success bonus
+    }
+
+    if (itemCount === 0) return { success: false, dc, items: [], critFail: false };
+
+    // Calculate time-scaled rarity multiplier
+    const timeRarityMult = Math.min(2.5, 1.0 + Math.max(0, Math.log10(hours)));
+
+    // Rarity distribution based on roll margin + GM rarityMod
+    const margin = (rollTotal - dc) + rarityMod;
+    let multipliers = { C: 1.0, U: 1.0, R: 1.0, VR: 1.0 };
+
+    if (!success) {
+        multipliers = { C: 1.0, U: 0.02 * timeRarityMult, R: 0.0, VR: 0.0 };
+    } else if (critSuccess) {
+        multipliers = { C: 0.1, U: 0.5 * timeRarityMult, R: 1.0 * timeRarityMult, VR: 1.0 * timeRarityMult };
+    } else if (margin >= 10) {
+        multipliers = { C: 0.2, U: 0.6 * timeRarityMult, R: 1.0 * timeRarityMult, VR: 0.8 * timeRarityMult };
+    } else if (margin >= 5) {
+        multipliers = { C: 0.5, U: 0.8 * timeRarityMult, R: 0.8 * timeRarityMult, VR: 0.2 * timeRarityMult };
+    } else {
+        const vrBase = 0.02 * timeRarityMult;
+        multipliers = { C: 1.0, U: 0.8 * timeRarityMult, R: 0.4 * timeRarityMult, VR: vrBase };
+    }
+
+    const getGroup = (tier) => {
+        if (["common_herb", "common_component", "liquid"].includes(tier)) return "C";
+        if (["uncommon_herb", "uncommon_component"].includes(tier)) return "U";
+        if (["monster_part", "rare_component"].includes(tier)) return "R";
+        return "VR";
+    };
 
     const biomePool = getBiomeIngredients()[biomeKey] ?? {};
     const rarityWeights = getRarityWeights();
@@ -250,9 +369,14 @@ export function resolveForagingByDC(dc, biomeKey, rollTotal) {
     const weightedPool = [];
 
     for (const [tier, names] of Object.entries(biomePool)) {
-        const weight = rarityWeights[tier] ?? 0;
-        for (const name of names) {
-            weightedPool.push({ name, type: tier, weight });
+        const baseWeight = rarityWeights[tier] ?? 0;
+        const group = getGroup(tier);
+        const mult = multipliers[group];
+        const finalWeight = baseWeight * mult;
+        if (finalWeight > 0) {
+            for (const name of names) {
+                weightedPool.push({ name, type: tier, weight: finalWeight });
+            }
         }
     }
 
@@ -286,11 +410,17 @@ export async function addIngredientToActor(actor, name, type, qty = 1) {
         const newQty = (existing.system.quantity ?? 0) + qty;
         await existing.update({ "system.quantity": newQty });
     } else {
+        const costs = getIngredientCosts();
+        const goldVal = costs[name] ?? 0;
         await actor.createEmbeddedDocuments("Item", [{
             name,
             type: "loot",
             img: icon,
-            system: { quantity: qty }
+            system: { 
+                quantity: qty, 
+                weight: { value: 0.1 },
+                price: { value: goldVal, denomination: "gp" }
+            }
         }]);
     }
 }

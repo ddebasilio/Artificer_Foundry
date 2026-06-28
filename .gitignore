@@ -6,3 +6,5 @@ AGENTS.md
 icons/
 items.csv
 temp
+.DS_Store
+.claude

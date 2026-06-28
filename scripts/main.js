@@ -1,7 +1,4 @@
-import { CraftingApp } from "./crafting-app.js";
-import { GathererApp } from "./gatherer-app.js";
-import { ForgeApp } from "./forge-app.js";
-import { MaterialsApp } from "./materials-app.js";
+import { ArtificerApp } from "./artificer-app.js";
 import { RecipeManager } from "./recipe-manager.js";
 import { ForgeRecipeManager } from "./forge-recipe-manager.js";
 import { loadIngredientData, getTypeLabels } from "./ingredient-data.js";
@@ -16,40 +13,13 @@ const MODULE    = "Artificer Foundry";
 const MODULE_ID = "artificer-foundry";
 
 // Track open app instances per actor to avoid duplicates
-const _craftingApps = new Map();
-const _gathererApps = new Map();
-const _forgeApps = new Map();
-const _materialsApps = new Map();
+const _artificerApps = new Map();
 
-function openCraftingApp(actor) {
-    const existing = _craftingApps.get(actor.id);
+function openArtificerApp(actor) {
+    const existing = _artificerApps.get(actor.id);
     if (existing?.element?.isConnected) { existing.bringToFront(); return; }
-    const app = new CraftingApp(actor);
-    _craftingApps.set(actor.id, app);
-    app.render(true);
-}
-
-function openGathererApp(actor) {
-    const existing = _gathererApps.get(actor.id);
-    if (existing?.element?.isConnected) { existing.bringToFront(); return; }
-    const app = new GathererApp(actor);
-    _gathererApps.set(actor.id, app);
-    app.render(true);
-}
-
-function openForgeApp(actor) {
-    const existing = _forgeApps.get(actor.id);
-    if (existing?.element?.isConnected) { existing.bringToFront(); return; }
-    const app = new ForgeApp(actor);
-    _forgeApps.set(actor.id, app);
-    app.render(true);
-}
-
-function openMaterialsApp(actor) {
-    const existing = _materialsApps.get(actor.id);
-    if (existing?.element?.isConnected) { existing.bringToFront(); return; }
-    const app = new MaterialsApp(actor);
-    _materialsApps.set(actor.id, app);
+    const app = new ArtificerApp(actor);
+    _artificerApps.set(actor.id, app);
     app.render(true);
 }
 
@@ -259,7 +229,27 @@ Hooks.once('ready', async function () {
                 console.error("Artificer Foundry | Error handling playerAddItemToPartyInventory:", err);
             }
         }
+    });
         // Note: refreshPartyInventory is handled by PartyInventory.registerSocketListeners()
+    // Refresh crafting and forge sheets when recipe data settings change
+    Hooks.on('updateSetting', (setting) => {
+        if (setting.key === `${MODULE_ID}.recipeData`) {
+            for (const app of _craftingApps.values()) {
+                if (app?.element?.isConnected) app.render();
+            }
+        } else if (setting.key === `${MODULE_ID}.forgeRecipeData`) {
+            for (const app of _forgeApps.values()) {
+                if (app?.element?.isConnected) app.render();
+            }
+        }
+    });
+
+    // Refresh crafting and forge sheets when actor flags change
+    Hooks.on('updateActor', (actor, changes, options, userId) => {
+        const craftingApp = _craftingApps.get(actor.id);
+        if (craftingApp?.element?.isConnected) craftingApp.render();
+        const forgeApp = _forgeApps.get(actor.id);
+        if (forgeApp?.element?.isConnected) forgeApp.render();
     });
 
     window.ArtificerFoundry = {
@@ -284,7 +274,7 @@ Hooks.once('ready', async function () {
 
     // Document-level capture handler for the injected crafting/gatherer nav buttons.
     document.addEventListener('click', (e) => {
-        const navItem = e.target.closest?.('.af-crafting-nav-item, .af-gatherer-nav-item, .af-forge-nav-item, .af-materials-nav-item');
+        const navItem = e.target.closest?.('.af-artificer-nav-item');
         if (!navItem) return;
         e.stopImmediatePropagation();
         e.stopPropagation();
@@ -294,23 +284,9 @@ Hooks.once('ready', async function () {
             ui.notifications.warn("No actor associated with this sheet.");
             return;
         }
-        if (navItem.classList.contains('af-crafting-nav-item')) {
-            console.log(`${MODULE} | Crafting tab clicked — actor:`, actor.name);
-            try { openCraftingApp(actor); }
-            catch (err) { console.error(`${MODULE} | Failed to open CraftingApp:`, err); }
-        } else if (navItem.classList.contains('af-forge-nav-item')) {
-            console.log(`${MODULE} | Forge tab clicked — actor:`, actor.name);
-            try { openForgeApp(actor); }
-            catch (err) { console.error(`${MODULE} | Failed to open ForgeApp:`, err); }
-        } else if (navItem.classList.contains('af-materials-nav-item')) {
-            console.log(`${MODULE} | Materials tab clicked — actor:`, actor.name);
-            try { openMaterialsApp(actor); }
-            catch (err) { console.error(`${MODULE} | Failed to open MaterialsApp:`, err); }
-        } else {
-            console.log(`${MODULE} | Gatherer tab clicked — actor:`, actor.name);
-            try { openGathererApp(actor); }
-            catch (err) { console.error(`${MODULE} | Failed to open GathererApp:`, err); }
-        }
+        console.log(`${MODULE} | Artificer Lab clicked — actor:`, actor.name);
+        try { openArtificerApp(actor); }
+        catch (err) { console.error(`${MODULE} | Failed to open ArtificerApp:`, err); }
     }, true);
 
     // MutationObserver — catches sheets opened before hooks fire
@@ -473,7 +449,7 @@ function injectCraftingTab(app, htmlArg) {
 
         if (!root) return;
 
-        if (root.querySelector('.af-crafting-nav-item') || root.querySelector('.af-forge-nav-item')) return;
+        if (root.querySelector('.af-artificer-nav-item')) return;
 
         const NAV_SELECTORS = [
             'nav.tabs[data-group="primary"]',
@@ -494,41 +470,13 @@ function injectCraftingTab(app, htmlArg) {
 
         if (!tabsNav) return;
 
-        if (showAlchemy) {
-            // Alchemy & Crafting tab (flask icon)
-            const navItem = document.createElement('a');
-            navItem.className = 'item af-crafting-nav-item';
-            navItem.title = 'Alchemy & Crafting Station';
-            navItem.innerHTML = `<i class="fas fa-flask"></i>`;
-            navItem._af_actor = actor;
-            tabsNav.appendChild(navItem);
-
-            // Ingredient Catalog tab (leaf icon)
-            const gathererItem = document.createElement('a');
-            gathererItem.className = 'item af-gatherer-nav-item';
-            gathererItem.title = 'Ingredient Catalog';
-            gathererItem.innerHTML = `<i class="fas fa-leaf"></i>`;
-            gathererItem._af_actor = actor;
-            tabsNav.appendChild(gathererItem);
-        }
-
-        if (showForge) {
-            // Item Forge tab (hammer/anvil icon)
-            const forgeItem = document.createElement('a');
-            forgeItem.className = 'item af-forge-nav-item';
-            forgeItem.title = 'Item Forge';
-            forgeItem.innerHTML = `<i class="fas fa-hammer"></i>`;
-            forgeItem._af_actor = actor;
-            tabsNav.appendChild(forgeItem);
-
-            // Materials Catalog tab (cubes icon)
-            const materialsItem = document.createElement('a');
-            materialsItem.className = 'item af-materials-nav-item';
-            materialsItem.title = 'Materials Catalog';
-            materialsItem.innerHTML = `<i class="fas fa-cubes"></i>`;
-            materialsItem._af_actor = actor;
-            tabsNav.appendChild(materialsItem);
-        }
+        // Injected tab button (mortar & pestle / tools icon)
+        const navItem = document.createElement('a');
+        navItem.className = 'item af-artificer-nav-item';
+        navItem.title = 'Artificer Lab';
+        navItem.innerHTML = `<i class="fas fa-tools"></i>`;
+        navItem._af_actor = actor;
+        tabsNav.appendChild(navItem);
 
     } catch (err) {
         console.error(`${MODULE} | injectCraftingTab error:`, err);
@@ -562,9 +510,9 @@ Hooks.on('getActorSheetHeaderButtons', (app, buttons) => {
     if (buttons.some(b => b.class === 'artificer-foundry-btn')) return;
     buttons.unshift({
         class: 'artificer-foundry-btn',
-        icon: 'fas fa-flask',
-        label: 'Crafting',
-        onclick: () => openCraftingApp(actor)
+        icon: 'fas fa-tools',
+        label: 'Artificer Lab',
+        onclick: () => openArtificerApp(actor)
     });
 });
 
@@ -579,9 +527,32 @@ Hooks.on('getActorSheetHeaderButtons', (app, buttons) => {
         if (buttons.some(b => b.action === MODULE_ID)) return;
         buttons.unshift({
             action: MODULE_ID,
-            icon: 'fas fa-flask',
-            label: 'Crafting',
-            onClick: () => openCraftingApp(actor)
+            icon: 'fas fa-tools',
+            label: 'Artificer Lab',
+            onClick: () => openArtificerApp(actor)
         });
     });
+});
+
+// Automatically merge duplicate loot/consumable items in actor sheets on creation
+Hooks.on("preCreateItem", (itemDoc, data, options, userId) => {
+    const actor = itemDoc.parent;
+    if (!actor) return true;
+
+    // We only stack "loot" (ingredients/materials) and "consumable" (potions) items
+    if (!["loot", "consumable"].includes(itemDoc.type)) return true;
+
+    const existing = actor.items.find(i => i.name === itemDoc.name && i.type === itemDoc.type);
+    if (existing) {
+        const currentQty = existing.system.quantity ?? 1;
+        const addedQty = itemDoc.system.quantity ?? 1;
+        const newQty = currentQty + addedQty;
+        
+        existing.update({ "system.quantity": newQty }).then(() => {
+            console.log(`Artificer Foundry | Merged duplicate item ${itemDoc.name} into existing stack. New quantity: ${newQty}`);
+        });
+        
+        return false; // cancels the creation of the duplicate item document
+    }
+    return true;
 });

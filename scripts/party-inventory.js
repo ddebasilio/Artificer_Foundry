@@ -2,11 +2,13 @@
  * Party Inventory – a sidebar tab that holds shared loot.
  * GM can send loot here from the Loot Generator; players can drag items
  * to their character sheets (removing from party) or add items back.
- * Uses Plutonium importer when available, same pattern as forge-app.js.
+ * Uses Plutonium importer when available, same pattern as artificer-app.js.
  */
 
 import { PlutoniumHelper } from "./plutonium-helper.js";
 import { normalizeRarity } from "./loot-generator.js";
+import { getIngredientCosts } from "./ingredient-data.js";
+import { getForgeMaterialCosts } from "./forge-data.js";
 
 const MODULE_ID = "artificer-foundry";
 const SOCKET_NAME = `module.${MODULE_ID}`;
@@ -620,6 +622,18 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
         }
 
         // 3. Fallback: Create basic loot item in the world
+        const getWeight = (name) => {
+            if (/ingot|ore|barstock|plank|wood|hide|metal/i.test(name)) return 1.0;
+            return 0.1;
+        };
+
+        let price = itemData.price || 0;
+        if (!price) {
+            const ingCosts = getIngredientCosts() || {};
+            const forgeCosts = getForgeMaterialCosts() || {};
+            price = ingCosts[itemData.name] || forgeCosts[itemData.name] || 0;
+        }
+
         return await Item.create({
             name: itemData.name,
             type: "loot",
@@ -628,8 +642,9 @@ export class PartyInventory extends HandlebarsApplicationMixin(AbstractSidebarTa
             system: {
                 description: { value: itemData.text || "" },
                 rarity: itemData.rarity || "common",
-                price: { value: itemData.price || 0, denomination: "gp" },
-                quantity: 1
+                price: { value: price, denomination: "gp" },
+                quantity: 1,
+                weight: { value: getWeight(itemData.name) }
             },
             img: itemData.img || "icons/svg/item-bag.svg"
         });
