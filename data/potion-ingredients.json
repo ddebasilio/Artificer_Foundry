@@ -178,6 +178,10 @@
     "legendary": {
       "days": 125,
       "cost": 50000
+    },
+    "artifact": {
+      "days": 250,
+      "cost": 250000
     }
   },
   "craftingTimesHealingPotions": {

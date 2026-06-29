@@ -3,7 +3,7 @@
  * Loaded from data/forge-materials.json at runtime.
  */
 
-import { getAbundanceModifiers, getTimeUnits, getIngredientCosts } from "./ingredient-data.js";
+import { getAbundanceModifiers, getTimeUnits, getIngredientCosts, getArtificerBag, getGatheringDice, rollFormula } from "./ingredient-data.js";
 
 let _forgeData = null;
 
@@ -52,20 +52,24 @@ export function getForgeSubstitutionGroups() {
 
 // ─── Crafting time helpers ───────────────────────────────────────────────────
 
-export function getForgeCraftingTime(rarity, isSmith = false) {
+export function getForgeCraftingTime(rarity, speedMult = 1.0) {
     const times = getForgeCraftingTimes();
     const base = times[rarity] ?? times.common ?? { days: 1, cost: 50 };
-    const days = isSmith ? Math.max(1, Math.ceil(base.days / 2)) : base.days;
+    const days = base.days * speedMult;
     return { days, cost: base.cost };
 }
 
 export function formatForgeCraftingTime(days) {
+    if (days === 0.5) return "4 hours (1/2 day)";
     if (days === 1) return "1 day";
-    if (days < 7) return `${days} days`;
+    if (days < 7) {
+        return Number.isInteger(days) ? `${days} days` : `${days.toFixed(2).replace(/\.?0+$/, "")} days`;
+    }
     const weeks = Math.floor(days / 7);
     const remainder = days % 7;
     if (remainder === 0) return weeks === 1 ? "1 workweek" : `${weeks} workweeks`;
-    return `${weeks}w ${remainder}d`;
+    const remStr = Number.isInteger(remainder) ? `${remainder}d` : `${remainder.toFixed(2).replace(/\.?0+$/, "")}d`;
+    return `${weeks}w ${remStr}`;
 }
 
 // ─── Substitution logic ──────────────────────────────────────────────────────
@@ -128,18 +132,13 @@ export function resolveForgeForagingByDC(dc, biomeKey, rollTotal, timeAmount = 1
 
     if (critFail) return { success: false, dc, items: [], critFail: true };
 
-    // Calculate time-scaled quantity
+    // Calculate time-scaled quantity using progressive dice roll
     const timeUnits = getTimeUnits();
     const hours = timeAmount * (timeUnits[timeUnit]?.hours ?? 1);
     const minutes = hours * 60;
-    const baseYieldPerMinute = 0.05;
-    const expectedQty = minutes * baseYieldPerMinute * abundance.qtyMul;
-
-    let itemCount = Math.floor(expectedQty);
-    const fraction = expectedQty - itemCount;
-    if (fraction > 0 && Math.random() < fraction) {
-        itemCount += 1;
-    }
+    
+    const rollData = getGatheringDice(minutes, abundance.qtyMul);
+    let itemCount = rollFormula(rollData.formula);
 
     if (success) {
         if (itemCount === 0) itemCount = 1; // Guarantee at least 1 item on success
@@ -270,7 +269,8 @@ export async function addForgeMaterialToActor(actor, name, type, qty = 1) {
     } else {
         const costs = getForgeMaterialCosts();
         const goldVal = costs[name] ?? 0;
-        await actor.createEmbeddedDocuments("Item", [{
+        const bag = getArtificerBag(actor);
+        const itemData = {
             name,
             type: "loot",
             img: icon,
@@ -279,6 +279,10 @@ export async function addForgeMaterialToActor(actor, name, type, qty = 1) {
                 weight: { value: getWeight(type) },
                 price: { value: goldVal, denomination: "gp" }
             }
-        }]);
+        };
+        if (bag) {
+            itemData.system.container = bag.id;
+        }
+        await actor.createEmbeddedDocuments("Item", [itemData]);
     }
 }

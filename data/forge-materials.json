@@ -123,6 +123,10 @@
     "legendary": {
       "days": 250,
       "cost": 100000
+    },
+    "artifact": {
+      "days": 500,
+      "cost": 500000
     }
   },
   "costs": {

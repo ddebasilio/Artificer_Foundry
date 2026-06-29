@@ -1,11 +1,13 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 import { 
     getIngredientIcon, getTypeLabels, getIngredientCosts, getSubstitutes, 
-    getCraftingTime, formatCraftingTime, getBiomeIngredients
+    getCraftingTime, formatCraftingTime, getBiomeIngredients, addIngredientToActor,
+    getIngredientIcons, getArtificerBag
 } from "./ingredient-data.js";
 import { 
     getForgeMaterialIcon, getForgeTypeLabels, getForgeMaterialCosts, getForgeSubstitutes, 
-    getForgeCraftingTime, formatForgeCraftingTime, canForgeSubstitute, addForgeMaterialToActor, getBiomeMaterials
+    getForgeCraftingTime, formatForgeCraftingTime, canForgeSubstitute, addForgeMaterialToActor, getBiomeMaterials,
+    getForgeMaterialIcons
 } from "./forge-data.js";
 import { PlutoniumHelper } from "./plutonium-helper.js";
 
@@ -75,6 +77,8 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
         this.inventoryRecipeFilter = false;
         this.catalogSearchQuery = "";
         this.catalogFilterType = "all";
+        this.showCatalog = false;
+        this.catalogRarityFilter = "all";
         this._draggedIngredient = null;
         this._duplicatesMerged = false;
     }
@@ -91,11 +95,29 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
     async _mergeActorDuplicates() {
         if (!this.actor || !this.actor.isOwner) return;
+        
+        // Find the Artificer's Component Bag if it exists (no auto-creation)
+        const bag = getArtificerBag(this.actor);
+        const bagId = bag?.id;
+
         const items = this.actor.items?.contents ?? [];
         const duplicates = {};
+
+        const ingCosts = typeof getIngredientCosts === "function" ? getIngredientCosts() : {};
+        const forgeCosts = typeof getForgeMaterialCosts === "function" ? getForgeMaterialCosts() : {};
+        const allComponentNames = new Set([
+            ...Object.keys(ingCosts).map(n => n.toLowerCase()),
+            ...Object.keys(forgeCosts).map(n => n.toLowerCase())
+        ]);
         
         for (const item of items) {
             if (!["loot", "consumable"].includes(item.type)) continue;
+            // Don't treat the bag itself as a component to duplicate/stack
+            if (item.name === "Artificer's Component Bag") continue;
+
+            // Only consolidate/move items if they are valid crafting ingredients/materials
+            if (!allComponentNames.has(item.name.toLowerCase())) continue;
+
             const key = `${item.name.toLowerCase()}_${item.type}`;
             if (!duplicates[key]) {
                 duplicates[key] = [];
@@ -106,23 +128,29 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
         const updates = [];
         const deletes = [];
 
-        const ingCosts = typeof getIngredientCosts === "function" ? getIngredientCosts() : {};
-        const forgeCosts = typeof getForgeMaterialCosts === "function" ? getForgeMaterialCosts() : {};
-
         for (const [key, list] of Object.entries(duplicates)) {
             const firstItem = list[0];
             const isLoot = firstItem.type === "loot";
             
             // Check if we need to update the price of this stack (if it has no price, set it)
-            let priceUpdateNeeded = false;
+            let updateNeeded = false;
+            const updateData = { _id: firstItem.id };
+
             let currentPriceValue = firstItem.system?.price?.value ?? 0;
             if (isLoot && currentPriceValue === 0) {
                 const name = firstItem.name;
                 const standardPrice = ingCosts[name] || forgeCosts[name] || 0;
                 if (standardPrice > 0) {
                     currentPriceValue = standardPrice;
-                    priceUpdateNeeded = true;
+                    updateData["system.price"] = { value: currentPriceValue, denomination: "gp" };
+                    updateNeeded = true;
                 }
+            }
+
+            // Move loot items into the Artificer bag
+            if (isLoot && bagId && firstItem.system.container !== bagId) {
+                updateData["system.container"] = bagId;
+                updateNeeded = true;
             }
 
             if (list.length > 1) {
@@ -132,21 +160,14 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                     totalQty += item.system.quantity ?? 1;
                 }
                 
-                const updateData = { _id: firstItem.id, "system.quantity": totalQty };
-                if (priceUpdateNeeded) {
-                    updateData["system.price"] = { value: currentPriceValue, denomination: "gp" };
-                }
+                updateData["system.quantity"] = totalQty;
                 updates.push(updateData);
                 
                 for (let i = 1; i < list.length; i++) {
                     deletes.push(list[i].id);
                 }
-            } else if (priceUpdateNeeded) {
-                // Just update the price for this single item
-                updates.push({
-                    _id: firstItem.id,
-                    "system.price": { value: currentPriceValue, denomination: "gp" }
-                });
+            } else if (updateNeeded) {
+                updates.push(updateData);
             }
         }
 
@@ -158,7 +179,9 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
         }
     }
 
-    _isAlchemist() {
+
+
+    _isAlchemistAuto() {
         if (!this.actor) return false;
         const items = this.actor.items?.contents ?? [];
         return items.some(i => {
@@ -170,16 +193,98 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
         });
     }
 
-    _isSmith() {
+    _isArmorerAuto() {
         if (!this.actor) return false;
         const items = this.actor.items?.contents ?? [];
         return items.some(i => {
             const name = (i.name ?? "").toLowerCase();
             const type = i.type ?? "";
-            if (type === "subclass" && (name.includes("armorer") || name.includes("battlesmith") || name.includes("battle smith"))) return true;
-            if (name.includes("tool proficiency") && name.includes("smith")) return true;
+            if (type === "subclass" && name.includes("armorer")) return true;
             return false;
         });
+    }
+
+    _isArtilleristAuto() {
+        if (!this.actor) return false;
+        const items = this.actor.items?.contents ?? [];
+        return items.some(i => {
+            const name = (i.name ?? "").toLowerCase();
+            const type = i.type ?? "";
+            if (type === "subclass" && name.includes("artillerist")) return true;
+            return false;
+        });
+    }
+
+    _isBattleSmithAuto() {
+        if (!this.actor) return false;
+        const items = this.actor.items?.contents ?? [];
+        return items.some(i => {
+            const name = (i.name ?? "").toLowerCase();
+            const type = i.type ?? "";
+            if (type === "subclass" && (name.includes("battlesmith") || name.includes("battle smith"))) return true;
+            return false;
+        });
+    }
+
+    _getAlchemySpeedMultiplier(recipe) {
+        if (!this.actor) return 1.0;
+        let mult = 1.0;
+
+        // Forge of the Artificer: Alchemist potion crafting halves duration
+        const alchemistPerk = this.actor.getFlag("artificer-foundry", "alchemistSubclass") ?? this._isAlchemistAuto();
+        if (alchemistPerk) {
+            mult *= 0.5;
+        }
+
+        // Cooperative Crafting: divide by (1 + assistants)
+        let assistants = this.actor.getFlag("artificer-foundry", "craftingAssistants") ?? 0;
+        const hasHomunculus = this.actor.getFlag("artificer-foundry", "hasHomunculus") ?? false;
+        const homunculusMode = this.actor.getFlag("artificer-foundry", "homunculusMode") || "assist";
+        if (hasHomunculus && homunculusMode === "assist") {
+            assistants += 1;
+        }
+        mult /= (1 + Number(assistants));
+
+        return mult;
+    }
+
+    _getForgeSpeedMultiplier(recipe) {
+        if (!this.actor) return 1.0;
+        let mult = 1.0;
+
+        if (recipe) {
+            const category = (recipe.category || "").toLowerCase();
+            const nameLower = (recipe.name || "").toLowerCase();
+
+            // Forge of the Artificer: Armorer armor crafting halves duration
+            const armorerPerk = this.actor.getFlag("artificer-foundry", "armorerSubclass") ?? this._isArmorerAuto();
+            if (armorerPerk && category === "armor") {
+                mult *= 0.5;
+            }
+
+            // Forge of the Artificer: Artillerist wand crafting halves duration
+            const artilleristPerk = this.actor.getFlag("artificer-foundry", "artilleristSubclass") ?? this._isArtilleristAuto();
+            if (artilleristPerk && (category === "wand" || nameLower.includes("wand"))) {
+                mult *= 0.5;
+            }
+
+            // Forge of the Artificer: Battle Smith weapon/shield crafting halves duration
+            const battleSmithPerk = this.actor.getFlag("artificer-foundry", "battleSmithSubclass") ?? this._isBattleSmithAuto();
+            if (battleSmithPerk && (category === "weapon" || category === "shield")) {
+                mult *= 0.5;
+            }
+        }
+
+        // Cooperative Crafting: divide by (1 + assistants)
+        let assistants = this.actor.getFlag("artificer-foundry", "craftingAssistants") ?? 0;
+        const hasHomunculus = this.actor.getFlag("artificer-foundry", "hasHomunculus") ?? false;
+        const homunculusMode = this.actor.getFlag("artificer-foundry", "homunculusMode") || "assist";
+        if (hasHomunculus && homunculusMode === "assist") {
+            assistants += 1;
+        }
+        mult /= (1 + Number(assistants));
+
+        return mult;
     }
 
     async _prepareContext(options) {
@@ -190,8 +295,8 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
             });
         }
 
-        const isAlchemist = this._isAlchemist();
-        const isSmith = this._isSmith();
+        const isAlchemist = this._getAlchemySpeedMultiplier() < 1.0;
+        const isSmith = this._getForgeSpeedMultiplier({ ingredients: [], category: "weapon" }) < 1.0;
 
         const allAlchemyRecipes = window.ArtificerFoundry.recipeManager.getRecipesForActor(this.actor) || [];
         const allForgeRecipes = window.ArtificerFoundry.forgeRecipeManager.getRecipesForActor(this.actor) || [];
@@ -288,7 +393,8 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
             return true;
         }).map(r => {
             const isHealingPotion = /healing/i.test(r.name);
-            const ct = getCraftingTime(r.rarity, isAlchemist, isHealingPotion);
+            const speedMult = this._getAlchemySpeedMultiplier();
+            const ct = getCraftingTime(r.rarity, speedMult, isHealingPotion);
             
             // Check availability
             let availableTypes = 0;
@@ -323,7 +429,8 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
             }
             return true;
         }).map(r => {
-            const ct = getForgeCraftingTime(r.rarity, isSmith);
+            const speedMult = this._getForgeSpeedMultiplier(r);
+            const ct = getForgeCraftingTime(r.rarity, speedMult);
             
             let availableTypes = 0;
             for (const ing of r.ingredients) {
@@ -370,9 +477,12 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                 this.craftQuantity = Math.min(Math.max(1, this.craftQuantity || 1), maxQuantity);
 
                 const isHealing = isPotion && /healing/i.test(selectedRecipe.name);
+                const speedMult = isPotion 
+                    ? this._getAlchemySpeedMultiplier() 
+                    : this._getForgeSpeedMultiplier(selectedRecipe);
                 const ct = isPotion 
-                    ? getCraftingTime(selectedRecipe.rarity, isAlchemist, isHealing)
-                    : getForgeCraftingTime(selectedRecipe.rarity, isSmith);
+                    ? getCraftingTime(selectedRecipe.rarity, speedMult, isHealing)
+                    : getForgeCraftingTime(selectedRecipe.rarity, speedMult);
 
                 selectedRecipe = {
                     ...selectedRecipe,
@@ -511,8 +621,65 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                 };
             });
 
+        // Filter catalog items
+        let catalogItems = [];
+        if (this.showCatalog) {
+            let rawCatalog = [];
+            if (this.activeRecipeTab === "alchemy") {
+                const icons = getIngredientIcons() || {};
+                const costs = getIngredientCosts() || {};
+                for (const [name, img] of Object.entries(icons)) {
+                    const tier = getItemTier(name);
+                    const rarity = getRarityFromTier(tier);
+                    const price = costs[name] ?? 0;
+                    rawCatalog.push({ name, img, rarity, price, type: tier });
+                }
+            } else {
+                const icons = getForgeMaterialIcons() || {};
+                const costs = getForgeMaterialCosts() || {};
+                for (const [name, img] of Object.entries(icons)) {
+                    const tier = getItemTier(name);
+                    const rarity = getRarityFromTier(tier);
+                    const price = costs[name] ?? 0;
+                    rawCatalog.push({ name, img, rarity, price, type: tier });
+                }
+            }
+
+            // Apply search & rarity filters
+            const catQuery = this.catalogSearchQuery.toLowerCase().trim();
+            const catRarity = this.catalogRarityFilter;
+
+            catalogItems = rawCatalog.filter(item => {
+                if (catRarity !== "all" && item.rarity !== catRarity) return false;
+                if (catQuery) {
+                    const matchesName = item.name.toLowerCase().includes(catQuery);
+                    const label = this.activeRecipeTab === "alchemy" 
+                        ? (getTypeLabels()[item.type] || item.type)
+                        : (getForgeTypeLabels()[item.type] || item.type);
+                    const matchesType = (label || "").toLowerCase().includes(catQuery);
+                    if (!matchesName && !matchesType) return false;
+                }
+                return true;
+            });
+
+            // Sort catalog items by rarity first, then by name
+            const rarityOrder = { common: 0, uncommon: 1, rare: 2, very_rare: 3, legendary: 4 };
+            catalogItems.sort((a, b) => {
+                const diff = rarityOrder[a.rarity] - rarityOrder[b.rarity];
+                if (diff !== 0) return diff;
+                return a.name.localeCompare(b.name);
+            });
+        }
+
+        const hasBag = !!getArtificerBag(this.actor);
+
         return {
             actor: this.actor,
+            hasBag,
+            showCatalog: this.showCatalog,
+            catalogSearchQuery: this.catalogSearchQuery,
+            catalogRarityFilter: this.catalogRarityFilter,
+            catalogItems,
             inventoryItems,
             selectedRecipe,
             mappedIngredients,
@@ -537,7 +704,17 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
             forgeCategories,
 
             isAlchemist,
-            isSmith
+            isSmith,
+            isSettingsTab: this.activeRecipeTab === "settings",
+            craftingAssistants: this.actor.getFlag("artificer-foundry", "craftingAssistants") ?? 0,
+            alchemistSubclass: this.actor.getFlag("artificer-foundry", "alchemistSubclass") ?? this._isAlchemistAuto(),
+            armorerSubclass: this.actor.getFlag("artificer-foundry", "armorerSubclass") ?? this._isArmorerAuto(),
+            artilleristSubclass: this.actor.getFlag("artificer-foundry", "artilleristSubclass") ?? this._isArtilleristAuto(),
+            battleSmithSubclass: this.actor.getFlag("artificer-foundry", "battleSmithSubclass") ?? this._isBattleSmithAuto(),
+            hasHomunculus: this.actor.getFlag("artificer-foundry", "hasHomunculus") ?? false,
+            homunculusMode: this.actor.getFlag("artificer-foundry", "homunculusMode") || "assist",
+            hasHomunculusIndependent: (this.actor.getFlag("artificer-foundry", "hasHomunculus") ?? false) && (this.actor.getFlag("artificer-foundry", "homunculusMode") || "assist") === "independent",
+            assignHomunculus: this.assignHomunculus ?? false
         };
     }
 
@@ -551,6 +728,102 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                 this.render();
             });
         });
+
+        // --- Left Panel Tab Switching ---
+        el.querySelectorAll('.left-tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.showCatalog = btn.dataset.tab === "catalog";
+                this.render();
+            });
+        });
+
+        // --- Create Artificer Bag Action ---
+        const createBagBtn = el.querySelector('.create-bag-btn');
+        if (createBagBtn) {
+            createBagBtn.addEventListener('click', async e => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (!this.actor?.isOwner) {
+                    ui.notifications.warn("You do not own this character.");
+                    return;
+                }
+
+                // Double check if bag already exists
+                let bag = getArtificerBag(this.actor);
+                if (bag) {
+                    ui.notifications.warn("An Artificer's Component Bag already exists.");
+                    return;
+                }
+
+                const type = game.documentTypes.Item.includes("container") ? "container" : "backpack";
+                const [created] = await this.actor.createEmbeddedDocuments("Item", [{
+                    name: "Artificer's Component Bag",
+                    type: type,
+                    img: "icons/containers/bags/pouch-leather-leaf-green.webp",
+                    system: {
+                        description: { value: "A special, enchanted bag used by artificers to store components, ingredients, and materials gathered for crafting." },
+                        weight: { value: 1 }
+                    }
+                }]);
+
+                if (created) {
+                    ui.notifications.info("Created Artificer's Component Bag. Consolidating your items...");
+                    
+                    // Force migration to move all existing components into this bag!
+                    await this._mergeActorDuplicates();
+                    this.render();
+                }
+            });
+        }
+
+        // --- Catalog search & filter dropdown listeners ---
+        const catSearchInput = el.querySelector('.catalog-search-input');
+        if (catSearchInput) {
+            catSearchInput.addEventListener('input', e => {
+                this.catalogSearchQuery = e.target.value;
+                this._restoreCatalogSearchFocus = true;
+                this._catalogSearchCursorPos = e.target.selectionStart;
+                this._debouncedSearch();
+            });
+        }
+
+        const catRaritySelect = el.querySelector('.catalog-rarity-filter');
+        if (catRaritySelect) {
+            catRaritySelect.addEventListener('change', e => {
+                this.catalogRarityFilter = e.target.value;
+                this.render();
+            });
+        }
+
+        el.querySelectorAll('.catalog-add-btn').forEach(btn => {
+            btn.addEventListener('click', async e => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (!this.actor?.isOwner) {
+                    ui.notifications.warn("You do not own this character.");
+                    return;
+                }
+                const name = btn.dataset.name;
+                const type = btn.dataset.type;
+                const tab = this.activeRecipeTab;
+
+                if (tab === "alchemy") {
+                    await addIngredientToActor(this.actor, name, type, 1);
+                } else {
+                    await addForgeMaterialToActor(this.actor, name, type, 1);
+                }
+                ui.notifications.info(`Added 1x ${name} to your inventory.`);
+            });
+        });
+
+        if (this._restoreCatalogSearchFocus) {
+            const search = el.querySelector('.catalog-search-input');
+            if (search) {
+                search.focus();
+                search.selectionStart = search.selectionEnd = this._catalogSearchCursorPos ?? search.value.length;
+            }
+            this._restoreCatalogSearchFocus = false;
+        }
 
         // --- Category Header Collapse Toggles ---
         el.querySelectorAll('.category-header').forEach(header => {
@@ -613,6 +886,49 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
         if (invRecipeCheckbox) {
             invRecipeCheckbox.addEventListener('change', e => {
                 this.inventoryRecipeFilter = e.target.checked;
+                this.render();
+            });
+        }
+
+        // Lab Settings Checkbox events
+        const bindSetting = (className, flagName) => {
+            const checkbox = el.querySelector(className);
+            if (checkbox) {
+                checkbox.addEventListener('change', async e => {
+                    await this.actor.setFlag("artificer-foundry", flagName, e.target.checked);
+                    this.render();
+                });
+            }
+        };
+
+        bindSetting('.setting-alchemist-subclass', 'alchemistSubclass');
+        bindSetting('.setting-armorer-subclass', 'armorerSubclass');
+        bindSetting('.setting-artillerist-subclass', 'artilleristSubclass');
+        bindSetting('.setting-battle-smith-subclass', 'battleSmithSubclass');
+
+        // Lab Settings Dropdown events
+        const assistantsSelect = el.querySelector('.setting-crafting-assistants');
+        if (assistantsSelect) {
+            assistantsSelect.addEventListener('change', async e => {
+                await this.actor.setFlag("artificer-foundry", "craftingAssistants", parseInt(e.target.value) || 0);
+                this.render();
+            });
+        }
+
+        bindSetting('.setting-has-homunculus', 'hasHomunculus');
+
+        const homunculusModeSelect = el.querySelector('.setting-homunculus-mode');
+        if (homunculusModeSelect) {
+            homunculusModeSelect.addEventListener('change', async e => {
+                await this.actor.setFlag("artificer-foundry", "homunculusMode", e.target.value);
+                this.render();
+            });
+        }
+
+        const assignHomunculusCheckbox = el.querySelector('.assign-homunculus-craft');
+        if (assignHomunculusCheckbox) {
+            assignHomunculusCheckbox.addEventListener('change', e => {
+                this.assignHomunculus = e.target.checked;
                 this.render();
             });
         }
@@ -1051,15 +1367,23 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
             }
         }
 
+        // Homunculus assignment checks
+        const hasHomunculus = this.actor.getFlag("artificer-foundry", "hasHomunculus") ?? false;
+        const homunculusMode = this.actor.getFlag("artificer-foundry", "homunculusMode") || "assist";
+        const hasHomunculusIndependent = hasHomunculus && homunculusMode === "independent";
+        const isHomunculus = hasHomunculusIndependent && (this.assignHomunculus ?? false);
+
         // Get crafting times
         let requiredDays, requiredHours;
         if (isPotion) {
             const isHealingPotion = /healing/i.test(recipe.name);
-            const ct = getCraftingTime(recipe.rarity, this._isAlchemist(), isHealingPotion);
+            const speedMult = isHomunculus ? 1.0 : this._getAlchemySpeedMultiplier();
+            const ct = getCraftingTime(recipe.rarity, speedMult, isHealingPotion);
             requiredDays = ct.days; // Brewing multiple potions in same cauldron takes NO extra time!
             requiredHours = requiredDays * 8;
         } else {
-            const ct = getForgeCraftingTime(recipe.rarity, this._isSmith());
+            const speedMult = isHomunculus ? 1.0 : this._getForgeSpeedMultiplier(recipe);
+            const ct = getForgeCraftingTime(recipe.rarity, speedMult);
             requiredDays = ct.days * quantity; // Forging scales with quantity
             requiredHours = requiredDays * 8;
         }
@@ -1079,7 +1403,8 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
             requiredDays,
             requiredHours,
             spentHours: 0,
-            dateStarted: new Date().toLocaleDateString()
+            dateStarted: new Date().toLocaleDateString(),
+            isHomunculus
         };
         projects.push(newProject);
         await this.actor.setFlag("artificer-foundry", "craftingProjects", projects);
@@ -1088,6 +1413,7 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
         
         this.providedIngredients = {};
         this.craftQuantity = 1;
+        this.assignHomunculus = false;
         this._crafting = false;
         this.render();
     }
@@ -1137,7 +1463,8 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                         project.spentHours = Math.round((project.spentHours + hoursToAdd) * 10) / 10;
                         await this.actor.setFlag("artificer-foundry", "craftingProjects", projects);
                         
-                        ui.notifications.info(`Contributed ${amount} ${unit} (${hoursToAdd} hours) to ${project.recipeName}.`);
+                        const workerName = project.isHomunculus ? "Homunculus Servant" : "You";
+                        ui.notifications.info(`${workerName} contributed ${amount} ${unit} (${hoursToAdd} hours) to ${project.recipeName}.`);
                         this.render();
                     }
                 },
@@ -1203,6 +1530,7 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                             case "rare": return 2000;
                             case "very_rare": return 20000;
                             case "legendary": return 100000;
+                            case "artifact": return 500000;
                             default: return 50;
                         }
                     } else {
@@ -1212,6 +1540,7 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                             case "rare": return 2000;
                             case "very_rare": return 20000;
                             case "legendary": return 100000;
+                            case "artifact": return 500000;
                             default: return 100;
                         }
                     }

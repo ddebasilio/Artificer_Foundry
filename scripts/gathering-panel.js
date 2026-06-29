@@ -2,7 +2,7 @@ import {
     loadIngredientData,
     getBiomes, getAbundanceModifiers, getTimeUnits,
     getWeatherModifiers, getSeasonModifiers, getSkillOptions,
-    resolveForagingByDC, addIngredientToActor,
+    resolveForagingByDC, addIngredientToActor, getGatheringDice,
     getBiomeIngredients, getRarityWeights
 } from "./ingredient-data.js";
 import { loadForgeData, getBiomeMaterials, getMaterialRarityWeights, addForgeMaterialToActor, resolveForgeForagingByDC } from "./forge-data.js";
@@ -114,23 +114,8 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
         const hours = this.timeAmount * (timeUnits[this.timeUnit]?.hours ?? 1);
         const minutes = hours * 60;
         const abundance = abundanceMods[this.abundance] ?? { qtyMul: 1.0, name: "Medium" };
-        const baseYieldPerMinute = 0.05;
-        const expectedQty = minutes * baseYieldPerMinute * abundance.qtyMul;
-
-        let expectedQtyLabel = "";
-        if (expectedQty <= 0) {
-            expectedQtyLabel = "0 items";
-        } else if (expectedQty < 1) {
-            expectedQtyLabel = `${(expectedQty * 100).toFixed(0)}% chance of 1 item (+1/2 on success)`;
-        } else {
-            const minQty = Math.floor(expectedQty);
-            const maxQty = Math.ceil(expectedQty);
-            if (minQty === maxQty) {
-                expectedQtyLabel = `${minQty} items (+1/2 on success)`;
-            } else {
-                expectedQtyLabel = `${minQty}–${maxQty} items (+1/2 on success)`;
-            }
-        }
+        const rollData = getGatheringDice(minutes, abundance.qtyMul);
+        const expectedQtyLabel = `${rollData.formula} (Avg ${rollData.average.toFixed(1)} items)`;
 
         // Rarity Distribution calculation for selected Biome
         const isMaterials = this.gatherMode === "materials";
@@ -359,7 +344,6 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
         const updateDC = () => {
             if (this.manualDC === null) {
                 el.querySelector('.dc-display').value = this._computeAutoDC();
-                el.querySelector('.dc-auto-label').textContent = `Auto: ${this._computeAutoDC()}`;
             }
         };
 
@@ -404,15 +388,12 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
         el.querySelector('.dc-display')?.addEventListener('change', e => {
             const val = parseInt(e.target.value);
             this.manualDC = isNaN(val) ? null : val;
-            const autoLabel = el.querySelector('.dc-auto-label');
-            if (autoLabel) autoLabel.textContent = `Auto: ${this._computeAutoDC()}`;
             const resetBtn = el.querySelector('.dc-reset-btn');
             if (resetBtn) resetBtn.style.display = this.manualDC !== null ? '' : 'none';
         });
         el.querySelector('.dc-reset-btn')?.addEventListener('click', () => {
             this.manualDC = null;
             el.querySelector('.dc-display').value = this._computeAutoDC();
-            el.querySelector('.dc-auto-label').textContent = `Auto: ${this._computeAutoDC()}`;
             el.querySelector('.dc-reset-btn').style.display = 'none';
         });
 

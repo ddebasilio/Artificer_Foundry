@@ -134,20 +134,24 @@ export function getSubstitutes(ingredientName, recipeRarity) {
 
 // ─── Crafting time helpers ───────────────────────────────────────────────────
 
-export function getCraftingTime(rarity, isAlchemist = false, isHealingPotion = false) {
+export function getCraftingTime(rarity, speedMult = 1.0, isHealingPotion = false) {
     const times = isHealingPotion ? getCraftingTimesHealingPotions() : getCraftingTimes();
     const base = times[rarity] ?? times.common ?? { days: 1, cost: 25 };
-    const days = isAlchemist ? Math.max(1, Math.ceil(base.days / 2)) : base.days;
+    const days = base.days * speedMult;
     return { days, cost: base.cost };
 }
 
 export function formatCraftingTime(days) {
+    if (days === 0.5) return "4 hours (1/2 day)";
     if (days === 1) return "1 day";
-    if (days < 7) return `${days} days`;
+    if (days < 7) {
+        return Number.isInteger(days) ? `${days} days` : `${days.toFixed(2).replace(/\.?0+$/, "")} days`;
+    }
     const weeks = Math.floor(days / 7);
     const remainder = days % 7;
     if (remainder === 0) return weeks === 1 ? "1 workweek" : `${weeks} workweeks`;
-    return `${weeks}w ${remainder}d`;
+    const remStr = Number.isInteger(remainder) ? `${remainder}d` : `${remainder.toFixed(2).replace(/\.?0+$/, "")}d`;
+    return `${weeks}w ${remStr}`;
 }
 
 // ─── Foraging logic ──────────────────────────────────────────────────────────
@@ -193,18 +197,13 @@ export function resolveForaging(biomeKey, abundanceKey, timeAmount, timeUnit, ro
 
     if (critFail) return { success: false, dc, items: [], critFail: true };
 
-    // Calculate time-scaled quantity (0.05 items per minute base yield)
+    // Calculate time-scaled quantity using progressive dice roll
     const timeUnits = getTimeUnits();
     const hours = timeAmount * (timeUnits[timeUnit]?.hours ?? 1);
     const minutes = hours * 60;
-    const baseYieldPerMinute = 0.05;
-    const expectedQty = minutes * baseYieldPerMinute * abundance.qtyMul;
-
-    let itemCount = Math.floor(expectedQty);
-    const fraction = expectedQty - itemCount;
-    if (fraction > 0 && Math.random() < fraction) {
-        itemCount += 1;
-    }
+    
+    const rollData = getGatheringDice(minutes, abundance.qtyMul);
+    let itemCount = rollFormula(rollData.formula);
 
     if (success) {
         if (itemCount === 0) itemCount = 1; // Guarantee at least 1 item on success
@@ -316,18 +315,13 @@ export function resolveForagingByDC(dc, biomeKey, rollTotal, timeAmount = 1, tim
 
     if (critFail) return { success: false, dc, items: [], critFail: true };
 
-    // Calculate time-scaled quantity
+    // Calculate time-scaled quantity using progressive dice roll
     const timeUnits = getTimeUnits();
     const hours = timeAmount * (timeUnits[timeUnit]?.hours ?? 1);
     const minutes = hours * 60;
-    const baseYieldPerMinute = 0.05;
-    const expectedQty = minutes * baseYieldPerMinute * abundance.qtyMul;
-
-    let itemCount = Math.floor(expectedQty);
-    const fraction = expectedQty - itemCount;
-    if (fraction > 0 && Math.random() < fraction) {
-        itemCount += 1;
-    }
+    
+    const rollData = getGatheringDice(minutes, abundance.qtyMul);
+    let itemCount = rollFormula(rollData.formula);
 
     if (success) {
         if (itemCount === 0) itemCount = 1; // Guarantee at least 1 item on success
@@ -401,6 +395,17 @@ export function resolveForagingByDC(dc, biomeKey, rollTotal, timeAmount = 1, tim
 }
 
 /**
+ * Get the Artificer's Component Bag on the actor if it exists.
+ */
+export function getArtificerBag(actor) {
+    if (!actor) return null;
+    return actor.items.find(i => 
+        i.name === "Artificer's Component Bag" && 
+        ["container", "backpack"].includes(i.type)
+    ) || null;
+}
+
+/**
  * Add an ingredient item to an actor's inventory.
  */
 export async function addIngredientToActor(actor, name, type, qty = 1) {
@@ -412,7 +417,8 @@ export async function addIngredientToActor(actor, name, type, qty = 1) {
     } else {
         const costs = getIngredientCosts();
         const goldVal = costs[name] ?? 0;
-        await actor.createEmbeddedDocuments("Item", [{
+        const bag = getArtificerBag(actor);
+        const itemData = {
             name,
             type: "loot",
             img: icon,
@@ -421,6 +427,65 @@ export async function addIngredientToActor(actor, name, type, qty = 1) {
                 weight: { value: 0.1 },
                 price: { value: goldVal, denomination: "gp" }
             }
-        }]);
+        };
+        if (bag) {
+            itemData.system.container = bag.id;
+        }
+        await actor.createEmbeddedDocuments("Item", [itemData]);
     }
+}
+
+/**
+ * Calculate the progressive dice pool for gathering based on minutes spent and abundance.
+ */
+export function getGatheringDice(minutes, qtyMul) {
+    const totalMinutes = minutes * qtyMul;
+    if (totalMinutes <= 1) {
+        return { formula: "1d2 - 1", average: 0.5 };
+    } else if (totalMinutes <= 5) {
+        return { formula: "1d3", average: 2.0 };
+    } else if (totalMinutes <= 10) {
+        return { formula: "1d6", average: 3.5 };
+    } else if (totalMinutes <= 15) {
+        return { formula: "1d8", average: 4.5 };
+    } else if (totalMinutes <= 30) {
+        return { formula: "1d10", average: 5.5 };
+    } else if (totalMinutes <= 45) {
+        return { formula: "1d12 + 1d4", average: 9.0 };
+    } else {
+        const hours = totalMinutes / 60;
+        const effectiveHours = Math.pow(hours, 0.6);
+        const numD10 = Math.round(effectiveHours * 2);
+        if (numD10 <= 1) {
+            return { formula: "1d10", average: 5.5 };
+        }
+        return { formula: `${numD10}d10`, average: numD10 * 5.5 };
+    }
+}
+
+/**
+ * Roll a synchronous dice formula.
+ */
+export function rollFormula(formula) {
+    if (formula === "1d2 - 1") {
+        return Math.floor(Math.random() * 2);
+    }
+    const match = formula.replace(/\s+/g, "").match(/^(\d+)d(\d+)(?:\+(\d+)d(\d+))?$/);
+    if (!match) return 1;
+    
+    const count1 = parseInt(match[1]);
+    const faces1 = parseInt(match[2]);
+    let total = 0;
+    for (let i = 0; i < count1; i++) {
+        total += Math.floor(Math.random() * faces1) + 1;
+    }
+    
+    if (match[3] && match[4]) {
+        const count2 = parseInt(match[3]);
+        const faces2 = parseInt(match[4]);
+        for (let i = 0; i < count2; i++) {
+            total += Math.floor(Math.random() * faces2) + 1;
+        }
+    }
+    return total;
 }

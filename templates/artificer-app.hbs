@@ -5,29 +5,84 @@
         <div class="panel-header-banner">
             <span class="banner-text">EXOTIC INGREDIENTS</span>
         </div>
-        <div class="panel-subheader">
-            <span class="inventory-hover-detail">SELECT AN INGREDIENT</span>
-            <label class="inventory-filter-checkbox {{#unless selectedRecipe}}disabled{{/unless}}" title="Show only ingredients needed for this recipe">
-                <input type="checkbox" class="inventory-recipe-filter" {{#if inventoryRecipeFilter}}checked{{/if}} {{#unless selectedRecipe}}disabled{{/unless}}>
-                <span>Recipe Fit</span>
-            </label>
+
+        {{#unless hasBag}}
+            <div class="create-bag-banner">
+                <span class="create-bag-message">Inventory getting cluttered?</span>
+                <button type="button" class="create-bag-btn" title="Create an Artificer Component Bag and consolidate all materials into it.">
+                    <i class="fas fa-suitcase"></i> Create Component Bag
+                </button>
+            </div>
+        {{/unless}}
+        
+        <div class="left-panel-tabs">
+            <button class="left-tab-btn {{#unless showCatalog}}active{{/unless}}" data-tab="inventory">
+                INVENTORY
+            </button>
+            <button class="left-tab-btn {{#if showCatalog}}active{{/if}}" data-tab="catalog">
+                CATALOG
+            </button>
         </div>
 
-        <div class="inventory-grid-container">
-            <div class="inventory-grid">
-                {{#each inventoryItems}}
-                    <div class="inventory-slot rarity-{{this.rarity}}" data-item-id="{{this.id}}" data-name="{{this.name}}" data-img="{{this.img}}" data-uuid="{{this.uuid}}" draggable="true" title="{{this.name}} (×{{this.quantity}})">
-                        <img class="slot-image" src="{{this.img}}" alt="">
-                        <span class="slot-qty">{{this.quantity}}</span>
-                    </div>
-                {{else}}
-                    <div class="no-ingredients">
-                        <i class="fas fa-box-open fa-2x"></i>
-                        <p>No materials in inventory.</p>
-                    </div>
-                {{/each}}
+        {{#unless showCatalog}}
+            <div class="panel-subheader">
+                <span class="inventory-hover-detail">SELECT AN INGREDIENT</span>
+                <label class="inventory-filter-checkbox {{#unless selectedRecipe}}disabled{{/unless}}" title="Show only ingredients needed for this recipe">
+                    <input type="checkbox" class="inventory-recipe-filter" {{#if inventoryRecipeFilter}}checked{{/if}} {{#unless selectedRecipe}}disabled{{/unless}}>
+                    <span>Recipe Fit</span>
+                </label>
             </div>
-        </div>
+
+            <div class="inventory-grid-container">
+                <div class="inventory-grid">
+                    {{#each inventoryItems}}
+                        <div class="inventory-slot rarity-{{this.rarity}}" data-item-id="{{this.id}}" data-name="{{this.name}}" data-img="{{this.img}}" data-uuid="{{this.uuid}}" draggable="true" title="{{this.name}} (×{{this.quantity}})">
+                            <img class="slot-image" src="{{this.img}}" alt="">
+                            <span class="slot-qty">{{this.quantity}}</span>
+                        </div>
+                    {{else}}
+                        <div class="no-ingredients">
+                            <i class="fas fa-box-open fa-2x"></i>
+                            <p>No materials in inventory.</p>
+                        </div>
+                    {{/each}}
+                </div>
+            </div>
+        {{else}}
+            <div class="catalog-filters">
+                <input class="catalog-search-input" type="text" placeholder="Search catalog..." value="{{catalogSearchQuery}}">
+                <select class="catalog-rarity-filter">
+                    <option value="all" {{#if (eq catalogRarityFilter "all")}}selected{{/if}}>All Rarities</option>
+                    <option value="common" {{#if (eq catalogRarityFilter "common")}}selected{{/if}}>Common</option>
+                    <option value="uncommon" {{#if (eq catalogRarityFilter "uncommon")}}selected{{/if}}>Uncommon</option>
+                    <option value="rare" {{#if (eq catalogRarityFilter "rare")}}selected{{/if}}>Rare</option>
+                    <option value="very_rare" {{#if (eq catalogRarityFilter "very_rare")}}selected{{/if}}>Very Rare</option>
+                    <option value="legendary" {{#if (eq catalogRarityFilter "legendary")}}selected{{/if}}>Legendary</option>
+                    <option value="artifact" {{#if (eq catalogRarityFilter "artifact")}}selected{{/if}}>Artifact</option>
+                </select>
+            </div>
+
+            <div class="catalog-list-container">
+                <div class="catalog-list">
+                    {{#each catalogItems}}
+                        <div class="catalog-item rarity-{{this.rarity}}" data-name="{{this.name}}" data-type="{{this.type}}" title="{{this.name}}">
+                            <img class="catalog-item-img" src="{{this.img}}" alt="">
+                            <div class="catalog-item-info">
+                                <span class="catalog-item-name">{{this.name}}</span>
+                                <span class="catalog-item-price">{{this.price}} gp</span>
+                            </div>
+                            <div class="catalog-actions">
+                                <button type="button" class="catalog-add-btn" data-name="{{this.name}}" data-type="{{this.type}}" title="Add to Inventory">
+                                    <i class="fas fa-plus"></i> Add
+                                </button>
+                            </div>
+                        </div>
+                    {{else}}
+                        <p class="empty-list">No catalog items found.</p>
+                    {{/each}}
+                </div>
+            </div>
+        {{/unless}}
     </div>
 
     {{!-- CENTER PANEL — Cauldron / Forge Workstation --}}
@@ -113,6 +168,12 @@
                             <button type="button" class="qty-btn qty-plus" title="Increase Quantity"><i class="fas fa-plus"></i></button>
                         </div>
                     </div>
+                    {{#if hasHomunculusIndependent}}
+                    <label class="homunculus-assign-checkbox" title="Assign this crafting project to your Homunculus Servant">
+                        <input type="checkbox" class="assign-homunculus-craft" {{#if assignHomunculus}}checked{{/if}}>
+                        <span><i class="fas fa-robot"></i> Homunculus</span>
+                    </label>
+                    {{/if}}
                     <button class="craft-btn unified-craft-btn {{#unless canCraft}}disabled{{/unless}}">
                         CRAFT
                     </button>
@@ -138,6 +199,9 @@
                                 <span class="project-name">
                                     <i class="fas {{#if this.isPotion}}fa-flask{{else}}fa-hammer{{/if}} project-type-icon"></i>
                                     {{this.recipeName}}
+                                    {{#if this.isHomunculus}}
+                                        <span class="project-batch-label homunculus-badge" title="Crafted independently by your Homunculus Servant"><i class="fas fa-robot"></i> Homunculus</span>
+                                    {{/if}}
                                     {{#if (gt this.output.quantity 1)}}
                                         <span class="project-batch-label" title="Multiple items crafted in this batch">Batch of {{this.output.quantity}}</span>
                                     {{/if}}
@@ -182,8 +246,12 @@
             <button class="tab-btn recipe-tab-btn {{#if isForgeTab}}active{{/if}}" data-tab="forge">
                 FORGE
             </button>
+            <button class="tab-btn recipe-tab-btn settings-tab-btn {{#if isSettingsTab}}active{{/if}}" data-tab="settings" title="Lab Settings">
+                <i class="fas fa-cog"></i>
+            </button>
         </div>
 
+        {{#unless isSettingsTab}}
         <div class="recipe-filters">
             <div class="search-rarity-row">
                 <input class="recipe-search-input" type="text" placeholder="Search recipe..." value="{{recipeSearchQuery}}">
@@ -194,6 +262,7 @@
                     <option value="rare" {{#if (eq recipeRarityFilter "rare")}}selected{{/if}}>Rare</option>
                     <option value="very_rare" {{#if (eq recipeRarityFilter "very_rare")}}selected{{/if}}>Very Rare</option>
                     <option value="legendary" {{#if (eq recipeRarityFilter "legendary")}}selected{{/if}}>Legendary</option>
+                    <option value="artifact" {{#if (eq recipeRarityFilter "artifact")}}selected{{/if}}>Artifact</option>
                 </select>
             </div>
             <div class="filter-checkboxes-row">
@@ -211,7 +280,100 @@
                 </label>
             </div>
         </div>
+        {{/unless}}
 
+        {{#if isSettingsTab}}
+        <div class="lab-settings-panel">
+            <div class="settings-intro">
+                <span class="settings-intro-title">Official D&D Crafting Rules</span>
+                <p class="settings-intro-text">
+                    Configure benefits based on official rules from the Player's Handbook (PHB) and Dungeon Master's Guide (DMG) for magic item crafting.
+                </p>
+            </div>
+
+            <div class="settings-group">
+                <h3 class="settings-group-title"><i class="fas fa-hat-wizard"></i> Forge of the Artificer (Subclasses)</h3>
+                <div class="settings-list">
+                    <label class="settings-item" title="Potion Crafting: Halves brewing times for all potions (DMG).">
+                        <input type="checkbox" class="setting-alchemist-subclass" {{#if alchemistSubclass}}checked{{/if}}>
+                        <div class="setting-details">
+                            <span class="setting-name">Alchemist (Potion Crafting)</span>
+                            <span class="setting-desc">Halves brewing times for potions.</span>
+                        </div>
+                    </label>
+                    <label class="settings-item" title="Armor Crafting: Halves crafting times for nonmagical and magical armor.">
+                        <input type="checkbox" class="setting-armorer-subclass" {{#if armorerSubclass}}checked{{/if}}>
+                        <div class="setting-details">
+                            <span class="setting-name">Armorer (Armor Crafting)</span>
+                            <span class="setting-desc">Halves crafting times for armor.</span>
+                        </div>
+                    </label>
+                    <label class="settings-item" title="Wand Crafting: Halves crafting times for magic wands.">
+                        <input type="checkbox" class="setting-artillerist-subclass" {{#if artilleristSubclass}}checked{{/if}}>
+                        <div class="setting-details">
+                            <span class="setting-name">Artillerist (Wand Crafting)</span>
+                            <span class="setting-desc">Halves crafting times for magic wands.</span>
+                        </div>
+                    </label>
+                    <label class="settings-item" title="Weapon & Shield Crafting: Halves crafting times for weapons and shields.">
+                        <input type="checkbox" class="setting-battle-smith-subclass" {{#if battleSmithSubclass}}checked{{/if}}>
+                        <div class="setting-details">
+                            <span class="setting-name">Battle Smith (Weapon & Shield Crafting)</span>
+                            <span class="setting-desc">Halves crafting times for weapons and shields.</span>
+                        </div>
+                    </label>
+            </div>
+
+            <div class="settings-group">
+                <h3 class="settings-group-title"><i class="fas fa-robot"></i> Homunculus Servant</h3>
+                <div class="settings-list">
+                    <label class="settings-item" title="Check if this character has an active Homunculus Servant.">
+                        <input type="checkbox" class="setting-has-homunculus" {{#if hasHomunculus}}checked{{/if}}>
+                        <div class="setting-details">
+                            <span class="setting-name">Active Homunculus Servant</span>
+                            <span class="setting-desc">Enables Homunculus crafting and assistance options.</span>
+                        </div>
+                    </label>
+                    {{#if hasHomunculus}}
+                    <div class="settings-dropdown-item">
+                        <div class="setting-details">
+                            <span class="setting-name">Homunculus Assignment</span>
+                            <span class="setting-desc">Configure whether the Homunculus assists you directly or crafts independently.</span>
+                        </div>
+                        <select class="setting-homunculus-mode">
+                            <option value="assist" {{#if (eq homunculusMode "assist")}}selected{{/if}}>Assisting Artificer (+1 Crafting Assistant)</option>
+                            <option value="independent" {{#if (eq homunculusMode "independent")}}selected{{/if}}>Independent Crafter (Workstation Assignment)</option>
+                        </select>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <h3 class="settings-group-title"><i class="fas fa-users"></i> Cooperative Crafting (DMG)</h3>
+                <div class="settings-list">
+                    <div class="settings-dropdown-item">
+                        <div class="setting-details">
+                            <span class="setting-name">Crafting Assistants</span>
+                            <span class="setting-desc">Divide total crafting time by the number of characters working on the item.</span>
+                        </div>
+                        <select class="setting-crafting-assistants">
+                            <option value="0" {{#if (eq craftingAssistants 0)}}selected{{/if}}>Solo Crafting (1.0x time)</option>
+                            <option value="1" {{#if (eq craftingAssistants 1)}}selected{{/if}}>1 Assistant (0.5x time / half-time)</option>
+                            <option value="2" {{#if (eq craftingAssistants 2)}}selected{{/if}}>2 Assistants (0.33x time / third-time)</option>
+                            <option value="3" {{#if (eq craftingAssistants 3)}}selected{{/if}}>3 Assistants (0.25x time / quarter-time)</option>
+                            <option value="4" {{#if (eq craftingAssistants 4)}}selected{{/if}}>4 Assistants (0.20x time / fifth-time)</option>
+                            <option value="5" {{#if (eq craftingAssistants 5)}}selected{{/if}}>5 Assistants (0.17x time)</option>
+                            <option value="6" {{#if (eq craftingAssistants 6)}}selected{{/if}}>6 Assistants (0.14x time)</option>
+                            <option value="7" {{#if (eq craftingAssistants 7)}}selected{{/if}}>7 Assistants (0.13x time)</option>
+                            <option value="8" {{#if (eq craftingAssistants 8)}}selected{{/if}}>8 Assistants (0.11x time)</option>
+                            <option value="9" {{#if (eq craftingAssistants 9)}}selected{{/if}}>9 Assistants (0.10x time / tenth-time)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{else}}
         <div class="recipe-list-container">
             <div class="recipe-list">
                 {{#if isAlchemyTab}}
@@ -285,6 +447,7 @@
                 {{/if}}
             </div>
         </div>
+        {{/if}}
 
         {{!-- Selected Recipe details card --}}
         <div class="recipe-details-card">

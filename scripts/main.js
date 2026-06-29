@@ -1,8 +1,8 @@
 import { ArtificerApp } from "./artificer-app.js";
 import { RecipeManager } from "./recipe-manager.js";
 import { ForgeRecipeManager } from "./forge-recipe-manager.js";
-import { loadIngredientData, getTypeLabels } from "./ingredient-data.js";
-import { loadForgeData, getForgeTypeLabels } from "./forge-data.js";
+import { loadIngredientData, getTypeLabels, getIngredientCosts } from "./ingredient-data.js";
+import { loadForgeData, getForgeTypeLabels, getForgeMaterialCosts } from "./forge-data.js";
 import { loadPotionData } from "./potion-data.js";
 import { loadItemData } from "./item-data.js";
 import { GatheringPanel } from "./gathering-panel.js";
@@ -542,6 +542,9 @@ Hooks.on("preCreateItem", (itemDoc, data, options, userId) => {
     // We only stack "loot" (ingredients/materials) and "consumable" (potions) items
     if (!["loot", "consumable"].includes(itemDoc.type)) return true;
 
+    // Don't treat the bag itself as a stackable component
+    if (itemDoc.name === "Artificer's Component Bag") return true;
+
     const existing = actor.items.find(i => i.name === itemDoc.name && i.type === itemDoc.type);
     if (existing) {
         const currentQty = existing.system.quantity ?? 1;
@@ -553,6 +556,23 @@ Hooks.on("preCreateItem", (itemDoc, data, options, userId) => {
         });
         
         return false; // cancels the creation of the duplicate item document
+    }
+
+    // Put new loot items in the Artificer's Component Bag if the bag exists and it's a valid crafting ingredient or material
+    if (itemDoc.type === "loot") {
+        const ingCosts = typeof getIngredientCosts === "function" ? getIngredientCosts() : {};
+        const forgeCosts = typeof getForgeMaterialCosts === "function" ? getForgeMaterialCosts() : {};
+        const isComponent = ingCosts[itemDoc.name] !== undefined || forgeCosts[itemDoc.name] !== undefined;
+
+        if (isComponent) {
+            const bag = actor.items.find(i => 
+                i.name === "Artificer's Component Bag" && 
+                ["container", "backpack"].includes(i.type)
+            );
+            if (bag) {
+                itemDoc.updateSource({ "system.container": bag.id });
+            }
+        }
     }
     return true;
 });
