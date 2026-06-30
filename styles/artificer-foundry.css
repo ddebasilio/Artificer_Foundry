@@ -164,29 +164,45 @@
 .artificer-foundry .recipe-actions {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 8px;
     flex-shrink: 0;
 }
 
-.artificer-foundry .known-badge {
-    color: #5cb85c;
-    font-size: 0.9em;
+.artificer-foundry .recipe-actions i {
+    font-size: 1.1em;
+    transition: transform 0.2s ease, color 0.2s ease;
 }
 
-.artificer-foundry .learn-recipe-btn,
-.artificer-foundry .forget-recipe-btn {
-    color: #9a7acc;
+.artificer-foundry .recipe-actions a:hover i {
+    transform: scale(1.22);
+}
+
+.artificer-foundry .known-badge {
+    color: #4caf50;
+}
+
+.artificer-foundry .unknown-lock-icon {
+    color: #ff9800;
+}
+
+.artificer-foundry .learn-recipe-btn {
+    color: #ab47bc;
     cursor: pointer;
-    font-size: 0.9em;
     padding: 2px;
 }
 
 .artificer-foundry .learn-recipe-btn:hover {
-    color: #c8a0ff;
+    color: #e040fb;
+}
+
+.artificer-foundry .forget-recipe-btn {
+    color: #78909c;
+    cursor: pointer;
+    padding: 2px;
 }
 
 .artificer-foundry .forget-recipe-btn:hover {
-    color: #e05050;
+    color: #ef5350;
 }
 
 .artificer-foundry .recipe-item-meta {
@@ -4402,4 +4418,20 @@
         bottom: 1px !important;
         right: 3px !important;
     }
+}
+
+/* Custom styled select dropdowns for game dialog windows */
+.dialog select {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    background: rgba(236, 212, 171, 0.45) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="%232e1503" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>') no-repeat right 8px center !important;
+    color: #2e1503 !important;
+    border: 1px solid #7a6020 !important;
+    border-radius: 3px !important;
+    padding: 4px 24px 4px 8px !important;
+    font-family: 'Signika', 'Palatino Linotype', serif !important;
+    cursor: pointer;
+    line-height: 1.5 !important;
+    height: 28px !important;
 }

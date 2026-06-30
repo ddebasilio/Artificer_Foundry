@@ -454,7 +454,6 @@
                                     <div class="recipe-item rarity-{{this.rarity}} {{#unless this.isLearned}}unknown{{/unless}} {{#if (eq ../../selectedRecipe.id this.id)}}selected{{/if}}" data-recipe-id="{{this.id}}">
                                         <div class="recipe-item-header">
                                             <span class="recipe-name">
-                                                {{#unless this.isLearned}}<i class="fas fa-lock" title="Unknown"></i> {{/unless}}
                                                 {{this.name}}
                                             </span>
                                             <div class="recipe-actions">
@@ -462,6 +461,7 @@
                                                     <i class="fas fa-check-circle known-badge" title="Known"></i>
                                                     <a class="forget-recipe-btn" data-recipe-id="{{this.id}}" title="Forget"><i class="fas fa-trash-alt"></i></a>
                                                 {{else}}
+                                                    <i class="fas fa-lock unknown-lock-icon" title="Unknown"></i>
                                                     <a class="learn-recipe-btn" data-recipe-id="{{this.id}}" title="Teach"><i class="fas fa-graduation-cap"></i></a>
                                                 {{/if}}
                                             </div>
@@ -489,7 +489,6 @@
                                     <div class="recipe-item rarity-{{this.rarity}} {{#unless this.isLearned}}unknown{{/unless}} {{#if (eq ../../selectedRecipe.id this.id)}}selected{{/if}}" data-recipe-id="{{this.id}}">
                                         <div class="recipe-item-header">
                                             <span class="recipe-name">
-                                                {{#unless this.isLearned}}<i class="fas fa-lock" title="Unknown"></i> {{/unless}}
                                                 {{this.name}}
                                             </span>
                                             <div class="recipe-actions">
@@ -497,6 +496,7 @@
                                                     <i class="fas fa-check-circle known-badge" title="Known"></i>
                                                     <a class="forget-recipe-btn" data-recipe-id="{{this.id}}" title="Forget"><i class="fas fa-trash-alt"></i></a>
                                                 {{else}}
+                                                    <i class="fas fa-lock unknown-lock-icon" title="Unknown"></i>
                                                     <a class="learn-recipe-btn" data-recipe-id="{{this.id}}" title="Teach"><i class="fas fa-graduation-cap"></i></a>
                                                 {{/if}}
                                             </div>

@@ -725,19 +725,23 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                     };
                 });
 
-                // Sort actor inventory so matching ingredients are sorted to the top
-                const recipeIngs = new Set();
-                for (const ing of selectedRecipe.ingredients) {
-                    recipeIngs.add(ing.name.toLowerCase());
-                    const subs = isPotion ? getSubstitutes(ing.name, selectedRecipe.rarity) : getForgeSubstitutes(ing.name, selectedRecipe.rarity);
-                    for (const s of subs) recipeIngs.add(s.toLowerCase());
+                if (this.inventoryRecipeFilter) {
+                    // Sort actor inventory so matching ingredients are sorted to the top
+                    const recipeIngs = new Set();
+                    for (const ing of selectedRecipe.ingredients) {
+                        recipeIngs.add(ing.name.toLowerCase());
+                        const subs = isPotion ? getSubstitutes(ing.name, selectedRecipe.rarity) : getForgeSubstitutes(ing.name, selectedRecipe.rarity);
+                        for (const s of subs) recipeIngs.add(s.toLowerCase());
+                    }
+                    inventoryItems.sort((a, b) => {
+                        const aMatches = recipeIngs.has(a.name.toLowerCase()) ? 1 : 0;
+                        const bMatches = recipeIngs.has(b.name.toLowerCase()) ? 1 : 0;
+                        if (aMatches !== bMatches) return bMatches - aMatches;
+                        return a.name.localeCompare(b.name);
+                    });
+                } else {
+                    inventoryItems.sort((a, b) => a.name.localeCompare(b.name));
                 }
-                inventoryItems.sort((a, b) => {
-                    const aMatches = recipeIngs.has(a.name.toLowerCase()) ? 1 : 0;
-                    const bMatches = recipeIngs.has(b.name.toLowerCase()) ? 1 : 0;
-                    if (aMatches !== bMatches) return bMatches - aMatches;
-                    return a.name.localeCompare(b.name);
-                });
             }
         } else {
             inventoryItems.sort((a, b) => a.name.localeCompare(b.name));
@@ -1419,13 +1423,23 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
         if (!this.actor?.isOwner) { ui.notifications.warn("You do not own this character."); return; }
         const recipeId = event.currentTarget.dataset.recipeId;
         const type = this.activeRecipeTab;
-        if (type === "alchemy") {
-            await window.ArtificerFoundry.recipeManager.forgetRecipe(this.actor, recipeId);
-        } else {
-            await window.ArtificerFoundry.forgeRecipeManager.forgetRecipe(this.actor, recipeId);
-        }
-        ui.notifications.info(`${this.actor.name} has forgotten a recipe.`);
-        this.render();
+        const recipeName = event.currentTarget.closest('.recipe-item-header')?.querySelector('.recipe-name')?.textContent?.trim() || "this recipe";
+
+        Dialog.confirm({
+            title: `Forget Recipe: ${recipeName}`,
+            content: `<p style="color: #2e1503; font-family: 'Signika', 'Palatino Linotype', serif;">Are you sure you want to forget <strong>${recipeName}</strong>?</p>`,
+            yes: async () => {
+                if (type === "alchemy") {
+                    await window.ArtificerFoundry.recipeManager.forgetRecipe(this.actor, recipeId);
+                } else {
+                    await window.ArtificerFoundry.forgeRecipeManager.forgetRecipe(this.actor, recipeId);
+                }
+                ui.notifications.info(`${this.actor.name} has forgotten the recipe for ${recipeName}.`);
+                this.render();
+            },
+            no: () => {},
+            defaultYes: false
+        });
     }
 
     async _onDropOnWorkstation(event) {
@@ -1755,14 +1769,14 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                     </div>
                     <div class="form-group">
                         <label>Unit:</label>
-                        <select name="unit" style="background: #0a0605; color: #ecd4ab; border: 1px solid #3c2418;">
+                        <select name="unit">
                             <option value="hours">Hours</option>
                             <option value="days">Days (1 Day = 8 Hours)</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Crafting Assistants:</label>
-                        <select name="assistants" style="background: #0a0605; color: #ecd4ab; border: 1px solid #3c2418;">
+                        <select name="assistants">
                             <option value="0">Solo Crafting (1.0x progress)</option>
                             <option value="1">1 Assistant (2.0x progress)</option>
                             <option value="2">2 Assistants (3.0x progress)</option>
