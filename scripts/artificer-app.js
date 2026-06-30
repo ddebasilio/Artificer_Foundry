@@ -1,11 +1,11 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
-import { 
-    getIngredientIcon, getTypeLabels, getIngredientCosts, getSubstitutes, 
+import {
+    getIngredientIcon, getTypeLabels, getIngredientCosts, getSubstitutes,
     getCraftingTime, formatCraftingTime, getBiomeIngredients, addIngredientToActor,
     getIngredientIcons, getArtificerBag
 } from "./ingredient-data.js";
-import { 
-    getForgeMaterialIcon, getForgeTypeLabels, getForgeMaterialCosts, getForgeSubstitutes, 
+import {
+    getForgeMaterialIcon, getForgeTypeLabels, getForgeMaterialCosts, getForgeSubstitutes,
     getForgeCraftingTime, formatForgeCraftingTime, canForgeSubstitute, addForgeMaterialToActor, getBiomeMaterials,
     getForgeMaterialIcons
 } from "./forge-data.js";
@@ -51,11 +51,65 @@ function getRarityFromTier(tier) {
 }
 
 export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
+    static _recipeImageCache = {};
+    static _compendiumImagesPreloaded = false;
+
+    static async _preloadCompendiumImages() {
+        if (this._compendiumImagesPreloaded) return;
+        this._compendiumImagesPreloaded = true;
+        this._recipeImageCache = {};
+
+        // 1. Preload standard dnd5e items compendium
+        const dnd5eItems = game.packs.get("dnd5e.items");
+        if (dnd5eItems) {
+            try {
+                const idx = await dnd5eItems.getIndex({ fields: ["img"] });
+                for (const entry of idx) {
+                    this._recipeImageCache[entry.name.toLowerCase()] = entry.img;
+                }
+            } catch (e) {
+                console.warn("Artificer Foundry | Failed to load dnd5e.items index", e);
+            }
+        }
+
+        // 2. Preload other item compendiums
+        for (const pack of game.packs) {
+            if (pack.documentName !== "Item" || pack.metadata.id === "dnd5e.items") continue;
+            try {
+                const idx = await pack.getIndex({ fields: ["img"] });
+                for (const entry of idx) {
+                    const key = entry.name.toLowerCase();
+                    if (!this._recipeImageCache[key] && entry.img) {
+                        this._recipeImageCache[key] = entry.img;
+                    }
+                }
+            } catch {}
+        }
+    }
+
+    static async _resolvePlutoniumImage(name) {
+        const cacheKey = name.toLowerCase();
+        if (this._recipeImageCache[cacheKey]) return this._recipeImageCache[cacheKey];
+
+        if (PlutoniumHelper.isAvailable()) {
+            try {
+                const allItems = await DataLoader.pCacheAndGetAllSite("item");
+                const ent = allItems.find(it => it.name.toLowerCase() === cacheKey);
+                if (ent) {
+                    const nameUrl = encodeURIComponent(ent.name);
+                    const imgUrl = `https://raw.githubusercontent.com/5etools-mirror-2/5etools-img/main/items/${nameUrl}.png`;
+                    this._recipeImageCache[cacheKey] = imgUrl;
+                    return imgUrl;
+                }
+            } catch {}
+        }
+        return null;
+    }
 
     constructor(actor = null, options = {}) {
         super(options);
         this.actor = actor;
-        
+
         // Active recipe selection states
         this.selectedRecipeId = null;
         this.selectedRecipeType = null; // "alchemy" or "forge"
@@ -76,6 +130,7 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
         this.craftQuantity = 1;
         this.inventoryRecipeFilter = false;
         this.catalogSearchQuery = "";
+        this.inventorySearchQuery = "";
         this.catalogFilterType = "all";
         this.showCatalog = false;
         this.catalogRarityFilter = "all";
@@ -83,8 +138,50 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
         this._duplicatesMerged = false;
     }
 
+    async renderInline(targetElement) {
+        this.targetElement = targetElement;
+
+        // Save scroll positions before rendering to prevent layout jumpiness
+        const scrollPositions = {};
+        const selectors = [
+            ".catalog-list-container",
+            ".inventory-grid-container",
+            ".recipe-list-container",
+            ".artificer-panels-layout"
+        ];
+        for (const selector of selectors) {
+            const el = targetElement.querySelector(selector);
+            if (el) {
+                scrollPositions[selector] = el.scrollTop;
+            }
+        }
+
+        const context = await this._prepareContext();
+        const renderFn = foundry.applications?.handlebars?.renderTemplate || renderTemplate;
+        const html = await renderFn("modules/artificer-foundry/templates/artificer-app.hbs", context);
+        targetElement.innerHTML = html;
+
+        // Restore scroll positions after rendering is complete
+        for (const selector of selectors) {
+            const el = targetElement.querySelector(selector);
+            if (el && scrollPositions[selector] !== undefined) {
+                el.scrollTop = scrollPositions[selector];
+            }
+        }
+
+        this._onRender(context);
+    }
+
+    async render(force = false, options = {}) {
+        if (this.targetElement && this.targetElement.isConnected) {
+            await this.renderInline(this.targetElement);
+            return this;
+        }
+        return super.render(force, options);
+    }
+
     static DEFAULT_OPTIONS = {
-        window: { title: "Artificer Lab", icon: "fas fa-cogs", resizable: true },
+        window: { title: "", icon: "fas fa-cogs", resizable: true },
         classes: ["artificer-foundry", "artificer-app"],
         position: { width: 1200, height: 820 },
     };
@@ -95,7 +192,7 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
     async _mergeActorDuplicates() {
         if (!this.actor || !this.actor.isOwner) return;
-        
+
         // Find the Artificer's Component Bag if it exists (no auto-creation)
         const bag = getArtificerBag(this.actor);
         const bagId = bag?.id;
@@ -109,7 +206,7 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
             ...Object.keys(ingCosts).map(n => n.toLowerCase()),
             ...Object.keys(forgeCosts).map(n => n.toLowerCase())
         ]);
-        
+
         for (const item of items) {
             if (!["loot", "consumable"].includes(item.type)) continue;
             // Don't treat the bag itself as a component to duplicate/stack
@@ -131,7 +228,7 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
         for (const [key, list] of Object.entries(duplicates)) {
             const firstItem = list[0];
             const isLoot = firstItem.type === "loot";
-            
+
             // Check if we need to update the price of this stack (if it has no price, set it)
             let updateNeeded = false;
             const updateData = { _id: firstItem.id };
@@ -159,10 +256,10 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                 for (const item of list) {
                     totalQty += item.system.quantity ?? 1;
                 }
-                
+
                 updateData["system.quantity"] = totalQty;
                 updates.push(updateData);
-                
+
                 for (let i = 1; i < list.length; i++) {
                     deletes.push(list[i].id);
                 }
@@ -236,8 +333,8 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
             mult *= 0.5;
         }
 
-        // Cooperative Crafting: divide by (1 + assistants)
-        let assistants = this.actor.getFlag("artificer-foundry", "craftingAssistants") ?? 0;
+        // Cooperative Crafting: homunculus assist mode is baked in
+        let assistants = 0;
         const hasHomunculus = this.actor.getFlag("artificer-foundry", "hasHomunculus") ?? false;
         const homunculusMode = this.actor.getFlag("artificer-foundry", "homunculusMode") || "assist";
         if (hasHomunculus && homunculusMode === "assist") {
@@ -275,8 +372,8 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
             }
         }
 
-        // Cooperative Crafting: divide by (1 + assistants)
-        let assistants = this.actor.getFlag("artificer-foundry", "craftingAssistants") ?? 0;
+        // Cooperative Crafting: homunculus assist mode is baked in
+        let assistants = 0;
         const hasHomunculus = this.actor.getFlag("artificer-foundry", "hasHomunculus") ?? false;
         const homunculusMode = this.actor.getFlag("artificer-foundry", "homunculusMode") || "assist";
         if (hasHomunculus && homunculusMode === "assist") {
@@ -294,6 +391,8 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                 console.error("Artificer Foundry | Error merging duplicate actor items on load:", err);
             });
         }
+
+        await ArtificerApp._preloadCompendiumImages();
 
         const isAlchemist = this._getAlchemySpeedMultiplier() < 1.0;
         const isSmith = this._getForgeSpeedMultiplier({ ingredients: [], category: "weapon" }) < 1.0;
@@ -332,24 +431,55 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                 .map(item => {
                     const tier = getItemTier(item.name);
                     const rarity = getRarityFromTier(tier);
+
+                    // Extract price and weight
+                    let priceVal = 0;
+                    let denom = "gp";
+                    if (item.system?.price) {
+                        if (typeof item.system.price === "object") {
+                            priceVal = item.system.price.value ?? 0;
+                            denom = item.system.price.denomination ?? "gp";
+                        } else if (typeof item.system.price === "number") {
+                            priceVal = item.system.price;
+                        }
+                    }
+                    let weightVal = 0;
+                    let weightUnits = "lbs";
+                    if (item.system?.weight) {
+                        if (typeof item.system.weight === "object") {
+                            weightVal = item.system.weight.value ?? 0;
+                            weightUnits = item.system.weight.units ?? "lbs";
+                        } else if (typeof item.system.weight === "number") {
+                            weightVal = item.system.weight;
+                        }
+                    }
+
                     return {
                         id: item.id,
                         name: item.name,
                         img: item.img,
                         quantity: item.system?.quantity ?? 1,
                         uuid: item.uuid,
-                        rarity
+                        rarity,
+                        price: `${priceVal} ${denom}`,
+                        weight: `${weightVal} ${weightUnits}`
                     };
                 });
 
             if (this.inventoryRecipeFilter && this.selectedRecipeId) {
                 inventoryItems = inventoryItems.filter(item => matchNames.has(item.name.toLowerCase()));
             }
+
+            if (this.inventorySearchQuery) {
+                const query = this.inventorySearchQuery.toLowerCase();
+                inventoryItems = inventoryItems.filter(item => (item.name ?? "").toLowerCase().includes(query));
+            }
         }
 
         // 2. Fetch Selected Recipe details
         let selectedRecipe = null;
         let mappedIngredients = [];
+        let workstationSlots = [];
         const query = this.recipeSearchQuery.toLowerCase();
 
         const checkAlchemyAvailable = (recipe) => {
@@ -395,7 +525,7 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
             const isHealingPotion = /healing/i.test(r.name);
             const speedMult = this._getAlchemySpeedMultiplier();
             const ct = getCraftingTime(r.rarity, speedMult, isHealingPotion);
-            
+
             // Check availability
             let availableTypes = 0;
             for (const ing of r.ingredients) {
@@ -431,7 +561,7 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
         }).map(r => {
             const speedMult = this._getForgeSpeedMultiplier(r);
             const ct = getForgeCraftingTime(r.rarity, speedMult);
-            
+
             let availableTypes = 0;
             for (const ing of r.ingredients) {
                 const direct = actorInventory[ing.name.toLowerCase()] || 0;
@@ -450,12 +580,46 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
             };
         });
 
+        // Resolve images for recipes (lazy-loaded for unlearned/unselected items to boost sheet performance)
+        for (const r of filteredAlchemy) {
+            r.recipeType = "alchemy";
+            const isSelected = this.selectedRecipeId === r.id;
+            const isLearned = r.isLearned || r.learned;
+            if (isLearned || isSelected) {
+                if (!r.output.img || r.output.img === "icons/svg/item-bag.svg" || r.output.img === "icons/svg/mystery-man.svg") {
+                    const cachedImg = ArtificerApp._recipeImageCache[r.name.toLowerCase()] || await ArtificerApp._resolvePlutoniumImage(r.name);
+                    if (cachedImg) r.output.img = cachedImg;
+                    else r.output.img = "icons/consumables/potions/bottle-corked-empty-blue.webp";
+                }
+            } else {
+                if (!r.output.img || r.output.img === "icons/svg/item-bag.svg" || r.output.img === "icons/svg/mystery-man.svg") {
+                    r.output.img = "icons/consumables/potions/bottle-corked-empty-blue.webp";
+                }
+            }
+        }
+        for (const r of filteredForge) {
+            r.recipeType = "forge";
+            const isSelected = this.selectedRecipeId === r.id;
+            const isLearned = r.isLearned || r.learned;
+            if (isLearned || isSelected) {
+                if (!r.output.img || r.output.img === "icons/svg/item-bag.svg" || r.output.img === "icons/svg/mystery-man.svg") {
+                    const cachedImg = ArtificerApp._recipeImageCache[r.name.toLowerCase()] || await ArtificerApp._resolvePlutoniumImage(r.name);
+                    if (cachedImg) r.output.img = cachedImg;
+                    else r.output.img = "icons/weapons/swords/sword-guard-steel.webp";
+                }
+            } else {
+                if (!r.output.img || r.output.img === "icons/svg/item-bag.svg" || r.output.img === "icons/svg/mystery-man.svg") {
+                    r.output.img = "icons/weapons/swords/sword-guard-steel.webp";
+                }
+            }
+        }
+
         // Select the active recipe details
         let maxQuantity = 1;
         if (this.selectedRecipeId) {
             const pool = this.selectedRecipeType === "alchemy" ? allAlchemyRecipes : allForgeRecipes;
             selectedRecipe = pool.find(r => r.id === this.selectedRecipeId);
-            
+
             if (selectedRecipe) {
                 const isPotion = this.selectedRecipeType === "alchemy";
 
@@ -463,8 +627,8 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                 let limits = [];
                 for (const ing of selectedRecipe.ingredients) {
                     const direct = actorInventory[ing.name.toLowerCase()] || 0;
-                    const subs = isPotion 
-                        ? getSubstitutes(ing.name, selectedRecipe.rarity) 
+                    const subs = isPotion
+                        ? getSubstitutes(ing.name, selectedRecipe.rarity)
                         : getForgeSubstitutes(ing.name, selectedRecipe.rarity);
                     let subsQty = 0;
                     for (const s of subs) {
@@ -477,10 +641,10 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                 this.craftQuantity = Math.min(Math.max(1, this.craftQuantity || 1), maxQuantity);
 
                 const isHealing = isPotion && /healing/i.test(selectedRecipe.name);
-                const speedMult = isPotion 
-                    ? this._getAlchemySpeedMultiplier() 
+                const speedMult = isPotion
+                    ? this._getAlchemySpeedMultiplier()
                     : this._getForgeSpeedMultiplier(selectedRecipe);
-                const ct = isPotion 
+                const ct = isPotion
                     ? getCraftingTime(selectedRecipe.rarity, speedMult, isHealing)
                     : getForgeCraftingTime(selectedRecipe.rarity, speedMult);
 
@@ -491,28 +655,44 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                     recipeType: this.selectedRecipeType
                 };
 
-                const totalIngredients = selectedRecipe.ingredients.length;
-                mappedIngredients = selectedRecipe.ingredients.map((ing, idx) => {
-                    const entry = this.providedIngredients[ing.name];
-                    const provided = entry && typeof entry === "object" ? entry.provided : (entry || 0);
-                    const icon = (provided > 0 && entry?.img) 
-                        ? entry.img 
-                        : (isPotion ? getIngredientIcon(ing.name, ing.type) : getForgeMaterialIcon(ing.name, ing.type));
-                    const displayName = (provided > 0 && entry?.name) ? entry.name : ing.name;
+                // Generate workstationSlots (flattened individual items)
+                for (const ing of selectedRecipe.ingredients) {
+                    const tier = getItemTier(ing.name);
+                    const rarity = getRarityFromTier(tier);
 
-                    const typeLabel = isPotion 
-                        ? (getTypeLabels()[ing.type] || ing.type) 
-                        : (getForgeTypeLabels()[ing.type] || ing.type);
-                    const subs = isPotion 
-                        ? getSubstitutes(ing.name, selectedRecipe.rarity) 
+                    for (let i = 0; i < ing.quantity; i++) {
+                        const slotIndex = workstationSlots.length;
+                        const providedData = this.providedIngredients[slotIndex.toString()];
+
+                        let icon = isPotion
+                            ? getIngredientIcon(ing.name, ing.type)
+                            : getForgeMaterialIcon(ing.name, ing.type);
+
+                        if (providedData && providedData.img) {
+                            icon = providedData.img;
+                        }
+
+                        workstationSlots.push({
+                            slotIndex,
+                            recipeIngName: ing.name,
+                            recipeIngType: ing.type,
+                            rarity,
+                            isFilled: providedData !== undefined,
+                            providedName: providedData?.name || "",
+                            icon
+                        });
+                    }
+                }
+
+                // Map ingredients for the aggregated checklist view
+                mappedIngredients = selectedRecipe.ingredients.map((ing) => {
+                    const subs = isPotion
+                        ? getSubstitutes(ing.name, selectedRecipe.rarity)
                         : getForgeSubstitutes(ing.name, selectedRecipe.rarity);
 
-                    // Slots coordinates calculation
-                    const angle = (idx / totalIngredients) * 2 * Math.PI - Math.PI / 2;
-                    const radius = 35; // Radius percentage inside the cauldron/forge circle
-                    const top = 50 + Math.sin(angle) * radius;
-                    const left = 50 + Math.cos(angle) * radius;
-                    const slotStyle = `top: ${top}%; left: ${left}%; transform: translate(-50%, -50%);`;
+                    const typeLabel = isPotion
+                        ? (getTypeLabels()[ing.type] || ing.type)
+                        : (getForgeTypeLabels()[ing.type] || ing.type);
 
                     const direct = actorInventory[ing.name.toLowerCase()] || 0;
                     let subsQty = 0;
@@ -520,18 +700,26 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                         subsQty += actorInventory[s.toLowerCase()] || 0;
                     }
 
+                    // Calculate how many matching items are currently provided in the workstation slots
+                    const provided = workstationSlots.filter(s => {
+                        if (!s.isFilled) return false;
+                        return s.recipeIngName.toLowerCase() === ing.name.toLowerCase();
+                    }).length;
+
                     const tier = getItemTier(ing.name);
                     const rarity = getRarityFromTier(tier);
+
+                    // Display name shows the name of the first item provided for this ingredient, if any
+                    const firstProvidedSlot = workstationSlots.find(s => s.isFilled && s.recipeIngName.toLowerCase() === ing.name.toLowerCase());
+                    const displayName = firstProvidedSlot ? firstProvidedSlot.providedName : ing.name;
 
                     return {
                         ...ing,
                         displayName,
                         provided,
                         fulfilled: provided >= ing.quantity,
-                        icon,
                         typeLabel,
                         substitutes: subs,
-                        slotStyle,
                         inventoryCount: direct + subsQty,
                         rarity
                     };
@@ -561,8 +749,8 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
             for (const ing of selectedRecipe.ingredients) {
                 const requiredTotal = ing.quantity * this.craftQuantity;
                 const direct = actorInventory[ing.name.toLowerCase()] || 0;
-                const subs = isPotion 
-                    ? getSubstitutes(ing.name, selectedRecipe.rarity) 
+                const subs = isPotion
+                    ? getSubstitutes(ing.name, selectedRecipe.rarity)
                     : getForgeSubstitutes(ing.name, selectedRecipe.rarity);
                 let subsQty = 0;
                 for (const s of subs) {
@@ -575,9 +763,9 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
             }
         }
 
-        const canCraft = selectedRecipe?.isLearned && 
-            mappedIngredients.length > 0 && 
-            mappedIngredients.every(i => i.fulfilled) && 
+        const canCraft = selectedRecipe &&
+            workstationSlots.length > 0 &&
+            workstationSlots.every(s => s.isFilled) &&
             hasEnoughForQuantity;
 
         // Group recipes into collapsible category submenus
@@ -605,21 +793,36 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
         const forgeCategories = groupRecipes(filteredForge, this.collapsedForgeCategories);
 
         // Unified Queue projects
-        const projects = (this.actor?.getFlag("artificer-foundry", "craftingProjects") || [])
-            .map(p => {
-                const reqHours = p.requiredHours !== undefined ? p.requiredHours : (p.requiredDays || 1) * 8;
-                const spentHours = p.spentHours !== undefined ? p.spentHours : (p.spentDays || 0) * 8;
-                const progress = Math.min(100, Math.floor((spentHours / reqHours) * 100));
-                const completed = spentHours >= reqHours;
-                return {
-                    ...p,
-                    requiredHours: reqHours,
-                    spentHours: spentHours,
-                    progress,
-                    completed,
-                    isPotion: p.type === "potion"
-                };
+        const mappedProjects = [];
+        for (const p of (this.actor?.getFlag("artificer-foundry", "craftingProjects") || [])) {
+            const reqHours = p.requiredHours !== undefined ? p.requiredHours : (p.requiredDays || 1) * 8;
+            const spentHours = p.spentHours !== undefined ? p.spentHours : (p.spentDays || 0) * 8;
+            const progress = Math.min(100, Math.floor((spentHours / reqHours) * 100));
+            const completed = spentHours >= reqHours;
+            
+            let img = p.output?.img || "icons/svg/item-bag.svg";
+            if (!img || img === "icons/svg/item-bag.svg" || img === "icons/svg/mystery-man.svg") {
+                const cachedImg = ArtificerApp._recipeImageCache[p.recipeName.toLowerCase()] || await ArtificerApp._resolvePlutoniumImage(p.recipeName);
+                if (cachedImg) img = cachedImg;
+                else img = p.type === "potion" ? "icons/consumables/potions/bottle-corked-empty-blue.webp" : "icons/weapons/swords/sword-guard-steel.webp";
+            }
+
+            mappedProjects.push({
+                ...p,
+                requiredHours: reqHours,
+                spentHours: spentHours,
+                progress,
+                completed,
+                isPotion: p.type === "potion",
+                output: {
+                    ...p.output,
+                    img
+                }
             });
+        }
+
+        const playerProjects = mappedProjects.filter(p => !p.isHomunculus);
+        const homunculusProjects = mappedProjects.filter(p => p.isHomunculus);
 
         // Filter catalog items
         let catalogItems = [];
@@ -653,7 +856,7 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                 if (catRarity !== "all" && item.rarity !== catRarity) return false;
                 if (catQuery) {
                     const matchesName = item.name.toLowerCase().includes(catQuery);
-                    const label = this.activeRecipeTab === "alchemy" 
+                    const label = this.activeRecipeTab === "alchemy"
                         ? (getTypeLabels()[item.type] || item.type)
                         : (getForgeTypeLabels()[item.type] || item.type);
                     const matchesType = (label || "").toLowerCase().includes(catQuery);
@@ -678,15 +881,18 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
             hasBag,
             showCatalog: this.showCatalog,
             catalogSearchQuery: this.catalogSearchQuery,
+            inventorySearchQuery: this.inventorySearchQuery,
             catalogRarityFilter: this.catalogRarityFilter,
             catalogItems,
             inventoryItems,
             selectedRecipe,
             mappedIngredients,
-            isManyIngredients: mappedIngredients.length > 4,
+            workstationSlots,
+            isManyIngredients: workstationSlots.length > 4,
             canCraft,
             crafting: this._crafting,
-            projects,
+            playerProjects,
+            homunculusProjects,
             recipeSearchQuery: this.recipeSearchQuery,
             recipeRarityFilter: this.recipeRarityFilter,
             recipeCraftableFilter: this.recipeCraftableFilter,
@@ -719,7 +925,7 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
     }
 
     _onRender(context, options) {
-        const el = this.element;
+        const el = this.targetElement || this.element;
 
         // --- Recipe Type Tab Switching ---
         el.querySelectorAll('.recipe-tab-btn').forEach(btn => {
@@ -768,11 +974,22 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
                 if (created) {
                     ui.notifications.info("Created Artificer's Component Bag. Consolidating your items...");
-                    
+
                     // Force migration to move all existing components into this bag!
                     await this._mergeActorDuplicates();
                     this.render();
                 }
+            });
+        }
+
+        // --- Inventory search listener ---
+        const invSearchInput = el.querySelector('.inventory-search-input');
+        if (invSearchInput) {
+            invSearchInput.addEventListener('input', e => {
+                this.inventorySearchQuery = e.target.value;
+                this._restoreInventorySearchFocus = true;
+                this._inventorySearchCursorPos = e.target.selectionStart;
+                this._debouncedSearch();
             });
         }
 
@@ -825,16 +1042,25 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
             this._restoreCatalogSearchFocus = false;
         }
 
+        if (this._restoreInventorySearchFocus) {
+            const search = el.querySelector('.inventory-search-input');
+            if (search) {
+                search.focus();
+                search.selectionStart = search.selectionEnd = this._inventorySearchCursorPos ?? search.value.length;
+            }
+            this._restoreInventorySearchFocus = false;
+        }
+
         // --- Category Header Collapse Toggles ---
         el.querySelectorAll('.category-header').forEach(header => {
             header.addEventListener('click', () => {
                 const catId = header.dataset.categoryId;
                 const tab = this.activeRecipeTab;
                 const collapsedSet = tab === "alchemy" ? this.collapsedAlchemyCategories : this.collapsedForgeCategories;
-                
+
                 if (collapsedSet.has(catId)) collapsedSet.delete(catId);
                 else collapsedSet.add(catId);
-                
+
                 this.render();
             });
         });
@@ -906,14 +1132,7 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
         bindSetting('.setting-artillerist-subclass', 'artilleristSubclass');
         bindSetting('.setting-battle-smith-subclass', 'battleSmithSubclass');
 
-        // Lab Settings Dropdown events
-        const assistantsSelect = el.querySelector('.setting-crafting-assistants');
-        if (assistantsSelect) {
-            assistantsSelect.addEventListener('change', async e => {
-                await this.actor.setFlag("artificer-foundry", "craftingAssistants", parseInt(e.target.value) || 0);
-                this.render();
-            });
-        }
+
 
         bindSetting('.setting-has-homunculus', 'hasHomunculus');
 
@@ -975,19 +1194,25 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
         el.querySelectorAll('.inventory-slot').forEach(slot => {
             slot.addEventListener('mouseenter', () => {
                 const name = slot.dataset.name;
+                const price = slot.dataset.price;
+                const weight = slot.dataset.weight;
                 const detailEl = el.querySelector('.inventory-hover-detail');
-                if (detailEl) detailEl.textContent = name;
+                if (detailEl) {
+                    detailEl.innerHTML = `<span style="color: #2e1503; font-weight: bold;">${name}</span> <span style="font-size: 0.85em; color: #5c2018; margin-left: 6px; font-weight: normal;"> - ${price} | ${weight}</span>`;
+                }
             });
             slot.addEventListener('mouseleave', () => {
                 const detailEl = el.querySelector('.inventory-hover-detail');
-                if (detailEl) detailEl.textContent = "Select an Ingredient";
+                if (detailEl) {
+                    detailEl.innerHTML = "SELECT AN INGREDIENT";
+                }
             });
         });
 
         // --- Interactive Clicks & Drag Setup ---
         el.querySelectorAll('.recipe-item').forEach(item => {
             item.addEventListener('click', e => this._onSelectRecipe(e));
-            
+
             // Drag recipe to cauldron
             item.setAttribute('draggable', 'true');
             item.addEventListener('dragstart', ev => {
@@ -1008,7 +1233,7 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                 e.preventDefault();
                 this._stageIngredientByName(slot.dataset.name, slot.dataset.img);
             });
-            
+
             // Drag ingredient
             slot.setAttribute('draggable', 'true');
             slot.addEventListener('dragstart', ev => {
@@ -1036,19 +1261,27 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
         dropZones.forEach(zone => {
             zone.addEventListener('dragover', e => {
                 e.preventDefault();
+                e.stopPropagation();
                 el.querySelector('.workstation-scene')?.classList.add('drag-over');
             });
-            zone.addEventListener('dragleave', () => el.querySelector('.workstation-scene')?.classList.remove('drag-over'));
-            zone.addEventListener('drop', e => this._onDropOnWorkstation(e));
+            zone.addEventListener('dragleave', (e) => {
+                e.stopPropagation();
+                el.querySelector('.workstation-scene')?.classList.remove('drag-over');
+            });
+            zone.addEventListener('drop', e => {
+                e.preventDefault();
+                e.stopPropagation();
+                this._onDropOnWorkstation(e);
+            });
         });
 
         // Interactive validation per workstation slot
         el.querySelectorAll('.station-slot').forEach(stationSlot => {
             stationSlot.addEventListener('dragover', e => {
                 if (!this._draggedIngredient) return;
-                
+
                 const isPotion = this.selectedRecipeType === "alchemy";
-                const pool = isPotion 
+                const pool = isPotion
                     ? window.ArtificerFoundry.recipeManager.getRecipesForActor(this.actor)
                     : window.ArtificerFoundry.forgeRecipeManager.getRecipesForActor(this.actor);
                 const recipe = pool.find(r => r.id === this.selectedRecipeId);
@@ -1059,29 +1292,39 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                 if (!ing) return;
 
                 const isExact = this._draggedIngredient.name.toLowerCase() === ing.name.toLowerCase();
-                const isSub = isPotion 
+                const isSub = isPotion
                     ? getSubstitutes(ing.name, recipe.rarity).some(s => s.toLowerCase() === this._draggedIngredient.name.toLowerCase())
                     : getForgeSubstitutes(ing.name, recipe.rarity).some(s => s.toLowerCase() === this._draggedIngredient.name.toLowerCase());
 
                 if (isExact || isSub) {
                     e.preventDefault(); // ALLOW drop
+                    e.stopPropagation();
                     stationSlot.classList.add('valid-drag-over');
                     stationSlot.classList.remove('invalid-drag-over');
                 } else {
-                    // Block drop by not calling e.preventDefault()
+                    e.stopPropagation();
                     stationSlot.classList.add('invalid-drag-over');
                     stationSlot.classList.remove('valid-drag-over');
                 }
             });
-            stationSlot.addEventListener('dragleave', () => {
+            stationSlot.addEventListener('dragleave', (e) => {
+                e.stopPropagation();
                 stationSlot.classList.remove('valid-drag-over', 'invalid-drag-over');
+            });
+            stationSlot.addEventListener('drop', e => {
+                e.preventDefault();
+                e.stopPropagation();
+                this._onDropOnWorkstation(e);
             });
         });
 
         el.querySelectorAll('.remove-ingredient-btn').forEach(btn => {
             btn.addEventListener('click', e => {
                 e.preventDefault(); e.stopPropagation();
-                delete this.providedIngredients[btn.dataset.ingredientName];
+                const idx = btn.dataset.slotIndex;
+                if (idx !== undefined) {
+                    delete this.providedIngredients[idx];
+                }
                 this.render();
             });
         });
@@ -1098,6 +1341,7 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
         el.querySelectorAll('.advance-project-btn').forEach(btn => btn.addEventListener('click', e => this._onContributeTime(e)));
         el.querySelectorAll('.claim-project-btn').forEach(btn => btn.addEventListener('click', e => this._onClaimProject(e)));
         el.querySelectorAll('.cancel-project-btn').forEach(btn => btn.addEventListener('click', e => this._onCancelProject(e)));
+        el.querySelectorAll('.project-details-click').forEach(elem => elem.addEventListener('click', e => this._onShowProjectDescription(e)));
     }
 
     _debouncedSearch = foundry.utils.debounce(() => this.render(), 300);
@@ -1111,6 +1355,49 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
         this.selectedRecipeType = recipeType;
         this.providedIngredients = {};
         this.render();
+    }
+
+    _onShowProjectDescription(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        const recipeId = event.currentTarget.dataset.recipeId;
+        if (!recipeId) return;
+
+        let recipe = window.ArtificerFoundry.recipeManager.recipes.find(r => r.id === recipeId);
+        if (!recipe) {
+            recipe = window.ArtificerFoundry.forgeRecipeManager.recipes.find(r => r.id === recipeId);
+        }
+        if (!recipe) return;
+
+        const ingredientsList = recipe.ingredients.map(ing => `<li>${ing.quantity}x ${ing.name}</li>`).join("");
+
+        new Dialog({
+            title: recipe.name,
+            content: `
+                <div style="padding: 8px; font-family: 'Signika', 'Palatino Linotype', serif; color: #2e1503;">
+                    <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 12px;">
+                        <img src="${recipe.output.img || 'icons/svg/item-bag.svg'}" style="width: 64px; height: 64px; border: 2px solid #3c2418; border-radius: 4px; background: rgba(0,0,0,0.05);" />
+                        <div>
+                            <h2 style="margin: 0; color: #5c2018; border-bottom: none; font-size: 1.5em; font-family: 'Signika', 'Palatino Linotype', serif;">${recipe.name}</h2>
+                            <p style="margin: 4px 0 0; text-transform: capitalize; color: #2e1503; font-size: 0.9em;"><strong>Rarity:</strong> ${recipe.rarity}</p>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <h4 style="margin: 0 0 4px; color: #5c2018; border-bottom: 1px solid rgba(60,36,24,0.3); font-family: 'Signika', 'Palatino Linotype', serif;">Ingredients Required:</h4>
+                        <ul style="margin: 0; padding-left: 20px; font-size: 0.95em; color: #2e1503;">
+                            ${ingredientsList}
+                        </ul>
+                    </div>
+                    <div style="line-height: 1.4; max-height: 200px; overflow-y: auto; background: rgba(0,0,0,0.05); padding: 8px; border: 1px solid rgba(60,36,24,0.2); border-radius: 4px; font-size: 0.95em; color: #2e1503;">
+                        ${recipe.description || "No description available."}
+                    </div>
+                </div>
+            `,
+            buttons: {
+                close: { label: "Close" }
+            },
+            default: "close"
+        }).render(true);
     }
 
     async _onLearnRecipe(event) {
@@ -1144,12 +1431,12 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
     async _onDropOnWorkstation(event) {
         event.preventDefault();
         event.stopPropagation();
-        const el = this.element;
+        const el = this.targetElement || this.element;
         el.querySelector('.workstation-scene')?.classList.remove('drag-over');
 
         try {
             const data = JSON.parse(event.dataTransfer?.getData('text/plain') || "{}");
-            
+
             // Drop recipe
             if (data.type === "af-recipe") {
                 this.selectedRecipeId = data.id;
@@ -1161,19 +1448,20 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
             // Find closest slot target
             const slotEl = event.target.closest('.station-slot');
-            const targetSlotName = slotEl ? slotEl.dataset.ingredientName : null;
+            const targetSlotIndexStr = slotEl ? slotEl.dataset.slotIndex : null;
+            const targetSlotIndex = targetSlotIndexStr !== null ? parseInt(targetSlotIndexStr, 10) : null;
 
             // Drop ingredient
             if (data.type === "Item") {
                 if (data.name && data.img) {
-                    this._stageIngredientByName(data.name, data.img, targetSlotName);
+                    this._stageIngredientByName(data.name, data.img, targetSlotIndex);
                 } else if (data.uuid) {
                     const item = await fromUuid(data.uuid);
                     if (item?.parent?.id !== this.actor?.id) {
                         ui.notifications.warn("You can only use items from your own inventory.");
                         return;
                     }
-                    this._stageIngredientByName(item.name, item.img, targetSlotName);
+                    this._stageIngredientByName(item.name, item.img, targetSlotIndex);
                 }
             }
         } catch (err) {
@@ -1181,68 +1469,86 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
         }
     }
 
-    _stageIngredientByName(name, img, targetSlotName) {
+    _stageIngredientByName(name, img, targetSlotIndex = null) {
         if (!this.selectedRecipeId) { ui.notifications.warn("Select or drag a recipe to the workstation first."); return; }
-        
+
         const isPotion = this.selectedRecipeType === "alchemy";
-        const pool = isPotion 
+        const pool = isPotion
             ? window.ArtificerFoundry.recipeManager.getRecipesForActor(this.actor)
             : window.ArtificerFoundry.forgeRecipeManager.getRecipesForActor(this.actor);
         const recipe = pool.find(r => r.id === this.selectedRecipeId);
         if (!recipe) return;
 
-        const getProvided = (ingName) => {
-            const entry = this.providedIngredients[ingName];
-            return entry && typeof entry === "object" ? entry.provided : (entry || 0);
-        };
+        // Generate the list of individual required slots to match against
+        const workstationSlots = [];
+        for (const ing of recipe.ingredients) {
+            for (let i = 0; i < ing.quantity; i++) {
+                workstationSlots.push({
+                    slotIndex: workstationSlots.length,
+                    recipeIngName: ing.name,
+                    recipeIngType: ing.type,
+                    rarity: getRarityFromTier(getItemTier(ing.name))
+                });
+            }
+        }
 
-        const isSatisfied = (ing) => getProvided(ing.name) >= ing.quantity;
-        const isExact = (ing) => name.toLowerCase() === ing.name.toLowerCase();
-        const isSub = (ing) => isPotion 
-            ? getSubstitutes(ing.name, recipe.rarity).some(s => s.toLowerCase() === name.toLowerCase())
-            : getForgeSubstitutes(ing.name, recipe.rarity).some(s => s.toLowerCase() === name.toLowerCase());
+        const isExact = (slot) => name.toLowerCase() === slot.recipeIngName.toLowerCase();
+        const isSub = (slot) => isPotion
+            ? getSubstitutes(slot.recipeIngName, recipe.rarity).some(s => s.toLowerCase() === name.toLowerCase())
+            : getForgeSubstitutes(slot.recipeIngName, recipe.rarity).some(s => s.toLowerCase() === name.toLowerCase());
 
-        let required = null;
-        if (targetSlotName) {
-            const ing = recipe.ingredients.find(i => i.name.toLowerCase() === targetSlotName.toLowerCase());
-            if (ing && (isExact(ing) || isSub(ing))) {
-                required = ing;
+        let targetSlot = null;
+
+        if (targetSlotIndex !== null) {
+            // Drop onto a specific slot
+            const slot = workstationSlots.find(s => s.slotIndex === targetSlotIndex);
+            if (slot && (isExact(slot) || isSub(slot))) {
+                targetSlot = slot;
             } else {
-                ui.notifications.warn(`"${name}" cannot be used for "${targetSlotName}".`);
+                const requiredTypeLabel = slot ? (isPotion ? (getTypeLabels()[slot.recipeIngType] || slot.recipeIngType) : (getForgeTypeLabels()[slot.recipeIngType] || slot.recipeIngType)) : "";
+                ui.notifications.warn(`"${name}" cannot be used for this slot (requires ${slot?.recipeIngName || requiredTypeLabel}).`);
                 return;
             }
         } else {
-            // General drop fallback, find first matching unsatisfied slot
-            required =
-                recipe.ingredients.find(i => isExact(i) && !isSatisfied(i)) ||
-                recipe.ingredients.find(i => isSub(i) && !isSatisfied(i)) ||
-                recipe.ingredients.find(i => isExact(i)) ||
-                recipe.ingredients.find(i => isSub(i));
+            // General drop/click fallback: find the first empty slot that matches
+            targetSlot = workstationSlots.find(slot => {
+                const isFilled = this.providedIngredients[slot.slotIndex.toString()] !== undefined;
+                if (isFilled) return false;
+                return isExact(slot) || isSub(slot);
+            });
+
+            if (!targetSlot) {
+                ui.notifications.warn(`"${name}" is not needed for any remaining slots of this recipe.`);
+                return;
+            }
         }
 
-        if (!required) {
-            ui.notifications.warn(`"${name}" is not needed for this recipe.`);
-            return;
-        }
-
+        // Verify if total inventory has enough of this item to commit
         const totalInInventory = (this.actor?.items?.contents ?? [])
-            .filter(i => i.type === "loot" && i.name.toLowerCase() === name.toLowerCase())
+            .filter(i => i.name.toLowerCase() === name.toLowerCase())
             .reduce((sum, i) => sum + (i.system?.quantity ?? 1), 0);
 
-        const already = getProvided(required.name);
-        const maxCanCommit = Math.min(required.quantity, totalInInventory);
-        if (already >= maxCanCommit) {
-            ui.notifications.info(`Already have enough staged for "${required.name}".`);
+        let alreadyStagedOfThisName = 0;
+        for (const [idxStr, entry] of Object.entries(this.providedIngredients)) {
+            if (idxStr === targetSlot.slotIndex.toString()) continue;
+            if (entry.name.toLowerCase() === name.toLowerCase()) {
+                alreadyStagedOfThisName += 1;
+            }
+        }
+
+        if (alreadyStagedOfThisName >= totalInInventory) {
+            ui.notifications.info(`You do not have enough "${name}" in your inventory to stage another.`);
             return;
         }
 
-        this.providedIngredients[required.name] = {
-            provided: maxCanCommit,
+        // Stage the item into this slot!
+        this.providedIngredients[targetSlot.slotIndex.toString()] = {
+            provided: 1,
             name: name,
             img: img || ""
         };
-        
-        ui.notifications.info(`Added ${name} to "${required.name}" workstation slot.`);
+
+        ui.notifications.info(`Added ${name} to workstation slot #${targetSlot.slotIndex + 1}.`);
         this.render();
     }
 
@@ -1251,23 +1557,33 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
         if (!this.selectedRecipeId || !this.actor) return;
 
         const isPotion = this.selectedRecipeType === "alchemy";
-        const pool = isPotion 
+        const pool = isPotion
             ? window.ArtificerFoundry.recipeManager.getRecipesForActor(this.actor)
             : window.ArtificerFoundry.forgeRecipeManager.getRecipesForActor(this.actor);
         const recipe = pool.find(r => r.id === this.selectedRecipeId);
         if (!recipe) return;
 
-        const getProvided = (ingName) => {
-            const entry = this.providedIngredients[ingName];
-            return entry && typeof entry === "object" ? entry.provided : (entry || 0);
-        };
+        if (!recipe.isLearned) {
+            ui.notifications.warn(`You do not know the recipe for "${recipe.name}" yet! You must learn the recipe before crafting it.`);
+            return;
+        }
 
-        // 1. Verify staged slots are satisfied (at least 1 base recipe complete)
+        // 1. Generate the list of individual required slots to check status
+        const workstationSlots = [];
         for (const ing of recipe.ingredients) {
-            if (getProvided(ing.name) < ing.quantity) {
-                ui.notifications.error(`First stage enough materials for at least one recipe batch of "${ing.name}".`);
-                return;
+            for (let i = 0; i < ing.quantity; i++) {
+                workstationSlots.push({
+                    slotIndex: workstationSlots.length,
+                    recipeIngName: ing.name,
+                    recipeIngType: ing.type
+                });
             }
+        }
+
+        const allSatisfied = workstationSlots.every(slot => this.providedIngredients[slot.slotIndex.toString()] !== undefined);
+        if (!allSatisfied) {
+            ui.notifications.error("Please fill all ingredient slots in the workstation before crafting.");
+            return;
         }
 
         // 2. Verify total inventory contains enough materials for quantity multiplier
@@ -1282,8 +1598,8 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
         for (const ing of recipe.ingredients) {
             const requiredTotal = ing.quantity * quantity;
             const direct = actorInventory[ing.name.toLowerCase()] || 0;
-            const subs = isPotion 
-                ? getSubstitutes(ing.name, recipe.rarity) 
+            const subs = isPotion
+                ? getSubstitutes(ing.name, recipe.rarity)
                 : getForgeSubstitutes(ing.name, recipe.rarity);
             let subsQty = 0;
             for (const s of subs) {
@@ -1301,17 +1617,66 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
         await new Promise(r => setTimeout(r, 2200));
 
         // Deduct materials from inventory
-        for (const ing of recipe.ingredients) {
-            const entry = this.providedIngredients[ing.name];
-            const stagedName = (entry && typeof entry === "object" && entry.name) ? entry.name : ing.name;
+        const itemsToConsume = {}; // name (lowercase) -> quantity
+        for (const slot of workstationSlots) {
+            const stagedItem = this.providedIngredients[slot.slotIndex.toString()];
+            if (stagedItem) {
+                const nameLower = stagedItem.name.toLowerCase();
+                itemsToConsume[nameLower] = (itemsToConsume[nameLower] || 0) + 1;
+            }
+        }
 
-            let remaining = ing.quantity * quantity;
-            
-            // A. Consume staged items first (which were specifically dragged/selected)
-            const matchingStaged = this.actor.items.filter(i => i.type === "loot" && 
-                i.name.toLowerCase() === stagedName.toLowerCase()
+        if (quantity > 1) {
+            // Create a temporary copy of inventory counts to see what's available
+            const tempInventory = { ...actorInventory };
+            // Deduct the staged items first from our temporary inventory count
+            for (const [nameLower, qty] of Object.entries(itemsToConsume)) {
+                if (tempInventory[nameLower] !== undefined) {
+                    tempInventory[nameLower] = Math.max(0, tempInventory[nameLower] - qty);
+                }
+            }
+
+            for (const ing of recipe.ingredients) {
+                let needed = ing.quantity * (quantity - 1);
+                if (needed <= 0) continue;
+
+                // 1. Try to consume exact ingredient first
+                const exactLower = ing.name.toLowerCase();
+                const availableExact = tempInventory[exactLower] || 0;
+                const takeExact = Math.min(needed, availableExact);
+                if (takeExact > 0) {
+                    itemsToConsume[exactLower] = (itemsToConsume[exactLower] || 0) + takeExact;
+                    tempInventory[exactLower] -= takeExact;
+                    needed -= takeExact;
+                }
+
+                // 2. Try to consume substitutes
+                if (needed > 0) {
+                    const subs = isPotion
+                        ? getSubstitutes(ing.name, recipe.rarity)
+                        : getForgeSubstitutes(ing.name, recipe.rarity);
+                    for (const s of subs) {
+                        if (needed <= 0) break;
+                        const subLower = s.toLowerCase();
+                        const availableSub = tempInventory[subLower] || 0;
+                        const takeSub = Math.min(needed, availableSub);
+                        if (takeSub > 0) {
+                            itemsToConsume[subLower] = (itemsToConsume[subLower] || 0) + takeSub;
+                            tempInventory[subLower] -= takeSub;
+                            needed -= takeSub;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Deduct materials from inventory using itemsToConsume map
+        for (const [nameLower, totalToDeduct] of Object.entries(itemsToConsume)) {
+            let remaining = totalToDeduct;
+            const matchingItems = this.actor.items.filter(i => i.type === "loot" &&
+                i.name.toLowerCase() === nameLower
             );
-            for (const actorItem of matchingStaged) {
+            for (const actorItem of matchingItems) {
                 if (remaining <= 0) break;
                 const qty = actorItem.system?.quantity ?? 1;
                 if (qty <= remaining) {
@@ -1320,49 +1685,6 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                 } else {
                     await actorItem.update({ "system.quantity": qty - remaining });
                     remaining = 0;
-                }
-            }
-
-            // B. Consume original items next
-            if (remaining > 0) {
-                const matchingOriginal = this.actor.items.filter(i => i.type === "loot" && 
-                    i.name.toLowerCase() === ing.name.toLowerCase()
-                );
-                for (const actorItem of matchingOriginal) {
-                    if (remaining <= 0) break;
-                    const qty = actorItem.system?.quantity ?? 1;
-                    if (qty <= remaining) {
-                        remaining -= qty;
-                        await actorItem.delete();
-                    } else {
-                        await actorItem.update({ "system.quantity": qty - remaining });
-                        remaining = 0;
-                    }
-                }
-            }
-
-            // C. Consume eligible substitutes
-            if (remaining > 0) {
-                const subs = isPotion 
-                    ? getSubstitutes(ing.name, recipe.rarity) 
-                    : getForgeSubstitutes(ing.name, recipe.rarity);
-                
-                for (const subName of subs) {
-                    if (remaining <= 0) break;
-                    const matchingSub = this.actor.items.filter(i => i.type === "loot" && 
-                        i.name.toLowerCase() === subName.toLowerCase()
-                    );
-                    for (const actorItem of matchingSub) {
-                        if (remaining <= 0) break;
-                        const qty = actorItem.system?.quantity ?? 1;
-                        if (qty <= remaining) {
-                            remaining -= qty;
-                            await actorItem.delete();
-                        } else {
-                            await actorItem.update({ "system.quantity": qty - remaining });
-                            remaining = 0;
-                        }
-                    }
                 }
             }
         }
@@ -1410,7 +1732,7 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
         await this.actor.setFlag("artificer-foundry", "craftingProjects", projects);
 
         ui.notifications.info(`Started crafting ${quantity}x ${recipe.name}! Project added to queue.`);
-        
+
         this.providedIngredients = {};
         this.craftQuantity = 1;
         this.assignHomunculus = false;
@@ -1433,9 +1755,24 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                     </div>
                     <div class="form-group">
                         <label>Unit:</label>
-                        <select name="unit">
+                        <select name="unit" style="background: #0a0605; color: #ecd4ab; border: 1px solid #3c2418;">
                             <option value="hours">Hours</option>
                             <option value="days">Days (1 Day = 8 Hours)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Crafting Assistants:</label>
+                        <select name="assistants" style="background: #0a0605; color: #ecd4ab; border: 1px solid #3c2418;">
+                            <option value="0">Solo Crafting (1.0x progress)</option>
+                            <option value="1">1 Assistant (2.0x progress)</option>
+                            <option value="2">2 Assistants (3.0x progress)</option>
+                            <option value="3">3 Assistants (4.0x progress)</option>
+                            <option value="4">4 Assistants (5.0x progress)</option>
+                            <option value="5">5 Assistants (6.0x progress)</option>
+                            <option value="6">6 Assistants (7.0x progress)</option>
+                            <option value="7">7 Assistants (8.0x progress)</option>
+                            <option value="8">8 Assistants (9.0x progress)</option>
+                            <option value="9">9 Assistants (10.0x progress)</option>
                         </select>
                     </div>
                 </form>
@@ -1447,24 +1784,37 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                     callback: async (html) => {
                         const amount = parseFloat(html.find('[name="amount"]').val() || 0);
                         const unit = html.find('[name="unit"]').val();
+                        const assistants = parseInt(html.find('[name="assistants"]').val() || 0);
                         if (amount <= 0 || isNaN(amount)) return;
-                        
-                        const hoursToAdd = unit === "days" ? amount * 8 : amount;
+
                         const projects = this.actor.getFlag("artificer-foundry", "craftingProjects") || [];
                         const project = projects.find(p => p.id === projectId);
                         if (!project) return;
-                        
+
+                        const hasHomunculus = this.actor.getFlag("artificer-foundry", "hasHomunculus") ?? false;
+                        const homunculusMode = this.actor.getFlag("artificer-foundry", "homunculusMode") || "assist";
+                        const isAssisting = hasHomunculus && homunculusMode === "assist" && !project.isHomunculus;
+                        const homunculusBonus = isAssisting ? 1 : 0;
+
+                        const baseHours = unit === "days" ? amount * 8 : amount;
+                        const hoursToAdd = baseHours * (1 + assistants + homunculusBonus);
+
                         // Migrate legacy project fields
                         if (project.requiredHours === undefined) {
                             project.requiredHours = (project.requiredDays || 1) * 8;
                             project.spentHours = (project.spentDays || 0) * 8;
                         }
-                        
+
                         project.spentHours = Math.round((project.spentHours + hoursToAdd) * 10) / 10;
                         await this.actor.setFlag("artificer-foundry", "craftingProjects", projects);
-                        
+
                         const workerName = project.isHomunculus ? "Homunculus Servant" : "You";
-                        ui.notifications.info(`${workerName} contributed ${amount} ${unit} (${hoursToAdd} hours) to ${project.recipeName}.`);
+                        const helperTextParts = [];
+                        if (assistants > 0) helperTextParts.push(`${assistants} assistant${assistants > 1 ? 's' : ''}`);
+                        if (isAssisting) helperTextParts.push("Homunculus Servant");
+                        const helperText = helperTextParts.length > 0 ? ` (with ${helperTextParts.join(" & ")})` : '';
+
+                        ui.notifications.info(`${workerName} contributed ${amount} ${unit}${helperText}, adding ${hoursToAdd} hours of progress to ${project.recipeName}.`);
                         this.render();
                     }
                 },
@@ -1485,8 +1835,8 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
         const project = projects[projectIdx];
         const isPotion = project.type === "potion";
-        
-        const pool = isPotion 
+
+        const pool = isPotion
             ? window.ArtificerFoundry.recipeManager.getRecipesForActor(this.actor)
             : window.ArtificerFoundry.forgeRecipeManager.getRecipesForActor(this.actor);
         const recipe = pool.find(r => r.id === project.recipeId);
@@ -1562,6 +1912,19 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
             }
         }
 
+        // Ensure the item has a valid, nice image if it was created/imported with a generic one
+        try {
+            const genericImages = ["icons/svg/item-bag.svg", "icons/svg/mystery-man.svg", "icons/svg/combat.svg", "icons/svg/shield.svg", "icons/svg/item.svg", "icons/svg/bag.svg"];
+            const createdItems = this.actor.items.filter(i => i.name === output.name);
+            for (const item of createdItems) {
+                if (genericImages.includes(item.img) || !item.img) {
+                    await item.update({ img: output.img });
+                }
+            }
+        } catch (e) {
+            console.error("Artificer Foundry | Error updating claimed item image:", e);
+        }
+
         // Clean from actor flags
         projects.splice(projectIdx, 1);
         await this.actor.setFlag("artificer-foundry", "craftingProjects", projects);
@@ -1591,11 +1954,11 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                         const projects = this.actor.getFlag("artificer-foundry", "craftingProjects") || [];
                         const projectIdx = projects.findIndex(p => p.id === projectId);
                         if (projectIdx === -1) return;
-                        
+
                         const project = projects[projectIdx];
                         projects.splice(projectIdx, 1);
                         await this.actor.setFlag("artificer-foundry", "craftingProjects", projects);
-                        
+
                         ui.notifications.warn(`Cancelled crafting of ${project.recipeName}. Materials were lost.`);
                         this.render();
                     }
@@ -1614,7 +1977,7 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                 const idx = await pack.getIndex();
                 const entry = idx.find(e => e.name.toLowerCase() === target);
                 if (entry) return await pack.getDocument(entry._id);
-            } catch {}
+            } catch { }
         }
         return null;
     }

@@ -57,7 +57,7 @@
     "ingredients": [
       {
         "name": "Bloodgrass",
-        "quantity": 3,
+        "quantity": 2,
         "type": "common_herb"
       },
       {
@@ -202,7 +202,7 @@
     "ingredients": [
       {
         "name": "Toadstool",
-        "quantity": 3,
+        "quantity": 2,
         "type": "common_herb"
       },
       {
@@ -392,17 +392,17 @@
     "ingredients": [
       {
         "name": "Bloodgrass",
-        "quantity": 6,
+        "quantity": 1,
         "type": "common_herb"
       },
       {
         "name": "Mandrake Root",
-        "quantity": 2,
+        "quantity": 1,
         "type": "uncommon_herb"
       },
       {
         "name": "Troll Blood",
-        "quantity": 2,
+        "quantity": 1,
         "type": "monster_part"
       },
       {
@@ -427,12 +427,12 @@
     "ingredients": [
       {
         "name": "Quicksilver Herb",
-        "quantity": 2,
+        "quantity": 1,
         "type": "uncommon_herb"
       },
       {
         "name": "Harpy Feather",
-        "quantity": 3,
+        "quantity": 2,
         "type": "rare_monster_part"
       },
       {
@@ -487,12 +487,12 @@
     "ingredients": [
       {
         "name": "Mandrake Root",
-        "quantity": 3,
+        "quantity": 1,
         "type": "uncommon_herb"
       },
       {
         "name": "Bloodgrass",
-        "quantity": 4,
+        "quantity": 1,
         "type": "common_herb"
       },
       {
@@ -552,7 +552,7 @@
       },
       {
         "name": "Dreamfern",
-        "quantity": 3,
+        "quantity": 2,
         "type": "uncommon_herb"
       },
       {
@@ -576,7 +576,7 @@
     "ingredients": [
       {
         "name": "Ethereal Dust",
-        "quantity": 3,
+        "quantity": 2,
         "type": "rare_component"
       },
       {
@@ -611,7 +611,7 @@
       },
       {
         "name": "Dreamfern",
-        "quantity": 2,
+        "quantity": 1,
         "type": "uncommon_herb"
       },
       {
@@ -636,12 +636,12 @@
     "ingredients": [
       {
         "name": "Mandrake Root",
-        "quantity": 4,
+        "quantity": 1,
         "type": "uncommon_herb"
       },
       {
         "name": "Troll Blood",
-        "quantity": 4,
+        "quantity": 1,
         "type": "monster_part"
       },
       {
@@ -701,12 +701,12 @@
     "ingredients": [
       {
         "name": "Will-o-Wisp Essence",
-        "quantity": 2,
+        "quantity": 1,
         "type": "rare_monster_part"
       },
       {
         "name": "Ethereal Dust",
-        "quantity": 3,
+        "quantity": 2,
         "type": "rare_component"
       },
       {
@@ -741,7 +741,7 @@
       },
       {
         "name": "Mandrake Root",
-        "quantity": 6,
+        "quantity": 2,
         "type": "uncommon_herb"
       }
     ],
@@ -766,7 +766,7 @@
       },
       {
         "name": "Aboleth Slime",
-        "quantity": 2,
+        "quantity": 1,
         "type": "rare_monster_part"
       },
       {
@@ -850,12 +850,12 @@
     "ingredients": [
       {
         "name": "Dragon Scale",
-        "quantity": 4,
+        "quantity": 1,
         "type": "legendary_component"
       },
       {
         "name": "Dragon Blood",
-        "quantity": 3,
+        "quantity": 2,
         "type": "legendary_component"
       },
       {
@@ -880,7 +880,7 @@
     "ingredients": [
       {
         "name": "Steel Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
@@ -897,11 +897,6 @@
         "name": "Pure Water",
         "quantity": 1,
         "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -920,7 +915,7 @@
     "ingredients": [
       {
         "name": "Steel Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
@@ -937,11 +932,6 @@
         "name": "Pure Water",
         "quantity": 1,
         "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -960,7 +950,7 @@
     "ingredients": [
       {
         "name": "Steel Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
@@ -977,11 +967,6 @@
         "name": "Pure Water",
         "quantity": 1,
         "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -1000,7 +985,7 @@
     "ingredients": [
       {
         "name": "Steel Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
@@ -1017,11 +1002,6 @@
         "name": "Pure Water",
         "quantity": 1,
         "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -1040,7 +1020,7 @@
     "ingredients": [
       {
         "name": "Steel Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
@@ -1057,11 +1037,6 @@
         "name": "Pure Water",
         "quantity": 1,
         "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -1080,7 +1055,7 @@
     "ingredients": [
       {
         "name": "Steel Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
@@ -1097,11 +1072,6 @@
         "name": "Pure Water",
         "quantity": 1,
         "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -1120,12 +1090,12 @@
     "ingredients": [
       {
         "name": "Mithral Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
         "name": "Arcane Essence",
-        "quantity": 2,
+        "quantity": 1,
         "type": "arcane"
       },
       {
@@ -1137,11 +1107,6 @@
         "name": "Pure Water",
         "quantity": 1,
         "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -1160,12 +1125,12 @@
     "ingredients": [
       {
         "name": "Mithral Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
         "name": "Arcane Essence",
-        "quantity": 2,
+        "quantity": 1,
         "type": "arcane"
       },
       {
@@ -1177,11 +1142,6 @@
         "name": "Pure Water",
         "quantity": 1,
         "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -1200,12 +1160,12 @@
     "ingredients": [
       {
         "name": "Adamantine Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
         "name": "Arcane Crystal",
-        "quantity": 2,
+        "quantity": 1,
         "type": "arcane"
       },
       {
@@ -1217,16 +1177,6 @@
         "name": "Elemental Core",
         "quantity": 1,
         "type": "elemental"
-      },
-      {
-        "name": "Pure Water",
-        "quantity": 1,
-        "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -1245,7 +1195,7 @@
     "ingredients": [
       {
         "name": "Iron Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
@@ -1280,7 +1230,7 @@
     "ingredients": [
       {
         "name": "Steel Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
@@ -1297,11 +1247,6 @@
         "name": "Pure Water",
         "quantity": 1,
         "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -1320,12 +1265,12 @@
     "ingredients": [
       {
         "name": "Mithral Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
         "name": "Arcane Essence",
-        "quantity": 2,
+        "quantity": 1,
         "type": "arcane"
       },
       {
@@ -1337,11 +1282,6 @@
         "name": "Pure Water",
         "quantity": 1,
         "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -1360,12 +1300,12 @@
     "ingredients": [
       {
         "name": "Adamantine Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
         "name": "Arcane Crystal",
-        "quantity": 2,
+        "quantity": 1,
         "type": "arcane"
       },
       {
@@ -1377,16 +1317,6 @@
         "name": "Elemental Core",
         "quantity": 1,
         "type": "elemental"
-      },
-      {
-        "name": "Pure Water",
-        "quantity": 1,
-        "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -1405,7 +1335,7 @@
     "ingredients": [
       {
         "name": "Steel Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
@@ -1422,11 +1352,6 @@
         "name": "Pure Water",
         "quantity": 1,
         "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -1445,12 +1370,12 @@
     "ingredients": [
       {
         "name": "Mithral Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
         "name": "Arcane Essence",
-        "quantity": 2,
+        "quantity": 1,
         "type": "arcane"
       },
       {
@@ -1462,11 +1387,6 @@
         "name": "Pure Water",
         "quantity": 1,
         "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -1485,7 +1405,7 @@
     "ingredients": [
       {
         "name": "Iron Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
@@ -1520,12 +1440,12 @@
     "ingredients": [
       {
         "name": "Adamantine Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
         "name": "Arcane Crystal",
-        "quantity": 2,
+        "quantity": 1,
         "type": "arcane"
       },
       {
@@ -1537,16 +1457,6 @@
         "name": "Elemental Core",
         "quantity": 1,
         "type": "elemental"
-      },
-      {
-        "name": "Pure Water",
-        "quantity": 1,
-        "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -1565,7 +1475,7 @@
     "ingredients": [
       {
         "name": "Steel Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
@@ -1582,11 +1492,6 @@
         "name": "Pure Water",
         "quantity": 1,
         "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -1605,7 +1510,7 @@
     "ingredients": [
       {
         "name": "Iron Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
@@ -1640,12 +1545,12 @@
     "ingredients": [
       {
         "name": "Mithral Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
         "name": "Arcane Essence",
-        "quantity": 2,
+        "quantity": 1,
         "type": "arcane"
       },
       {
@@ -1657,11 +1562,6 @@
         "name": "Pure Water",
         "quantity": 1,
         "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -1680,7 +1580,7 @@
     "ingredients": [
       {
         "name": "Steel Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
@@ -1697,11 +1597,6 @@
         "name": "Pure Water",
         "quantity": 1,
         "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -1720,12 +1615,12 @@
     "ingredients": [
       {
         "name": "Mithral Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
         "name": "Arcane Essence",
-        "quantity": 2,
+        "quantity": 1,
         "type": "arcane"
       },
       {
@@ -1737,11 +1632,6 @@
         "name": "Pure Water",
         "quantity": 1,
         "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -1760,7 +1650,7 @@
     "ingredients": [
       {
         "name": "Iron Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
@@ -1795,12 +1685,12 @@
     "ingredients": [
       {
         "name": "Mithral Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
         "name": "Arcane Essence",
-        "quantity": 2,
+        "quantity": 1,
         "type": "arcane"
       },
       {
@@ -1812,11 +1702,6 @@
         "name": "Pure Water",
         "quantity": 1,
         "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -1835,12 +1720,12 @@
     "ingredients": [
       {
         "name": "Mithral Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
         "name": "Arcane Essence",
-        "quantity": 2,
+        "quantity": 1,
         "type": "arcane"
       },
       {
@@ -1852,11 +1737,6 @@
         "name": "Pure Water",
         "quantity": 1,
         "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -1875,12 +1755,12 @@
     "ingredients": [
       {
         "name": "Adamantine Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
         "name": "Arcane Crystal",
-        "quantity": 2,
+        "quantity": 1,
         "type": "arcane"
       },
       {
@@ -1892,16 +1772,6 @@
         "name": "Elemental Core",
         "quantity": 1,
         "type": "elemental"
-      },
-      {
-        "name": "Pure Water",
-        "quantity": 1,
-        "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -1920,7 +1790,7 @@
     "ingredients": [
       {
         "name": "Steel Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
@@ -1937,11 +1807,6 @@
         "name": "Pure Water",
         "quantity": 1,
         "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -1960,12 +1825,12 @@
     "ingredients": [
       {
         "name": "Adamantine Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
         "name": "Arcane Crystal",
-        "quantity": 2,
+        "quantity": 1,
         "type": "arcane"
       },
       {
@@ -1977,16 +1842,6 @@
         "name": "Elemental Core",
         "quantity": 1,
         "type": "elemental"
-      },
-      {
-        "name": "Pure Water",
-        "quantity": 1,
-        "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -2005,7 +1860,7 @@
     "ingredients": [
       {
         "name": "Steel Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
@@ -2022,11 +1877,6 @@
         "name": "Pure Water",
         "quantity": 1,
         "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -2045,12 +1895,12 @@
     "ingredients": [
       {
         "name": "Mithral Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
         "name": "Arcane Essence",
-        "quantity": 2,
+        "quantity": 1,
         "type": "arcane"
       },
       {
@@ -2062,11 +1912,6 @@
         "name": "Pure Water",
         "quantity": 1,
         "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -2085,12 +1930,12 @@
     "ingredients": [
       {
         "name": "Adamantine Ingot",
-        "quantity": 3,
+        "quantity": 1,
         "type": "metal"
       },
       {
         "name": "Arcane Crystal",
-        "quantity": 3,
+        "quantity": 1,
         "type": "arcane"
       },
       {
@@ -2100,23 +1945,8 @@
       },
       {
         "name": "Elemental Core",
-        "quantity": 2,
+        "quantity": 1,
         "type": "elemental"
-      },
-      {
-        "name": "Astral Shard",
-        "quantity": 1,
-        "type": "planar"
-      },
-      {
-        "name": "Pure Water",
-        "quantity": 1,
-        "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -2135,12 +1965,12 @@
     "ingredients": [
       {
         "name": "Adamantine Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
         "name": "Arcane Crystal",
-        "quantity": 2,
+        "quantity": 1,
         "type": "arcane"
       },
       {
@@ -2152,16 +1982,6 @@
         "name": "Elemental Core",
         "quantity": 1,
         "type": "elemental"
-      },
-      {
-        "name": "Pure Water",
-        "quantity": 1,
-        "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -2180,7 +2000,7 @@
     "ingredients": [
       {
         "name": "Iron Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
@@ -2215,7 +2035,7 @@
     "ingredients": [
       {
         "name": "Steel Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {
@@ -2232,11 +2052,6 @@
         "name": "Pure Water",
         "quantity": 1,
         "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
       }
     ],
     "output": {
@@ -2255,7 +2070,7 @@
     "ingredients": [
       {
         "name": "Iron Ingot",
-        "quantity": 2,
+        "quantity": 1,
         "type": "metal"
       },
       {

@@ -16,10 +16,10 @@
         {{/unless}}
         
         <div class="left-panel-tabs">
-            <button class="left-tab-btn {{#unless showCatalog}}active{{/unless}}" data-tab="inventory">
+            <button type="button" class="left-tab-btn {{#unless showCatalog}}active{{/unless}}" data-tab="inventory">
                 INVENTORY
             </button>
-            <button class="left-tab-btn {{#if showCatalog}}active{{/if}}" data-tab="catalog">
+            <button type="button" class="left-tab-btn {{#if showCatalog}}active{{/if}}" data-tab="catalog">
                 CATALOG
             </button>
         </div>
@@ -33,10 +33,14 @@
                 </label>
             </div>
 
+            <div class="inventory-filters">
+                <input class="inventory-search-input" type="text" placeholder="Search inventory..." value="{{inventorySearchQuery}}">
+            </div>
+
             <div class="inventory-grid-container">
                 <div class="inventory-grid">
                     {{#each inventoryItems}}
-                        <div class="inventory-slot rarity-{{this.rarity}}" data-item-id="{{this.id}}" data-name="{{this.name}}" data-img="{{this.img}}" data-uuid="{{this.uuid}}" draggable="true" title="{{this.name}} (×{{this.quantity}})">
+                        <div class="inventory-slot rarity-{{this.rarity}}" data-item-id="{{this.id}}" data-name="{{this.name}}" data-img="{{this.img}}" data-uuid="{{this.uuid}}" data-price="{{this.price}}" data-weight="{{this.weight}}" draggable="true" title="{{this.name}} (×{{this.quantity}})&#10;Price: {{this.price}}&#10;Weight: {{this.weight}}">
                             <img class="slot-image" src="{{this.img}}" alt="">
                             <span class="slot-qty">{{this.quantity}}</span>
                         </div>
@@ -121,16 +125,17 @@
             {{#if selectedRecipe}}
                 <div class="staged-slots-hud">
                     <div class="staged-slots-row {{#if isManyIngredients}}slots-many{{/if}}">
-                        {{#each mappedIngredients}}
+                        {{#each workstationSlots}}
                             {{#if @index}}
                                 <span class="slots-plus-separator">+</span>
                             {{/if}}
-                            <div class="station-slot slot-{{#if this.fulfilled}}filled{{else}}empty{{/if}} rarity-{{this.rarity}}" data-ingredient-name="{{this.name}}" title="{{this.name}} ({{this.provided}}/{{this.quantity}})">
-                                <img src="{{this.icon}}" alt="" class="slot-item-icon {{#unless this.provided}}ghost-icon{{/unless}}">
-                                <span class="slot-badge">{{this.provided}}/{{this.quantity}}</span>
-                                <button class="remove-ingredient-btn slot-remove" data-ingredient-name="{{this.name}}" title="Remove">
-                                    <i class="fas fa-times"></i>
-                                </button>
+                            <div class="station-slot slot-{{#if this.isFilled}}filled{{else}}empty{{/if}} rarity-{{this.rarity}}" data-slot-index="{{this.slotIndex}}" data-ingredient-name="{{this.recipeIngName}}" title="{{this.recipeIngName}} ({{#if this.isFilled}}{{this.providedName}}{{else}}Empty Slot{{/if}})">
+                                <img src="{{this.icon}}" alt="" class="slot-item-icon {{#unless this.isFilled}}ghost-icon{{/unless}}">
+                                {{#if this.isFilled}}
+                                    <button type="button" class="remove-ingredient-btn slot-remove" data-slot-index="{{this.slotIndex}}" title="Remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                {{/if}}
                             </div>
                         {{/each}}
                     </div>
@@ -159,6 +164,12 @@
                     </div>
                 </div>
 
+                {{#unless selectedRecipe.isLearned}}
+                    <div class="unknown-warning" style="text-align: center; width: 100%; margin-bottom: 8px;">
+                        <i class="fas fa-exclamation-triangle"></i> You do not know the recipe for "{{selectedRecipe.name}}" yet!
+                    </div>
+                {{/unless}}
+
                 <div class="workstation-controls">
                     <div class="craft-multiplier-container" title="Brew/forge multiple copies of this item at once.">
                         <label>Qty:</label>
@@ -174,7 +185,7 @@
                         <span><i class="fas fa-robot"></i> Homunculus</span>
                     </label>
                     {{/if}}
-                    <button class="craft-btn unified-craft-btn {{#unless canCraft}}disabled{{/unless}}">
+                    <button type="button" class="craft-btn unified-craft-btn {{#unless canCraft}}disabled{{/unless}}">
                         CRAFT
                     </button>
                 </div>
@@ -185,23 +196,52 @@
             {{/if}}
         </div>
 
+        {{!-- Selected Recipe details card --}}
+        {{#if selectedRecipe}}
+        <div class="recipe-details-card">
+            <div class="details-card-header">
+                <h4>{{selectedRecipe.name}}</h4>
+            </div>
+            <div class="details-card-body">
+                <p class="details-description">{{selectedRecipe.description}}</p>
+                
+                <div class="details-ingredients-section">
+                    <ul class="details-ingredients-list">
+                        {{#each mappedIngredients}}
+                            <li class="{{#if (gte this.inventoryCount this.quantity)}}has-enough{{else}}missing-some{{/if}}">
+                                <strong>{{this.name}}</strong>: {{this.inventoryCount}} / {{this.quantity}}
+                                {{#if this.substitutes.length}}
+                                    <span class="substitutes-note" title="Allowed substitutes: {{#each this.substitutes}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}">
+                                        (or: {{#each this.substitutes}}{{this}}{{#unless @last}}, {{/unless}}{{/each}})
+                                    </span>
+                                {{/if}}
+                            </li>
+                        {{/each}}
+                    </ul>
+                </div>
+
+                <div class="details-stats">
+                    <span><strong>Cost:</strong> {{selectedRecipe.craftingCost}} gp</span>
+                    <span><strong>Time:</strong> {{selectedRecipe.craftingTimeLabel}}</span>
+                </div>
+            </div>
+        </div>
+        {{/if}}
+
         {{!-- ACTIVE PROJECTS QUEUE --}}
         <div class="active-projects-section">
             <div class="queue-header-banner">
                 <span class="queue-title"><i class="fas fa-hourglass-half"></i> LAB QUEUE</span>
             </div>
             <div class="projects-list">
-                {{#each projects}}
+                {{#each playerProjects}}
                     <div class="project-card {{#if this.completed}}completed{{/if}}" data-project-id="{{this.id}}">
-                        <img class="project-img" src="{{this.output.img}}" alt="">
-                        <div class="project-info">
+                        <img class="project-img project-details-click" src="{{this.output.img}}" alt="" data-recipe-id="{{this.recipeId}}" title="Click to view recipe details">
+                        <div class="project-info project-details-click" data-recipe-id="{{this.recipeId}}" title="Click to view recipe details">
                             <div class="project-header">
                                 <span class="project-name">
                                     <i class="fas {{#if this.isPotion}}fa-flask{{else}}fa-hammer{{/if}} project-type-icon"></i>
                                     {{this.recipeName}}
-                                    {{#if this.isHomunculus}}
-                                        <span class="project-batch-label homunculus-badge" title="Crafted independently by your Homunculus Servant"><i class="fas fa-robot"></i> Homunculus</span>
-                                    {{/if}}
                                     {{#if (gt this.output.quantity 1)}}
                                         <span class="project-batch-label" title="Multiple items crafted in this batch">Batch of {{this.output.quantity}}</span>
                                     {{/if}}
@@ -217,15 +257,15 @@
                         </div>
                         <div class="project-actions">
                             {{#if this.completed}}
-                                <button class="claim-project-btn btn-glowing" data-project-id="{{this.id}}">
+                                <button type="button" class="claim-project-btn btn-glowing" data-project-id="{{this.id}}">
                                     CLAIM
                                 </button>
                             {{else}}
-                                <button class="advance-project-btn btn-action" data-project-id="{{this.id}}">
+                                <button type="button" class="advance-project-btn btn-action" data-project-id="{{this.id}}">
                                     CRAFT
                                 </button>
                             {{/if}}
-                            <button class="cancel-project-btn btn-danger" data-project-id="{{this.id}}" title="Discard project">
+                            <button type="button" class="cancel-project-btn btn-danger" data-project-id="{{this.id}}" title="Discard project">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </div>
@@ -234,22 +274,70 @@
                     <p class="empty-queue">Workstation is idle.</p>
                 {{/each}}
             </div>
+
+            {{#if hasHomunculusIndependent}}
+            <div class="queue-header-banner homunculus-queue-header" style="margin-top: 15px;">
+                <span class="queue-title"><i class="fas fa-robot"></i> HOMUNCULUS QUEUE</span>
+            </div>
+            <div class="projects-list">
+                {{#each homunculusProjects}}
+                    <div class="project-card {{#if this.completed}}completed{{/if}}" data-project-id="{{this.id}}">
+                        <img class="project-img project-details-click" src="{{this.output.img}}" alt="" data-recipe-id="{{this.recipeId}}" title="Click to view recipe details">
+                        <div class="project-info project-details-click" data-recipe-id="{{this.recipeId}}" title="Click to view recipe details">
+                            <div class="project-header">
+                                <span class="project-name">
+                                    <i class="fas {{#if this.isPotion}}fa-flask{{else}}fa-hammer{{/if}} project-type-icon"></i>
+                                    {{this.recipeName}}
+                                    {{#if (gt this.output.quantity 1)}}
+                                        <span class="project-batch-label" title="Multiple items crafted in this batch">Batch of {{this.output.quantity}}</span>
+                                    {{/if}}
+                                </span>
+                                <span class="project-date">Started: {{this.dateStarted}}</span>
+                            </div>
+                            <div class="project-progress-container">
+                                <div class="project-progress-bar">
+                                    <div class="bar-fill" style="width: {{this.progress}}%;"></div>
+                                </div>
+                                <span class="progress-text">{{this.spentHours}} / {{this.requiredHours}} hrs ({{this.progress}}%)</span>
+                            </div>
+                        </div>
+                        <div class="project-actions">
+                            {{#if this.completed}}
+                                <button type="button" class="claim-project-btn btn-glowing" data-project-id="{{this.id}}">
+                                    CLAIM
+                                </button>
+                            {{else}}
+                                <button type="button" class="advance-project-btn btn-action" data-project-id="{{this.id}}">
+                                    CRAFT
+                                </button>
+                            {{/if}}
+                            <button type="button" class="cancel-project-btn btn-danger" data-project-id="{{this.id}}" title="Discard project">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                {{else}}
+                    <p class="empty-queue">Homunculus is idle.</p>
+                {{/each}}
+            </div>
+            {{/if}}
         </div>
     </div>
 
     {{!-- RIGHT PANEL — Recipes & Blueprints tabs --}}
     <div class="artificer-wood-panel panel-right">
         <div class="right-panel-tabs recipe-tabs">
-            <button class="tab-btn recipe-tab-btn {{#if isAlchemyTab}}active{{/if}}" data-tab="alchemy">
+            <button type="button" class="tab-btn recipe-tab-btn {{#if isAlchemyTab}}active{{/if}}" data-tab="alchemy">
                 ALCHEMY
             </button>
-            <button class="tab-btn recipe-tab-btn {{#if isForgeTab}}active{{/if}}" data-tab="forge">
+            <button type="button" class="tab-btn recipe-tab-btn {{#if isForgeTab}}active{{/if}}" data-tab="forge">
                 FORGE
             </button>
-            <button class="tab-btn recipe-tab-btn settings-tab-btn {{#if isSettingsTab}}active{{/if}}" data-tab="settings" title="Lab Settings">
+            <button type="button" class="tab-btn recipe-tab-btn settings-tab-btn {{#if isSettingsTab}}active{{/if}}" data-tab="settings" title="Lab Settings">
                 <i class="fas fa-cog"></i>
             </button>
         </div>
+
 
         {{#unless isSettingsTab}}
         <div class="recipe-filters">
@@ -348,30 +436,6 @@
                     {{/if}}
                 </div>
             </div>
-
-            <div class="settings-group">
-                <h3 class="settings-group-title"><i class="fas fa-users"></i> Cooperative Crafting (DMG)</h3>
-                <div class="settings-list">
-                    <div class="settings-dropdown-item">
-                        <div class="setting-details">
-                            <span class="setting-name">Crafting Assistants</span>
-                            <span class="setting-desc">Divide total crafting time by the number of characters working on the item.</span>
-                        </div>
-                        <select class="setting-crafting-assistants">
-                            <option value="0" {{#if (eq craftingAssistants 0)}}selected{{/if}}>Solo Crafting (1.0x time)</option>
-                            <option value="1" {{#if (eq craftingAssistants 1)}}selected{{/if}}>1 Assistant (0.5x time / half-time)</option>
-                            <option value="2" {{#if (eq craftingAssistants 2)}}selected{{/if}}>2 Assistants (0.33x time / third-time)</option>
-                            <option value="3" {{#if (eq craftingAssistants 3)}}selected{{/if}}>3 Assistants (0.25x time / quarter-time)</option>
-                            <option value="4" {{#if (eq craftingAssistants 4)}}selected{{/if}}>4 Assistants (0.20x time / fifth-time)</option>
-                            <option value="5" {{#if (eq craftingAssistants 5)}}selected{{/if}}>5 Assistants (0.17x time)</option>
-                            <option value="6" {{#if (eq craftingAssistants 6)}}selected{{/if}}>6 Assistants (0.14x time)</option>
-                            <option value="7" {{#if (eq craftingAssistants 7)}}selected{{/if}}>7 Assistants (0.13x time)</option>
-                            <option value="8" {{#if (eq craftingAssistants 8)}}selected{{/if}}>8 Assistants (0.11x time)</option>
-                            <option value="9" {{#if (eq craftingAssistants 9)}}selected{{/if}}>9 Assistants (0.10x time / tenth-time)</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
         </div>
         {{else}}
         <div class="recipe-list-container">
@@ -448,42 +512,6 @@
             </div>
         </div>
         {{/if}}
-
-        {{!-- Selected Recipe details card --}}
-        <div class="recipe-details-card">
-            {{#if selectedRecipe}}
-                <div class="details-card-header">
-                    <h4>{{selectedRecipe.name}}</h4>
-                </div>
-                <div class="details-card-body">
-                    <p class="details-description">{{selectedRecipe.description}}</p>
-                    
-                    <div class="details-ingredients-section">
-                        <ul class="details-ingredients-list">
-                            {{#each mappedIngredients}}
-                                <li class="{{#if (gte this.inventoryCount this.quantity)}}has-enough{{else}}missing-some{{/if}}">
-                                    <strong>{{this.name}}</strong>: {{this.inventoryCount}} / {{this.quantity}}
-                                    {{#if this.substitutes.length}}
-                                        <span class="substitutes-note" title="Allowed substitutes: {{#each this.substitutes}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}">
-                                            (or: {{#each this.substitutes}}{{this}}{{#unless @last}}, {{/unless}}{{/each}})
-                                        </span>
-                                    {{/if}}
-                                </li>
-                            {{/each}}
-                        </ul>
-                    </div>
-
-                    <div class="details-stats">
-                        <span><strong>Cost:</strong> {{selectedRecipe.craftingCost}} gp</span>
-                        <span><strong>Time:</strong> {{selectedRecipe.craftingTimeLabel}}</span>
-                    </div>
-                </div>
-            {{else}}
-                <div class="details-card-empty">
-                    <p>Select a recipe to view details.</p>
-                </div>
-            {{/if}}
-        </div>
     </div>
 
 </div>

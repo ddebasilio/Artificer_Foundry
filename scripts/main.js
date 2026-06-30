@@ -9,18 +9,26 @@ import { GatheringPanel } from "./gathering-panel.js";
 import { PartyInventory } from "./party-inventory.js";
 import { loadLootTables } from "./loot-generator.js";
 
-const MODULE    = "Artificer Foundry";
+const MODULE = "Artificer Foundry";
 const MODULE_ID = "artificer-foundry";
 
 // Track open app instances per actor to avoid duplicates
 const _artificerApps = new Map();
 
 function openArtificerApp(actor) {
-    const existing = _artificerApps.get(actor.id);
-    if (existing?.element?.isConnected) { existing.bringToFront(); return; }
-    const app = new ArtificerApp(actor);
-    _artificerApps.set(actor.id, app);
-    app.render(true);
+    if (!actor) return;
+    actor.sheet.render(true);
+
+    const selectTab = () => {
+        const sheetEl = actor.sheet.element instanceof HTMLElement ? actor.sheet.element : actor.sheet.element?.[0];
+        const tabBtn = sheetEl?.querySelector?.('.af-artificer-nav-item');
+        if (tabBtn) {
+            tabBtn.click();
+        } else {
+            setTimeout(selectTab, 50);
+        }
+    };
+    setTimeout(selectTab, 100);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -230,7 +238,7 @@ Hooks.once('ready', async function () {
             }
         }
     });
-        // Note: refreshPartyInventory is handled by PartyInventory.registerSocketListeners()
+    // Note: refreshPartyInventory is handled by PartyInventory.registerSocketListeners()
     // Refresh crafting and forge sheets when recipe data settings change
     Hooks.on('updateSetting', (setting) => {
         if (setting.key === `${MODULE_ID}.recipeData`) {
@@ -272,22 +280,7 @@ Hooks.once('ready', async function () {
         PartyInventory,
     };
 
-    // Document-level capture handler for the injected crafting/gatherer nav buttons.
-    document.addEventListener('click', (e) => {
-        const navItem = e.target.closest?.('.af-artificer-nav-item');
-        if (!navItem) return;
-        e.stopImmediatePropagation();
-        e.stopPropagation();
-        e.preventDefault();
-        const actor = navItem._af_actor;
-        if (!actor || actor.documentName !== 'Actor') {
-            ui.notifications.warn("No actor associated with this sheet.");
-            return;
-        }
-        console.log(`${MODULE} | Artificer Lab clicked — actor:`, actor.name);
-        try { openArtificerApp(actor); }
-        catch (err) { console.error(`${MODULE} | Failed to open ArtificerApp:`, err); }
-    }, true);
+
 
     // MutationObserver — catches sheets opened before hooks fire
     const interfaceEl = document.querySelector('#interface') ?? document.body;
@@ -470,13 +463,185 @@ function injectCraftingTab(app, htmlArg) {
 
         if (!tabsNav) return;
 
+        // Check if Artificer Lab is the tracked active tab
+        let isTabActive = false;
+        if (app.tabGroups?.primary === "artificer-lab") {
+            isTabActive = true;
+        } else if (Array.isArray(app._tabs)) {
+            for (const t of app._tabs) {
+                if (t.group === 'primary' && t.active === 'artificer-lab') {
+                    isTabActive = true;
+                    break;
+                }
+            }
+        }
+
         // Injected tab button (mortar & pestle / tools icon)
         const navItem = document.createElement('a');
         navItem.className = 'item af-artificer-nav-item';
+        navItem.dataset.tab = 'artificer-lab';
         navItem.title = 'Artificer Lab';
-        navItem.innerHTML = `<i class="fas fa-tools"></i>`;
         navItem._af_actor = actor;
+
+        if (isTabActive) {
+            navItem.classList.add('active');
+            navItem.ariaSelected = "true";
+        }
+
+        const firstLink = tabsNav.querySelector('a.item, a[data-tab]');
+        if (firstLink) {
+            const hasLabel = firstLink.querySelector('label') !== null;
+            const tooltip = firstLink.dataset.tooltip || firstLink.getAttribute('data-tooltip');
+            const hasVisibleText = firstLink.textContent.trim().length > 0;
+
+            if (hasLabel) {
+                navItem.innerHTML = `<i class="fas fa-tools"></i>`;
+            } else if (tooltip && !hasVisibleText) {
+                // Icon-only tab with tooltip (V2 sheets)
+                navItem.innerHTML = `<i class="fas fa-tools"></i>`;
+                navItem.dataset.tooltip = 'Artificer Lab';
+                navItem.setAttribute('aria-label', 'Artificer Lab');
+            } else {
+                navItem.innerHTML = `<i class="fas fa-tools"></i>`;
+            }
+        } else {
+            navItem.innerHTML = `<i class="fas fa-tools"></i>`;
+        }
         tabsNav.appendChild(navItem);
+
+        // Inject the tab content body
+        const tabBody = root.querySelector('.tab-body, .sheet-body, form, .sheet-content');
+        if (tabBody) {
+            let labTab = tabBody.querySelector('.artificer-lab-tab');
+            if (!labTab) {
+                const featuresTab = root.querySelector('[data-tab="features"], [data-tab="biography"], [data-tab="description"]');
+                if (featuresTab) {
+                    const parent = featuresTab.parentElement;
+                    labTab = document.createElement('div');
+                    labTab.className = 'tab artificer-lab-tab';
+                    labTab.dataset.group = 'primary';
+                    labTab.dataset.tab = 'artificer-lab';
+                    parent.appendChild(labTab);
+                } else {
+                    labTab = document.createElement('div');
+                    labTab.className = 'tab artificer-lab-tab';
+                    labTab.dataset.group = 'primary';
+                    labTab.dataset.tab = 'artificer-lab';
+                    tabBody.appendChild(labTab);
+                }
+            }
+
+            // Sync visibility based on active state
+            if (isTabActive) {
+                // Deactivate other tabs
+                tabsNav.querySelectorAll('.item').forEach(item => {
+                    if (item !== navItem) {
+                        item.classList.remove('active');
+                        item.ariaSelected = "false";
+                    }
+                });
+
+                // Hide other tab content containers
+                tabBody.querySelectorAll('.tab').forEach(tab => {
+                    if (tab !== labTab) {
+                        tab.classList.remove('active');
+                        tab.style.display = 'none';
+                    }
+                });
+
+                labTab.classList.add('active');
+                labTab.style.display = 'block';
+            } else {
+                labTab.classList.remove('active');
+                labTab.style.display = 'none';
+            }
+
+            // Click listener for our tab button
+            navItem.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                // Persist the active tab group state in Foundry's sheet tracker
+                if (app.tabGroups) {
+                    app.tabGroups.primary = "artificer-lab";
+                }
+                if (Array.isArray(app._tabs)) {
+                    for (const t of app._tabs) {
+                        if (t.group === 'primary') {
+                            t.active = 'artificer-lab';
+                        }
+                    }
+                }
+
+                // Deactivate other tabs
+                tabsNav.querySelectorAll('.item').forEach(item => {
+                    if (item !== navItem) {
+                        item.classList.remove('active');
+                        item.ariaSelected = "false";
+                    }
+                });
+
+                // Activate our tab button
+                navItem.classList.add('active');
+                navItem.ariaSelected = "true";
+
+                // Toggle visibility of content tabs
+                tabBody.querySelectorAll('.tab').forEach(tab => {
+                    if (tab === labTab) {
+                        tab.classList.add('active');
+                        tab.style.display = 'block';
+                    } else {
+                        tab.classList.remove('active');
+                        tab.style.display = 'none';
+                    }
+                });
+
+                // Force render on switch to ensure freshness
+                let appInstance = _artificerApps.get(actor.id);
+                if (appInstance) {
+                    appInstance.renderInline(labTab);
+                }
+            });
+
+            // Listen to other native tab clicks to hide our lab view
+            tabsNav.querySelectorAll('.item').forEach(item => {
+                if (item !== navItem) {
+                    item.addEventListener('click', () => {
+                        // Reset active tracker when navigating away
+                        if (app.tabGroups && app.tabGroups.primary === "artificer-lab") {
+                            app.tabGroups.primary = item.dataset.tab;
+                        }
+                        if (Array.isArray(app._tabs)) {
+                            for (const t of app._tabs) {
+                                if (t.group === 'primary' && t.active === 'artificer-lab') {
+                                    t.active = item.dataset.tab;
+                                }
+                            }
+                        }
+
+                        navItem.classList.remove('active');
+                        navItem.ariaSelected = "false";
+                        labTab.classList.remove('active');
+                        labTab.style.display = 'none';
+
+                        tabBody.querySelectorAll('.tab').forEach(tab => {
+                            if (tab !== labTab && tab.dataset.tab === item.dataset.tab) {
+                                tab.classList.add('active');
+                                tab.style.display = '';
+                            }
+                        });
+                    });
+                }
+            });
+
+            // Render the app inline
+            let appInstance = _artificerApps.get(actor.id);
+            if (!appInstance) {
+                appInstance = new ArtificerApp(actor);
+                _artificerApps.set(actor.id, appInstance);
+            }
+            appInstance.renderInline(labTab);
+        }
 
     } catch (err) {
         console.error(`${MODULE} | injectCraftingTab error:`, err);
@@ -487,7 +652,7 @@ function injectCraftingTab(app, htmlArg) {
 // HOOKS — belt-and-suspenders
 // ─────────────────────────────────────────────────────────────────────────────
 
-Hooks.on('renderApplication',   (app, html) => injectCraftingTab(app, html));
+Hooks.on('renderApplication', (app, html) => injectCraftingTab(app, html));
 Hooks.on('renderApplicationV2', (app, html) => injectCraftingTab(app, html));
 
 [
@@ -550,11 +715,11 @@ Hooks.on("preCreateItem", (itemDoc, data, options, userId) => {
         const currentQty = existing.system.quantity ?? 1;
         const addedQty = itemDoc.system.quantity ?? 1;
         const newQty = currentQty + addedQty;
-        
+
         existing.update({ "system.quantity": newQty }).then(() => {
             console.log(`Artificer Foundry | Merged duplicate item ${itemDoc.name} into existing stack. New quantity: ${newQty}`);
         });
-        
+
         return false; // cancels the creation of the duplicate item document
     }
 
@@ -565,8 +730,8 @@ Hooks.on("preCreateItem", (itemDoc, data, options, userId) => {
         const isComponent = ingCosts[itemDoc.name] !== undefined || forgeCosts[itemDoc.name] !== undefined;
 
         if (isComponent) {
-            const bag = actor.items.find(i => 
-                i.name === "Artificer's Component Bag" && 
+            const bag = actor.items.find(i =>
+                i.name === "Artificer's Component Bag" &&
                 ["container", "backpack"].includes(i.type)
             );
             if (bag) {
