@@ -1398,41 +1398,6 @@
     "description": "When you drink this potion, your Strength score changes to 23 for 1 hour. The potion has no effect on you if your Strength is equal to or greater than that score.\n\nThis potion's transparent liquid has floating in it a sliver of fingernail from a frost giant."
   },
   {
-    "id": "potion-of-giant-strength",
-    "name": "Potion of Giant Strength",
-    "rarity": "common",
-    "learned": false,
-    "ingredients": [
-      {
-        "name": "Iron Ingot",
-        "quantity": 1,
-        "type": "metal"
-      },
-      {
-        "name": "Leather Strips",
-        "quantity": 1,
-        "type": "hide"
-      },
-      {
-        "name": "Pure Water",
-        "quantity": 1,
-        "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
-      }
-    ],
-    "output": {
-      "name": "Potion of Giant Strength",
-      "img": "",
-      "type": "potion",
-      "quantity": 1
-    },
-    "description": "Multiple variations of this item exist, as listed below:\n\nPotion of Hill Giant StrengthPotion of Frost Giant StrengthPotion of Stone Giant StrengthPotion of Fire Giant StrengthPotion of Cloud Giant StrengthPotion of Storm Giant Strength"
-  },
-  {
     "id": "potion-of-greater-invisibility",
     "name": "Potion of Greater Invisibility",
     "rarity": "very rare",
@@ -1501,41 +1466,6 @@
       "quantity": 1
     },
     "description": "When you drink this potion, you gain the \"enlarge\" effect of the Enlarge/Reduce spell for 10 minutes (no Concentration required).\n\nThe red in the potion's liquid continuously expands from a tiny bead to color the clear liquid around it and then contracts. Shaking the bottle fails to interrupt this process."
-  },
-  {
-    "id": "potion-of-healing",
-    "name": "Potion of Healing (*)",
-    "rarity": "common",
-    "learned": false,
-    "ingredients": [
-      {
-        "name": "Iron Ingot",
-        "quantity": 1,
-        "type": "metal"
-      },
-      {
-        "name": "Leather Strips",
-        "quantity": 1,
-        "type": "hide"
-      },
-      {
-        "name": "Pure Water",
-        "quantity": 1,
-        "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
-      }
-    ],
-    "output": {
-      "name": "Potion of Healing (*)",
-      "img": "",
-      "type": "potion",
-      "quantity": 1
-    },
-    "description": "* This item group has the same name and source as the item potion of healing.\n\nMultiple variations of this item exist, as listed below:\n\nPotion of HealingPotion of Greater HealingPotion of Superior HealingPotion of Supreme Healing"
   },
   {
     "id": "potion-of-heroism",
@@ -1641,41 +1571,6 @@
       "quantity": 1
     },
     "description": "For 1 minute after you drink this potion, you have Resistance to all damage.\n\nThis potion's syrupy liquid looks like liquefied iron."
-  },
-  {
-    "id": "potion-of-mind-control",
-    "name": "Potion of Mind Control",
-    "rarity": "common",
-    "learned": false,
-    "ingredients": [
-      {
-        "name": "Iron Ingot",
-        "quantity": 1,
-        "type": "metal"
-      },
-      {
-        "name": "Leather Strips",
-        "quantity": 1,
-        "type": "hide"
-      },
-      {
-        "name": "Pure Water",
-        "quantity": 1,
-        "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
-      }
-    ],
-    "output": {
-      "name": "Potion of Mind Control",
-      "img": "",
-      "type": "potion",
-      "quantity": 1
-    },
-    "description": "Multiple variations of this item exist, as listed below:\n\nPotion of Mind Control (beast)Potion of Mind Control (humanoid)Potion of Mind Control (monster)"
   },
   {
     "id": "potion-of-mind-control-beast",
@@ -2061,40 +1956,5 @@
       "quantity": 1
     },
     "description": "You can breathe underwater for 24 hours after drinking this potion.\n\nThis potion's cloudy green fluid smells of the sea and has a jellyfish-like bubble floating in it."
-  },
-  {
-    "id": "potions-of-healing",
-    "name": "Potions of Healing",
-    "rarity": "common",
-    "learned": false,
-    "ingredients": [
-      {
-        "name": "Iron Ingot",
-        "quantity": 1,
-        "type": "metal"
-      },
-      {
-        "name": "Leather Strips",
-        "quantity": 1,
-        "type": "hide"
-      },
-      {
-        "name": "Pure Water",
-        "quantity": 1,
-        "type": "liquid"
-      },
-      {
-        "name": "Bloodgrass",
-        "quantity": 1,
-        "type": "common_herb"
-      }
-    ],
-    "output": {
-      "name": "Potions of Healing",
-      "img": "",
-      "type": "potion",
-      "quantity": 1
-    },
-    "description": "Multiple variations of this item exist, as listed below:\n\nPotion of HealingPotion of Greater HealingPotion of Superior HealingPotion of Supreme Healing"
   }
 ]

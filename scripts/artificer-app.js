@@ -11,6 +11,159 @@ import {
 } from "./forge-data.js";
 import { PlutoniumHelper } from "./plutonium-helper.js";
 
+const FORGE_VARIANTS = {
+    "Armor +1": [
+        "Padded Armor +1",
+        "Leather Armor +1",
+        "Studded Leather Armor +1",
+        "Hide Armor +1",
+        "Chain Shirt +1",
+        "Scale Mail +1",
+        "Breastplate +1",
+        "Half Plate +1",
+        "Ring Mail +1",
+        "Chain Mail +1",
+        "Splint Armor +1",
+        "Plate Armor +1"
+    ],
+    "Armor +2": [
+        "Padded Armor +2",
+        "Leather Armor +2",
+        "Studded Leather Armor +2",
+        "Hide Armor +2",
+        "Chain Shirt +2",
+        "Scale Mail +2",
+        "Breastplate +2",
+        "Half Plate +2",
+        "Ring Mail +2",
+        "Chain Mail +2",
+        "Splint Armor +2",
+        "Plate Armor +2"
+    ],
+    "Armor +3": [
+        "Padded Armor +3",
+        "Leather Armor +3",
+        "Studded Leather Armor +3",
+        "Hide Armor +3",
+        "Chain Shirt +3",
+        "Scale Mail +3",
+        "Breastplate +3",
+        "Half Plate +3",
+        "Ring Mail +3",
+        "Chain Mail +3",
+        "Splint Armor +3",
+        "Plate Armor +3"
+    ],
+    "Weapon +1": [
+        "Dagger +1",
+        "Handaxe +1",
+        "Javelin +1",
+        "Light Hammer +1",
+        "Mace +1",
+        "Quarterstaff +1",
+        "Sickle +1",
+        "Spear +1",
+        "Light Crossbow +1",
+        "Dart +1",
+        "Shortbow +1",
+        "Sling +1",
+        "Battleaxe +1",
+        "Flail +1",
+        "Glaive +1",
+        "Greataxe +1",
+        "Greatsword +1",
+        "Halberd +1",
+        "Lance +1",
+        "Longsword +1",
+        "Maul +1",
+        "Morningstar +1",
+        "Pike +1",
+        "Rapier +1",
+        "Scimitar +1",
+        "Shortsword +1",
+        "Trident +1",
+        "War Pick +1",
+        "Warhammer +1",
+        "Whip +1",
+        "Blowgun +1",
+        "Hand Crossbow +1",
+        "Heavy Crossbow +1",
+        "Longbow +1"
+    ],
+    "Weapon +2": [
+        "Dagger +2",
+        "Handaxe +2",
+        "Javelin +2",
+        "Light Hammer +2",
+        "Mace +2",
+        "Quarterstaff +2",
+        "Sickle +2",
+        "Spear +2",
+        "Light Crossbow +2",
+        "Dart +2",
+        "Shortbow +2",
+        "Sling +2",
+        "Battleaxe +2",
+        "Flail +2",
+        "Glaive +2",
+        "Greataxe +2",
+        "Greatsword +2",
+        "Halberd +2",
+        "Lance +2",
+        "Longsword +2",
+        "Maul +2",
+        "Morningstar +2",
+        "Pike +2",
+        "Rapier +2",
+        "Scimitar +2",
+        "Shortsword +2",
+        "Trident +2",
+        "War Pick +2",
+        "Warhammer +2",
+        "Whip +2",
+        "Blowgun +2",
+        "Hand Crossbow +2",
+        "Heavy Crossbow +2",
+        "Longbow +2"
+    ],
+    "Weapon +3": [
+        "Dagger +3",
+        "Handaxe +3",
+        "Javelin +3",
+        "Light Hammer +3",
+        "Mace +3",
+        "Quarterstaff +3",
+        "Sickle +3",
+        "Spear +3",
+        "Light Crossbow +3",
+        "Dart +3",
+        "Shortbow +3",
+        "Sling +3",
+        "Battleaxe +3",
+        "Flail +3",
+        "Glaive +3",
+        "Greataxe +3",
+        "Greatsword +3",
+        "Halberd +3",
+        "Lance +3",
+        "Longsword +3",
+        "Maul +3",
+        "Morningstar +3",
+        "Pike +3",
+        "Rapier +3",
+        "Scimitar +3",
+        "Shortsword +3",
+        "Trident +3",
+        "War Pick +3",
+        "Warhammer +3",
+        "Whip +3",
+        "Blowgun +3",
+        "Hand Crossbow +3",
+        "Heavy Crossbow +3",
+        "Longbow +3"
+    ]
+};
+
 function getItemTier(name) {
     if (!name) return "common";
     const nameLower = name.toLowerCase();
@@ -1564,6 +1717,46 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
             return;
         }
 
+        let variantName = recipe.output.name;
+        const variants = FORGE_VARIANTS[recipe.name];
+        if (variants) {
+            const selectedVariant = await new Promise((resolve) => {
+                let optionsHtml = "";
+                for (const v of variants) {
+                    optionsHtml += `<option value="${v}">${v}</option>`;
+                }
+
+                new Dialog({
+                    title: `Select Variant for ${recipe.name}`,
+                    content: `
+                        <form style="margin-bottom: 8px;">
+                            <div class="form-group">
+                                <label>Choose Variant:</label>
+                                <select name="variant" style="width: 100%;">
+                                    ${optionsHtml}
+                                </select>
+                            </div>
+                        </form>
+                    `,
+                    buttons: {
+                        craft: {
+                            label: "Select & Craft",
+                            callback: (html) => resolve(html.find('[name="variant"]').val())
+                        },
+                        cancel: {
+                            label: "Cancel",
+                            callback: () => resolve(null)
+                        }
+                    },
+                    default: "craft",
+                    close: () => resolve(null)
+                }).render(true);
+            });
+
+            if (!selectedVariant) return; // User cancelled or closed dialog
+            variantName = selectedVariant;
+        }
+
         // 1. Generate the list of individual required slots to check status
         const workstationSlots = [];
         for (const ing of recipe.ingredients) {
@@ -1714,7 +1907,7 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
             recipeName: recipe.name,
             recipeId: recipe.id,
             output: {
-                name: recipe.output.name,
+                name: variantName,
                 img: recipe.output.img || "icons/svg/item-bag.svg",
                 quantity: (recipe.output.quantity ?? 1) * quantity
             },
@@ -1839,7 +2032,7 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
         const recipe = pool.find(r => r.id === project.recipeId);
         if (!recipe) { ui.notifications.error("Recipe no longer exists."); return; }
 
-        const output = recipe.output;
+        const output = project.output;
         const plutoniumImported = await PlutoniumHelper.pImportItem(this.actor, output.name, output.quantity ?? 1);
 
         if (!plutoniumImported) {
