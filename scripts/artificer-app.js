@@ -605,11 +605,11 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                 if (!r.output.img || r.output.img === "icons/svg/item-bag.svg" || r.output.img === "icons/svg/mystery-man.svg") {
                     const cachedImg = ArtificerApp._recipeImageCache[r.name.toLowerCase()] || await ArtificerApp._resolvePlutoniumImage(r.name);
                     if (cachedImg) r.output.img = cachedImg;
-                    else r.output.img = "icons/weapons/swords/sword-guard-steel.webp";
+                    else r.output.img = "icons/weapons/swords/sword-bastard-steel.webp";
                 }
             } else {
                 if (!r.output.img || r.output.img === "icons/svg/item-bag.svg" || r.output.img === "icons/svg/mystery-man.svg") {
-                    r.output.img = "icons/weapons/swords/sword-guard-steel.webp";
+                    r.output.img = "icons/weapons/swords/sword-bastard-steel.webp";
                 }
             }
         }
@@ -808,7 +808,7 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
             if (!img || img === "icons/svg/item-bag.svg" || img === "icons/svg/mystery-man.svg") {
                 const cachedImg = ArtificerApp._recipeImageCache[p.recipeName.toLowerCase()] || await ArtificerApp._resolvePlutoniumImage(p.recipeName);
                 if (cachedImg) img = cachedImg;
-                else img = p.type === "potion" ? "icons/consumables/potions/bottle-corked-empty-blue.webp" : "icons/weapons/swords/sword-guard-steel.webp";
+                else img = p.type === "potion" ? "icons/consumables/potions/bottle-corked-empty-blue.webp" : "icons/weapons/swords/sword-bastard-steel.webp";
             }
 
             mappedProjects.push({

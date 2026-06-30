@@ -123,7 +123,7 @@ export function getForgeSubstitutes(ingredientName, recipeRarity) {
 /**
  * Resolve forge material gathering by a pre-computed DC (used by gathering panel).
  */
-export function resolveForgeForagingByDC(dc, biomeKey, rollTotal, timeAmount = 1, timeUnit = "hours", abundanceKey = "medium", rarityMod = 0) {
+export function resolveForgeForagingByDC(dc, biomeKey, rollTotal, timeAmount = 1, timeUnit = "hours", abundanceKey = "medium", rarityMod = 0, forcedItemCount = null) {
     const abundanceMods = getAbundanceModifiers();
     const abundance = abundanceMods[abundanceKey] ?? { qtyMul: 1.0 };
     const critFail = rollTotal === 1;
@@ -132,17 +132,24 @@ export function resolveForgeForagingByDC(dc, biomeKey, rollTotal, timeAmount = 1
 
     if (critFail) return { success: false, dc, items: [], critFail: true };
 
-    // Calculate time-scaled quantity using progressive dice roll
     const timeUnits = getTimeUnits();
     const hours = timeAmount * (timeUnits[timeUnit]?.hours ?? 1);
-    const minutes = hours * 60;
-    
-    const rollData = getGatheringDice(minutes, abundance.qtyMul);
-    let itemCount = rollFormula(rollData.formula);
+
+    // Calculate time-scaled quantity using progressive dice roll or use forced roll
+    let itemCount;
+    if (forcedItemCount !== null && forcedItemCount !== undefined && forcedItemCount > 0) {
+        itemCount = forcedItemCount;
+    } else {
+        const minutes = hours * 60;
+        const rollData = getGatheringDice(minutes, abundance.qtyMul);
+        itemCount = rollFormula(rollData.formula);
+    }
 
     if (success) {
         if (itemCount === 0) itemCount = 1; // Guarantee at least 1 item on success
-        itemCount += critSuccess ? 2 : 1; // Success bonus
+        if (forcedItemCount === null || forcedItemCount === undefined) {
+            itemCount += critSuccess ? 2 : 1; // Success bonus
+        }
     }
 
     if (itemCount === 0) return { success: false, dc, items: [], critFail: false };
@@ -226,9 +233,10 @@ export function resolveForgeForagingByDC(dc, biomeKey, rollTotal, timeAmount = 1
         const group = getGroup(tier);
         const mult = multipliers[group];
         const finalWeight = baseWeight * mult;
-        if (finalWeight > 0) {
+        if (finalWeight > 0 && names.length > 0) {
+            const itemWeight = finalWeight / names.length;
             for (const name of names) {
-                weightedPool.push({ name, type: tier, weight: finalWeight });
+                weightedPool.push({ name, type: tier, weight: itemWeight });
             }
         }
     }

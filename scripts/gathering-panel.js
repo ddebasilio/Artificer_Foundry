@@ -598,6 +598,14 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
         const skillLabel = skillOpt?.label ?? "Survival";
         const modeLabel = this.gatherMode === "materials" ? "Forge Materials" : "Ingredients";
 
+        const abundanceMods = getAbundanceModifiers();
+        const abundance = abundanceMods[this.abundance] ?? { qtyMul: 1.0 };
+        const timeUnits = getTimeUnits();
+        const hours = this.timeAmount * (timeUnits[this.timeUnit]?.hours ?? 1);
+        const minutes = hours * 60;
+        const rollData = getGatheringDice(minutes, abundance.qtyMul);
+        const formula = rollData.formula;
+
         // Persist request so players can roll even after page reload
         const active = game.settings.get(MODULE_ID, "activeGatherRequests");
         active[reqId] = {
@@ -609,7 +617,8 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
             rarityMod: parseInt(this.rarityMod || 0),
             actorIds,
             skillKey: this.skillKey,
-            gatherMode: this.gatherMode
+            gatherMode: this.gatherMode,
+            formula: rollData.formula
         };
         await game.settings.set(MODULE_ID, "activeGatherRequests", active);
 
@@ -630,7 +639,15 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
             if (!actor) return '';
             return `<div class="af-gather-request-row">
                 <strong>${actor.name}</strong>
-                <button data-action="af-gather-roll" data-request-id="${reqId}" data-actor-id="${actorId}" class="af-gather-roll-btn">
+                <button 
+                    data-action="af-gather-roll" 
+                    data-request-id="${reqId}" 
+                    data-actor-id="${actorId}" 
+                    data-dc="${dc}" 
+                    data-formula="${formula}" 
+                    data-skill-key="${this.skillKey}" 
+                    data-gather-mode="${this.gatherMode}" 
+                    class="af-gather-roll-btn">
                     <i class="fas fa-dice-d20"></i> Roll ${skillLabel}
                 </button>
             </div>`;
@@ -655,7 +672,7 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
 
     // ─── Socket: handle incoming roll result (called from main.js) ───────────────
 
-    static async handleRollResult({ requestId, actorId, rollTotal }) {
+    static async handleRollResult({ requestId, actorId, rollTotal, qtyTotal = null }) {
         if (!game.user.isGM) return;
 
         const active = game.settings.get(MODULE_ID, "activeGatherRequests");
@@ -670,8 +687,8 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
 
         const gatherMode = req.gatherMode ?? "ingredients";
         const result = gatherMode === "materials"
-            ? resolveForgeForagingByDC(req.dc, req.biomeKey, rollTotal, req.timeAmount, req.timeUnit, req.abundanceKey, req.rarityMod || 0)
-            : resolveForagingByDC(req.dc, req.biomeKey, rollTotal, req.timeAmount, req.timeUnit, req.abundanceKey, req.rarityMod || 0);
+            ? resolveForgeForagingByDC(req.dc, req.biomeKey, rollTotal, req.timeAmount, req.timeUnit, req.abundanceKey, req.rarityMod || 0, qtyTotal)
+            : resolveForagingByDC(req.dc, req.biomeKey, rollTotal, req.timeAmount, req.timeUnit, req.abundanceKey, req.rarityMod || 0, qtyTotal);
 
         let msgContent;
         if (result.critFail) {
@@ -680,16 +697,45 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
             msgContent = `<p><strong>Failed.</strong> ${actor.name} didn't find anything useful. <em>(DC was ${result.dc})</em></p>`;
         } else {
             const modeLabel = gatherMode === "materials" ? "forge materials" : "ingredients";
-            msgContent = `<strong>${actor.name} found ${modeLabel}:</strong><ul>`;
-            for (const item of result.items) {
-                if (gatherMode === "materials") {
-                    await addForgeMaterialToActor(actor, item.name, item.type, item.qty);
+            
+            // Map item types to human-readable rarity groups
+            const getRarityGroup = (itemType, mode) => {
+                if (mode === "materials") {
+                    if (["metal", "crafting_supply", "wood", "hide", "natural", "cloth", "paper", "tool"].includes(itemType)) return "Common";
+                    if (["essence", "gem", "monster_part", "arcane"].includes(itemType)) return "Uncommon";
+                    if (["divine", "elemental"].includes(itemType)) return "Rare";
+                    return "Very Rare";
                 } else {
-                    await addIngredientToActor(actor, item.name, item.type, item.qty);
+                    if (["common_herb", "common_mushroom", "common_flower"].includes(itemType)) return "Common";
+                    if (["uncommon_herb", "uncommon_mushroom", "uncommon_flower", "uncommon_component"].includes(itemType)) return "Uncommon";
+                    if (["monster_part", "rare_component"].includes(itemType)) return "Rare";
+                    return "Very Rare";
                 }
-                msgContent += `<li>${item.qty}× ${item.name}</li>`;
+            };
+
+            const groups = { "Common": [], "Uncommon": [], "Rare": [], "Very Rare": [] };
+            for (const item of result.items) {
+                const grp = getRarityGroup(item.type, gatherMode);
+                groups[grp].push(item);
             }
-            msgContent += `</ul><em>(DC was ${result.dc})</em>`;
+
+            msgContent = `<strong>${actor.name} found ${modeLabel}:</strong>`;
+            for (const [rarity, list] of Object.entries(groups)) {
+                if (list.length === 0) continue;
+                msgContent += `<div style="margin-top: 6px;">
+                    <span style="font-weight: bold; font-size: 1.05em; color: #5c2018;">${rarity}</span>
+                    <ul style="margin: 0; padding-left: 20px;">`;
+                for (const item of list) {
+                    if (gatherMode === "materials") {
+                        await addForgeMaterialToActor(actor, item.name, item.type, item.qty);
+                    } else {
+                        await addIngredientToActor(actor, item.name, item.type, item.qty);
+                    }
+                    msgContent += `<li>${item.qty}× ${item.name}</li>`;
+                }
+                msgContent += `</ul></div>`;
+            }
+            msgContent += `<div style="margin-top: 8px;"><em>(DC was ${result.dc})</em></div>`;
         }
 
         await ChatMessage.create({

@@ -14,6 +14,7 @@ const MODULE_ID = "artificer-foundry";
 
 // Track open app instances per actor to avoid duplicates
 const _artificerApps = new Map();
+const _gatherStates = new Map();
 
 function openArtificerApp(actor) {
     if (!actor) return;
@@ -308,11 +309,32 @@ Hooks.once('ready', async function () {
     Hooks.on('renderChatMessageHTML', (message, html) => {
         const el = html instanceof HTMLElement ? html : html?.[0] ?? html;
         if (!el) return;
+        // 1. Skill check roll button handler
         el.querySelectorAll('.af-gather-roll-btn').forEach(btn => {
+            const requestId = btn.dataset.requestId;
+            const actorId = btn.dataset.actorId;
+            const state = _gatherStates.get(requestId);
+
+            const dc = parseInt(btn.dataset.dc || "10");
+            const formula = btn.dataset.formula || "1d4";
+            const skillKey = btn.dataset.skillKey || "sur";
+            const gatherMode = btn.dataset.gatherMode || "ingredients";
+
+            // Restore state on render
+            if (state) {
+                if (state.step === "done" || state.step === "done_check") {
+                    const isSuccess = state.rollTotal >= dc || state.rollTotal === 20;
+                    const suffix = isSuccess ? "(Success!)" : "(Failure)";
+                    btn.disabled = true;
+                    btn.innerHTML = `<i class="fas fa-check"></i> Check: ${state.rollTotal} ${suffix}`;
+                } else if (state.step === "failed") {
+                    btn.disabled = true;
+                    btn.innerHTML = `<i class="fas fa-times"></i> Failed (Rolled: ${state.rollTotal})`;
+                }
+            }
+
             btn.addEventListener('click', async (e) => {
                 e.preventDefault();
-                const requestId = btn.dataset.requestId;
-                const actorId = btn.dataset.actorId;
                 const actor = game.actors.get(actorId);
                 if (!actor) { ui.notifications.warn("Actor not found."); return; }
 
@@ -322,15 +344,9 @@ Hooks.once('ready', async function () {
                     return;
                 }
 
-                const active = game.settings.get(MODULE_ID, "activeGatherRequests");
-                const req = active[requestId];
-                if (!req) { ui.notifications.warn("This gathering request has expired."); return; }
-
-                const skillKey = req.skillKey ?? "sur";
                 const skillMap = { sur: "sur", nat: "nat", arc: "arc", inv: "inv", per: "prc", med: "med" };
                 const dndSkill = skillMap[skillKey] ?? "sur";
 
-                // Roll the skill check using Foundry's native dialog (includes modifiers)
                 let rollTotal;
                 try {
                     // dnd5e 5.x uses { skill } object syntax
@@ -359,20 +375,116 @@ Hooks.once('ready', async function () {
                     }
                 }
 
-                // Disable the button after rolling
+                // Verify check success against the requested DC
+                const isSuccess = rollTotal >= dc || rollTotal === 20;
+                const isCritFail = rollTotal === 1;
+
+                if (isCritFail) {
+                    _gatherStates.set(requestId, { rollTotal, qtyTotal: 0, step: "failed" });
+                    btn.disabled = true;
+                    btn.innerHTML = `<i class="fas fa-times"></i> Failed (Rolled: ${rollTotal})`;
+
+                    if (game.user.isGM) {
+                        await GatheringPanel.handleRollResult({ requestId, actorId, rollTotal, qtyTotal: 0 });
+                    } else {
+                        const gmUsers = game.users.filter(u => u.isGM).map(u => u.id);
+                        await ChatMessage.create({
+                            content: `<div class="af-gather-result-msg" data-request-id="${requestId}" data-actor-id="${actorId}" data-roll-total="${rollTotal}" data-qty-total="0">
+                                <p><strong>${actor.name}</strong> rolled <strong>${rollTotal}</strong> (failed) for gathering.</p>
+                            </div>`,
+                            whisper: gmUsers,
+                            speaker: { alias: "Artificer Foundry" },
+                        });
+                    }
+                } else {
+                    _gatherStates.set(requestId, { rollTotal, step: "done_check" });
+                    btn.disabled = true;
+                    const suffix = isSuccess ? "(Success!)" : "(Failure)";
+                    btn.innerHTML = `<i class="fas fa-check"></i> Check: ${rollTotal} ${suffix}`;
+
+                    // Generate a separate chat card whispered to the player to roll their yield
+                    const checkStatusHtml = isSuccess 
+                        ? `<p><i class="fas fa-check-circle" style="color: green;"></i> <strong>Gathering Success!</strong></p>` 
+                        : `<p><i class="fas fa-exclamation-triangle" style="color: #ff9800;"></i> <strong>Check failed</strong>, but you still gather what you can (rarity reduced).</p>`;
+
+                    const content = `
+                        <div class="af-gather-yield-request">
+                            ${checkStatusHtml}
+                            <p>Click below to roll the yield formula to see what you find.</p>
+                            <button 
+                                data-action="af-gather-yield-roll" 
+                                data-request-id="${requestId}" 
+                                data-actor-id="${actorId}" 
+                                data-roll-total="${rollTotal}" 
+                                data-dc="${dc}" 
+                                data-formula="${formula}" 
+                                data-gather-mode="${gatherMode}" 
+                                class="af-gather-yield-roll-btn">
+                                <i class="fas fa-dice-six"></i> Roll Yield (${formula})
+                            </button>
+                        </div>`;
+                    await ChatMessage.create({
+                        content,
+                        whisper: [game.user.id],
+                        speaker: { alias: "Artificer Foundry" }
+                    });
+                }
+            });
+        });
+
+        // 2. Yield roll button handler (on the separate success card)
+        el.querySelectorAll('.af-gather-yield-roll-btn').forEach(btn => {
+            const requestId = btn.dataset.requestId;
+            const actorId = btn.dataset.actorId;
+            const state = _gatherStates.get(requestId);
+
+            const rollTotal = parseInt(btn.dataset.rollTotal || "0");
+            const formula = btn.dataset.formula || "1d4";
+            const gatherMode = btn.dataset.gatherMode || "ingredients";
+
+            // Restore state on render
+            if (state && state.step === "done") {
                 btn.disabled = true;
-                btn.innerHTML = `<i class="fas fa-check"></i> Rolled: ${rollTotal}`;
+                btn.innerHTML = `<i class="fas fa-check"></i> Yield Rolled: ${state.qtyTotal}`;
+            }
+
+            btn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const actor = game.actors.get(actorId);
+                if (!actor) { ui.notifications.warn("Actor not found."); return; }
+
+                if (!actor.isOwner) {
+                    ui.notifications.warn("You don't own this character.");
+                    return;
+                }
+
+                btn.disabled = true;
+
+                // Roll the quantity yield formula using standard Foundry VTT Roll
+                let qtyTotal = 1;
+                try {
+                    const qtyRoll = await new Roll(formula).evaluate();
+                    const modeLabel = gatherMode === "materials" ? "Forge Materials" : "Ingredients";
+                    await qtyRoll.toMessage({
+                        speaker: ChatMessage.getSpeaker({ actor }),
+                        flavor: `Gathering Yield: ${modeLabel} (${formula})`
+                    });
+                    qtyTotal = qtyRoll.total;
+                } catch (errQty) {
+                    console.error("Artificer Foundry | Quantity roll failed:", errQty);
+                }
+
+                _gatherStates.set(requestId, { rollTotal, qtyTotal, step: "done" });
+                btn.innerHTML = `<i class="fas fa-check"></i> Yield Rolled: ${qtyTotal}`;
 
                 // Send result to GM for processing
                 if (game.user.isGM) {
-                    await GatheringPanel.handleRollResult({ requestId, actorId, rollTotal });
+                    await GatheringPanel.handleRollResult({ requestId, actorId, rollTotal, qtyTotal });
                 } else {
-                    // Use a socket or setting to notify GM
-                    // For simplicity, create a GM-whispered message with the result
                     const gmUsers = game.users.filter(u => u.isGM).map(u => u.id);
                     await ChatMessage.create({
-                        content: `<div class="af-gather-result-msg" data-request-id="${requestId}" data-actor-id="${actorId}" data-roll-total="${rollTotal}">
-                            <p><strong>${actor.name}</strong> rolled <strong>${rollTotal}</strong> for gathering.</p>
+                        content: `<div class="af-gather-result-msg" data-request-id="${requestId}" data-actor-id="${actorId}" data-roll-total="${rollTotal}" data-qty-total="${qtyTotal}">
+                            <p><strong>${actor.name}</strong> rolled <strong>${rollTotal}</strong> (yield: <strong>${qtyTotal}</strong>) for gathering.</p>
                         </div>`,
                         whisper: gmUsers,
                         speaker: { alias: "Artificer Foundry" },
@@ -387,9 +499,10 @@ Hooks.once('ready', async function () {
                 const requestId = msg.dataset.requestId;
                 const actorId = msg.dataset.actorId;
                 const rollTotal = parseInt(msg.dataset.rollTotal);
+                const qtyTotal = parseInt(msg.dataset.qtyTotal || "0");
                 if (requestId && actorId && !isNaN(rollTotal) && !msg.dataset.processed) {
                     msg.dataset.processed = "true";
-                    GatheringPanel.handleRollResult({ requestId, actorId, rollTotal });
+                    GatheringPanel.handleRollResult({ requestId, actorId, rollTotal, qtyTotal });
                 }
             });
         }
