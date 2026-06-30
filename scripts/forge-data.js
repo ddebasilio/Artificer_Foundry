@@ -3,7 +3,7 @@
  * Loaded from data/forge-materials.json at runtime.
  */
 
-import { getAbundanceModifiers, getTimeUnits, getIngredientCosts, getArtificerBag, getGatheringDice, rollFormula } from "./ingredient-data.js";
+import { getAbundanceModifiers, getTimeUnits, getIngredientCosts, getArtificerBag, getGatheringDice, rollFormula, calculateGroupWeights } from "./ingredient-data.js";
 
 let _forgeData = null;
 
@@ -124,8 +124,6 @@ export function getForgeSubstitutes(ingredientName, recipeRarity) {
  * Resolve forge material gathering by a pre-computed DC (used by gathering panel).
  */
 export function resolveForgeForagingByDC(dc, biomeKey, rollTotal, timeAmount = 1, timeUnit = "hours", abundanceKey = "medium", rarityMod = 0, forcedItemCount = null) {
-    const abundanceMods = getAbundanceModifiers();
-    const abundance = abundanceMods[abundanceKey] ?? { qtyMul: 1.0 };
     const critFail = rollTotal === 1;
     const critSuccess = rollTotal === 20;
     const success = rollTotal >= dc || critSuccess;
@@ -141,61 +139,28 @@ export function resolveForgeForagingByDC(dc, biomeKey, rollTotal, timeAmount = 1
         itemCount = forcedItemCount;
     } else {
         const minutes = hours * 60;
-        const rollData = getGatheringDice(minutes, abundance.qtyMul);
+        const rollData = getGatheringDice(minutes, abundanceKey);
         itemCount = rollFormula(rollData.formula);
     }
 
     if (success) {
         if (itemCount === 0) itemCount = 1; // Guarantee at least 1 item on success
         if (forcedItemCount === null || forcedItemCount === undefined) {
-            itemCount += critSuccess ? 2 : 1; // Success bonus
+            if (critSuccess) {
+                itemCount = Math.round(itemCount * 1.5);
+                if (itemCount <= 1) itemCount = 2;
+            }
         }
     }
 
     if (itemCount === 0) return { success: false, dc, items: [], critFail: false };
 
-    // Calculate time-scaled rarity multiplier
-    const timeRarityMult = Math.min(2.5, 1.0 + Math.max(0, Math.log10(hours)));
-
-    // Rarity distribution based on roll margin + GM rarityMod
-    const margin = (rollTotal - dc) + rarityMod;
-    let multipliers = { C: 1.0, U: 1.0, R: 1.0, VR: 1.0 };
-
-    if (!success) {
-        multipliers = { C: 1.0, U: 0.02 * timeRarityMult, R: 0.0, VR: 0.0 };
-    } else if (critSuccess) {
-        multipliers = { C: 0.1, U: 0.5 * timeRarityMult, R: 1.0 * timeRarityMult, VR: 1.0 * timeRarityMult };
-    } else if (margin >= 10) {
-        multipliers = { C: 0.2, U: 0.6 * timeRarityMult, R: 1.0 * timeRarityMult, VR: 0.8 * timeRarityMult };
-    } else if (margin >= 5) {
-        multipliers = { C: 0.5, U: 0.8 * timeRarityMult, R: 0.8 * timeRarityMult, VR: 0.2 * timeRarityMult };
-    } else {
-        const vrBase = 0.02 * timeRarityMult;
-        multipliers = { C: 1.0, U: 0.8 * timeRarityMult, R: 0.4 * timeRarityMult, VR: vrBase };
-    }
-
     const getGroup = (type) => {
         if (["metal", "crafting_supply", "wood", "hide", "natural", "cloth", "paper", "tool"].includes(type)) return "C";
         if (["essence", "gem", "monster_part", "arcane"].includes(type)) return "U";
-        if (["divine", "elemental"].includes(type)) return "R";
+        if (["divine", "elemental", "rare_metal", "rare_essence", "rare_gem", "rare_monster_part"].includes(type)) return "R";
         return "VR";
     };
-
-    const rarityWeights = { ...getMaterialRarityWeights() };
-    if ((rarityWeights["very_rare_metal"] ?? 0) === 0) rarityWeights["very_rare_metal"] = 1.5;
-    if ((rarityWeights["rare_essence"] ?? 0) === 0) rarityWeights["rare_essence"] = 2.0;
-    if ((rarityWeights["very_rare_essence"] ?? 0) === 0) rarityWeights["very_rare_essence"] = 1.0;
-    if ((rarityWeights["legendary_essence"] ?? 0) === 0) rarityWeights["legendary_essence"] = 0.1;
-    if ((rarityWeights["rare_gem"] ?? 0) === 0) rarityWeights["rare_gem"] = 2.0;
-    if ((rarityWeights["very_rare_gem"] ?? 0) === 0) rarityWeights["very_rare_gem"] = 1.0;
-    if ((rarityWeights["legendary_gem"] ?? 0) === 0) rarityWeights["legendary_gem"] = 0.1;
-    if ((rarityWeights["rare_monster_part"] ?? 0) === 0) rarityWeights["rare_monster_part"] = 1.0;
-    if ((rarityWeights["very_rare_monster_part"] ?? 0) === 0) rarityWeights["very_rare_monster_part"] = 0.5;
-    if ((rarityWeights["very_rare_component"] ?? 0) === 0) rarityWeights["very_rare_component"] = 0.5;
-    if ((rarityWeights["legendary_component"] ?? 0) === 0) rarityWeights["legendary_component"] = 0.1;
-    if ((rarityWeights["divine"] ?? 0) === 0) rarityWeights["divine"] = 1.0;
-    if ((rarityWeights["elemental"] ?? 0) === 0) rarityWeights["elemental"] = 1.0;
-    if ((rarityWeights["planar"] ?? 0) === 0) rarityWeights["planar"] = 1.0;
 
     const biomePool = { ...getBiomeMaterials()[biomeKey] };
     const allIngredientsByTier = {};
@@ -205,6 +170,47 @@ export function resolveForgeForagingByDC(dc, biomeKey, rollTotal, timeAmount = 1
             for (const name of names) allIngredientsByTier[t].add(name);
         }
     }
+
+    // Statically inject very rare, legendary, divine, planar, elemental components if not in biomes
+    const staticVeryRareMetal = ["Adamantine Ingot", "Mithral Ingot"];
+    if (!allIngredientsByTier["very_rare_metal"]) allIngredientsByTier["very_rare_metal"] = new Set();
+    for (const name of staticVeryRareMetal) allIngredientsByTier["very_rare_metal"].add(name);
+
+    const staticVeryRareEssence = ["Superior Arcane Essence"];
+    if (!allIngredientsByTier["very_rare_essence"]) allIngredientsByTier["very_rare_essence"] = new Set();
+    for (const name of staticVeryRareEssence) allIngredientsByTier["very_rare_essence"].add(name);
+
+    const staticLegendaryEssence = ["Legendary Arcane Essence"];
+    if (!allIngredientsByTier["legendary_essence"]) allIngredientsByTier["legendary_essence"] = new Set();
+    for (const name of staticLegendaryEssence) allIngredientsByTier["legendary_essence"].add(name);
+
+    const staticVeryRareGem = ["Diamond"];
+    if (!allIngredientsByTier["very_rare_gem"]) allIngredientsByTier["very_rare_gem"] = new Set();
+    for (const name of staticVeryRareGem) allIngredientsByTier["very_rare_gem"].add(name);
+
+    const staticLegendaryGem = ["Diamond"];
+    if (!allIngredientsByTier["legendary_gem"]) allIngredientsByTier["legendary_gem"] = new Set();
+    for (const name of staticLegendaryGem) allIngredientsByTier["legendary_gem"].add(name);
+
+    const staticVeryRareMonsterPart = ["Storm Giant Blood", "Fire Giant Heartstring", "Pegasus Hair"];
+    if (!allIngredientsByTier["very_rare_monster_part"]) allIngredientsByTier["very_rare_monster_part"] = new Set();
+    for (const name of staticVeryRareMonsterPart) allIngredientsByTier["very_rare_monster_part"].add(name);
+
+    const staticLegendaryComponent = ["Dragon Heart", "Unicorn Horn"];
+    if (!allIngredientsByTier["legendary_component"]) allIngredientsByTier["legendary_component"] = new Set();
+    for (const name of staticLegendaryComponent) allIngredientsByTier["legendary_component"].add(name);
+
+    const staticDivine = ["Divine Spark"];
+    if (!allIngredientsByTier["divine"]) allIngredientsByTier["divine"] = new Set();
+    for (const name of staticDivine) allIngredientsByTier["divine"].add(name);
+
+    const staticElemental = ["Elemental Core"];
+    if (!allIngredientsByTier["elemental"]) allIngredientsByTier["elemental"] = new Set();
+    for (const name of staticElemental) allIngredientsByTier["elemental"].add(name);
+
+    const staticPlanar = ["Astral Shard"];
+    if (!allIngredientsByTier["planar"]) allIngredientsByTier["planar"] = new Set();
+    for (const name of staticPlanar) allIngredientsByTier["planar"].add(name);
 
     const rareTiers = [
         "rare_metal", "very_rare_metal", "rare_essence", "very_rare_essence", "legendary_essence",
@@ -225,18 +231,28 @@ export function resolveForgeForagingByDC(dc, biomeKey, rollTotal, timeAmount = 1
         }
     }
 
+    const groupWeights = calculateGroupWeights(rarityMod);
+    const groupedItems = { C: [], U: [], R: [], VR: [] };
+    for (const [tier, names] of Object.entries(biomePool)) {
+        const group = getGroup(tier);
+        if (names && names.length > 0) {
+            for (const name of names) {
+                if (!groupedItems[group].some(e => e.name === name)) {
+                    groupedItems[group].push({ name, tier });
+                }
+            }
+        }
+    }
+
     const items = [];
     const weightedPool = [];
-
-    for (const [tier, names] of Object.entries(biomePool)) {
-        const baseWeight = rarityWeights[tier] ?? 0;
-        const group = getGroup(tier);
-        const mult = multipliers[group];
-        const finalWeight = baseWeight * mult;
-        if (finalWeight > 0 && names.length > 0) {
-            const itemWeight = finalWeight / names.length;
-            for (const name of names) {
-                weightedPool.push({ name, type: tier, weight: itemWeight });
+    for (const group of ["C", "U", "R", "VR"]) {
+        const itemsInGroup = groupedItems[group];
+        const gWeight = groupWeights[group];
+        if (gWeight > 0 && itemsInGroup.length > 0) {
+            const itemWeight = gWeight / itemsInGroup.length;
+            for (const item of itemsInGroup) {
+                weightedPool.push({ name: item.name, type: item.tier, weight: itemWeight });
             }
         }
     }

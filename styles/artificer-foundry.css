@@ -1741,12 +1741,21 @@
 
 .af-lg-coin-amount {
     font-weight: bold;
-    min-width: 50px;
+    width: 60px;
+    flex: 0 0 60px;
     text-align: right;
     color: var(--color-text-light-highlight, #f0e8d0);
+    box-sizing: border-box;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    padding: 2px 4px;
+    height: 22px;
 }
 
 .af-lg-coin-type {
+    width: 80px;
+    flex: 0 0 80px;
     color: var(--color-text-light-primary, #b4b0a8);
 }
 
@@ -1768,18 +1777,22 @@
 
 .af-lg-item-actions {
     display: flex;
-    gap: 4px;
-    flex: 0 0 32px;
-    width: 32px;
+    flex-direction: column;
+    gap: 3px;
+    flex: 0 0 24px;
+    width: 24px;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
+    height: 100%;
+    margin-right: 6px;
 }
 
 .af-lg-send-item-to-party,
 .af-lg-reroll-item,
+.af-lg-remove-item,
 .af-lg-item-info {
-    width: 14px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     padding: 0;
     box-sizing: border-box;
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -1787,7 +1800,7 @@
     background: transparent;
     color: var(--color-text-light-primary, #b4b0a8);
     cursor: pointer;
-    font-size: 9px;
+    font-size: 11px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1807,6 +1820,12 @@
     background: rgba(255, 100, 0, 0.1);
 }
 
+.af-lg-remove-item:hover {
+    color: #ff4444;
+    border-color: #ff4444;
+    background: rgba(255, 68, 68, 0.1);
+}
+
 .af-lg-item-desc {
     margin-top: 4px;
     padding: 4px 6px;
@@ -1821,27 +1840,43 @@
     margin: 0;
 }
 
-/* Send to party button */
+/* Send and Discard actions container */
 .af-lg-send-actions {
-    margin-top: 6px;
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
 }
 
-.af-lg-send-to-party {
-    width: 100%;
+.af-lg-send-to-party,
+.af-lg-discard-roll {
+    flex: 1;
     padding: 6px 10px;
     font-size: 12px;
     font-weight: bold;
     cursor: pointer;
     border: 1px solid var(--color-border-dark-tertiary, rgba(255, 255, 255, 0.15));
     border-radius: 4px;
-    background: transparent;
-    color: var(--color-text-light-highlight, #f0e8d0);
-    transition: color 0.15s, border-color 0.15s;
+    background: rgba(0, 0, 0, 0.2);
+    color: var(--color-text-light-primary, #b4b0a8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    height: 32px;
+    box-sizing: border-box;
 }
 
 .af-lg-send-to-party:hover {
-    color: var(--color-text-hyperlink, #ff6400);
-    border-color: var(--color-text-hyperlink, #ff6400);
+    background: rgba(68, 153, 255, 0.15);
+    border-color: #4499ff;
+    color: #4499ff;
+}
+
+.af-lg-discard-roll:hover {
+    background: rgba(255, 68, 68, 0.15);
+    border-color: #ff4444;
+    color: #ff4444;
 }
 
 /* Rarity colors — brighter for dark backgrounds */
@@ -2143,7 +2178,7 @@
     display: flex !important;
     align-items: center;
     gap: 8px;
-    padding: 0 8px 0 0;
+    padding: 0;
     border: 1px solid var(--color-border-dark-tertiary, rgba(255, 255, 255, 0.1));
     border-radius: 4px;
     background: rgba(0, 0, 0, 0.15);

@@ -57,6 +57,11 @@
     }
   },
   "abundanceModifiers": {
+    "abundant": {
+      "name": "Abundant",
+      "dcMod": -5,
+      "qtyMul": 3.0
+    },
     "plentiful": {
       "name": "Plentiful",
       "dcMod": -3,

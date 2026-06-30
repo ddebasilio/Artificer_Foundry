@@ -255,6 +255,46 @@ export async function rollItemsByCategory(crTier, category) {
         }
     }
 
+    // Force-roll at least 1 item if random rolls yielded nothing
+    if (rolledItems.length === 0) {
+        const allowedRarities = [];
+        for (const r of tier.magicItems) {
+            for (const itemEntry of r.items || []) {
+                if (itemEntry.rarity && !allowedRarities.includes(itemEntry.rarity)) {
+                    allowedRarities.push(itemEntry.rarity);
+                }
+            }
+        }
+
+        const fallbackRarity = allowedRarities.length > 0
+            ? allowedRarities[Math.floor(Math.random() * allowedRarities.length)]
+            : "uncommon";
+
+        let itemName = _pickRandomItemInCategory(fallbackRarity, category);
+
+        if (!itemName) {
+            const allRarities = ["common", "uncommon", "rare", "very_rare", "legendary"];
+            for (const r of allRarities) {
+                itemName = _pickRandomItemInCategory(r, category);
+                if (itemName) break;
+            }
+        }
+
+        if (itemName) {
+            const details = getItemDetails(itemName);
+            rolledItems.push({
+                id: foundry.utils.randomID(),
+                name: itemName,
+                rarity: details?.rarity ?? "uncommon",
+                type: details?.type ?? "",
+                text: details?.text ?? "",
+                price: details?.price ?? 0,
+                source: details?.source ?? "",
+                img: "icons/svg/item-bag.svg",
+            });
+        }
+    }
+
     return { coins: {}, items: rolledItems };
 }
 

@@ -19,15 +19,6 @@
             <h3 class="gathering-section-title"><i class="fas fa-skull-crossbones"></i> Loot Parameters</h3>
 
             <div class="gather-row">
-                <label>Loot Type</label>
-                <select class="af-lg-loot-type">
-                    {{#each lootTypes}}
-                        <option value="{{this.value}}" {{#if (eq ../lootType this.value)}}selected{{/if}}>{{this.label}}</option>
-                    {{/each}}
-                </select>
-            </div>
-
-            <div class="gather-row">
                 <label>Challenge Rating</label>
                 <select class="af-lg-cr-tier">
                     {{#each crTiers}}
@@ -35,22 +26,34 @@
                     {{/each}}
                 </select>
             </div>
-
-            <div class="gather-row af-lg-category-row" style="{{#unless showCategorySelect}}display:none{{/unless}}">
-                <label>Category</label>
-                <select class="af-lg-item-category">
-                    {{#each itemCategories}}
-                        <option value="{{this.value}}" {{#if (eq ../itemCategory this.value)}}selected{{/if}}>{{this.label}}</option>
-                    {{/each}}
-                </select>
-            </div>
         </section>
 
-        <div class="gathering-action">
-            <button class="af-lg-roll-btn">
-                <i class="fas fa-dice-d20"></i> Roll Loot
-            </button>
-        </div>
+        <section class="gathering-section">
+            <h3 class="gathering-section-title"><i class="fas fa-dice-d20"></i> Quick Roll Treasure & Items</h3>
+            <div class="af-lg-quick-roll-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 12px;">
+                <button class="af-lg-roll-btn" data-action="currency" style="grid-column: span 2; font-weight: bold;">
+                    <i class="fas fa-coins"></i> Currency
+                </button>
+                <button class="af-lg-roll-btn" data-action="potions">
+                    <i class="fas fa-flask"></i> Potions
+                </button>
+                <button class="af-lg-roll-btn" data-action="scrolls">
+                    <i class="fas fa-scroll"></i> Scrolls
+                </button>
+                <button class="af-lg-roll-btn" data-action="weapons">
+                    <i class="fas fa-wand-magic-sparkles"></i> Weapons & Wands
+                </button>
+                <button class="af-lg-roll-btn" data-action="armor">
+                    <i class="fas fa-shield-halved"></i> Armor
+                </button>
+                <button class="af-lg-roll-btn" data-action="rings">
+                    <i class="fas fa-ring"></i> Rings
+                </button>
+                <button class="af-lg-roll-btn" data-action="general">
+                    <i class="fas fa-magic"></i> General Magic Items
+                </button>
+            </div>
+        </section>
 
         {{!-- ── Results (multiple rolls, newest first) ── --}}
         {{#if hasLootResults}}
@@ -107,7 +110,7 @@
 
             <div class="gathering-action af-lg-send-actions">
                 <button class="af-lg-send-to-party">
-                    <i class="fas fa-users"></i> Send All to Party Inventory
+                    <i class="fas fa-boxes-stacked"></i> Send to Inventory
                 </button>
                 <button class="af-lg-discard-roll">
                     <i class="fas fa-trash"></i> Discard Roll
@@ -161,9 +164,9 @@
             </div>
         </section>
 
-        {{!-- ── Environment ── --}}
+        {{!-- ── DC Modifiers ── --}}
         <section class="gathering-section gathering-environment">
-            <h3 class="gathering-section-title"><i class="fas fa-map"></i> Environment</h3>
+            <h3 class="gathering-section-title"><i class="fas fa-map"></i> DC Modifiers</h3>
 
             <div class="gather-row">
                 <label>Biome</label>
@@ -183,14 +186,17 @@
                 </select>
             </div>
 
-            <div class="gather-row">
+            <div class="gather-row" style="flex-wrap: wrap;">
                 <label>Time Spent</label>
                 <input class="gather-time-amount" type="number" min="1" max="999" value="{{timeAmount}}">
-                <select class="gather-time-unit">
+                <select class="gather-time-unit" style="flex: 1;">
                     {{#each timeUnits}}
                         <option value="{{this.value}}" {{#if (eq ../timeUnit this.value)}}selected{{/if}}>{{this.name}}</option>
                     {{/each}}
                 </select>
+                <p class="notes" style="width: 100%; margin: 4px 0 0 0; font-size: 0.9em; opacity: 0.8;">
+                    Note: 1 day of active gathering equals 8 hours.
+                </p>
             </div>
 
             <div class="gather-row">
@@ -210,20 +216,37 @@
                     {{/each}}
                 </select>
             </div>
+        </section>
+
+        {{!-- ── Roll Settings ── --}}
+        <section class="gathering-section gathering-settings">
+            <h3 class="gathering-section-title"><i class="fas fa-cog"></i> Roll Settings</h3>
 
             <div class="gather-row">
-                <label>Rarity Focus</label>
-                <select class="gather-rarity-mod">
-                    <option value="-5" {{#if (eq rarityMod "-5")}}selected{{/if}}>-5 (Abundant Common)</option>
-                    <option value="-3" {{#if (eq rarityMod "-3")}}selected{{/if}}>-3 (Favor Common)</option>
-                    <option value="0" {{#if (eq rarityMod "0")}}selected{{/if}}>0 (Standard Biome)</option>
-                    <option value="3" {{#if (eq rarityMod "3")}}selected{{/if}}>+3 (Favor Rares)</option>
-                    <option value="5" {{#if (eq rarityMod "5")}}selected{{/if}}>+5 (Abundant Legends)</option>
+                <label>Skill</label>
+                <select class="gather-skill">
+                    {{#each skillOptions}}
+                        <option value="{{this.value}}" {{#if (eq ../skillKey this.value)}}selected{{/if}}>{{this.label}}</option>
+                    {{/each}}
                 </select>
+            </div>
+
+            <div class="gather-row" style="flex-wrap: wrap;">
+                <label>Rarity Bias</label>
+                <select class="gather-rarity-mod" style="flex: 1;">
+                    <option value="-5" {{#if (eq rarityMod "-5")}}selected{{/if}}>Extreme Common Focus (Common 90% | Uncommon 7.5% | Rare 1.7% | Very Rare 0.8%)</option>
+                    <option value="-3" {{#if (eq rarityMod "-3")}}selected{{/if}}>Favor Common (Common 78% | Uncommon 16.5% | Rare 3.9% | Very Rare 1.6%)</option>
+                    <option value="0" {{#if (eq rarityMod "0")}}selected{{/if}}>Balanced (Common 60% | Uncommon 30% | Rare 7% | Very Rare 3%)</option>
+                    <option value="3" {{#if (eq rarityMod "3")}}selected{{/if}}>Favor Rare/Legend (Common 42% | Uncommon 30% | Rare 19.6% | Very Rare 8.4%)</option>
+                    <option value="5" {{#if (eq rarityMod "5")}}selected{{/if}}>Extreme Rare/Legend (Common 30% | Uncommon 30% | Rare 28% | Very Rare 12%)</option>
+                </select>
+                <p class="notes" style="width: 100%; margin: 4px 0 0 0; font-size: 0.9em; opacity: 0.8;">
+                    Positive bias shifts weight from Common to Rare/Very Rare. Negative bias shifts weight to Common.
+                </p>
             </div>
         </section>
 
-        {{!-- ── DC & Skill ── --}}
+        {{!-- ── Difficulty Class ── --}}
         <section class="gathering-section gathering-dc-section">
             <h3 class="gathering-section-title"><i class="fas fa-bullseye"></i> Difficulty Class</h3>
 
@@ -233,15 +256,6 @@
                 <button class="dc-reset-btn icon-btn" title="Reset to auto" style="{{#unless isManualDC}}display:none{{/unless}}">
                     <i class="fas fa-undo"></i>
                 </button>
-            </div>
-
-            <div class="gather-row">
-                <label>Skill</label>
-                <select class="gather-skill">
-                    {{#each skillOptions}}
-                        <option value="{{this.value}}" {{#if (eq ../skillKey this.value)}}selected{{/if}}>{{this.label}}</option>
-                    {{/each}}
-                </select>
             </div>
         </section>
 

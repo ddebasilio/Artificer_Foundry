@@ -333,15 +333,6 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
             mult *= 0.5;
         }
 
-        // Cooperative Crafting: homunculus assist mode is baked in
-        let assistants = 0;
-        const hasHomunculus = this.actor.getFlag("artificer-foundry", "hasHomunculus") ?? false;
-        const homunculusMode = this.actor.getFlag("artificer-foundry", "homunculusMode") || "assist";
-        if (hasHomunculus && homunculusMode === "assist") {
-            assistants += 1;
-        }
-        mult /= (1 + Number(assistants));
-
         return mult;
     }
 
@@ -371,15 +362,6 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                 mult *= 0.5;
             }
         }
-
-        // Cooperative Crafting: homunculus assist mode is baked in
-        let assistants = 0;
-        const hasHomunculus = this.actor.getFlag("artificer-foundry", "hasHomunculus") ?? false;
-        const homunculusMode = this.actor.getFlag("artificer-foundry", "homunculusMode") || "assist";
-        if (hasHomunculus && homunculusMode === "assist") {
-            assistants += 1;
-        }
-        mult /= (1 + Number(assistants));
 
         return mult;
     }
@@ -1811,6 +1793,7 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                         const homunculusBonus = isAssisting ? 1 : 0;
 
                         const baseHours = unit === "days" ? amount * 8 : amount;
+                        // homunculus adds +1 to progress rate when assisting
                         const hoursToAdd = baseHours * (1 + assistants + homunculusBonus);
 
                         // Migrate legacy project fields
