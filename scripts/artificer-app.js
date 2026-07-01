@@ -433,11 +433,17 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
     _isAlchemistAuto() {
         if (!this.actor) return false;
+        const systemSubclass = this.actor.system?.details?.subclass;
+        if (systemSubclass && typeof systemSubclass === "string" && systemSubclass.toLowerCase().includes("alchemist")) {
+            return true;
+        }
         const items = this.actor.items?.contents ?? [];
         return items.some(i => {
             const name = (i.name ?? "").toLowerCase();
             const type = i.type ?? "";
             if (type === "subclass" && (name.includes("alchemist") || name.includes("alchemy"))) return true;
+            if (type === "class" && name.includes("alchemist")) return true;
+            if (type === "feat" && (name.includes("alchemist") || name.includes("alchemy"))) return true;
             if (name.includes("tool proficiency") && name.includes("alchemist")) return true;
             return false;
         });
@@ -445,33 +451,51 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
     _isArmorerAuto() {
         if (!this.actor) return false;
+        const systemSubclass = this.actor.system?.details?.subclass;
+        if (systemSubclass && typeof systemSubclass === "string" && systemSubclass.toLowerCase().includes("armorer")) {
+            return true;
+        }
         const items = this.actor.items?.contents ?? [];
         return items.some(i => {
             const name = (i.name ?? "").toLowerCase();
             const type = i.type ?? "";
             if (type === "subclass" && name.includes("armorer")) return true;
+            if (type === "class" && name.includes("armorer")) return true;
+            if (type === "feat" && name.includes("armorer")) return true;
             return false;
         });
     }
 
     _isArtilleristAuto() {
         if (!this.actor) return false;
+        const systemSubclass = this.actor.system?.details?.subclass;
+        if (systemSubclass && typeof systemSubclass === "string" && systemSubclass.toLowerCase().includes("artillerist")) {
+            return true;
+        }
         const items = this.actor.items?.contents ?? [];
         return items.some(i => {
             const name = (i.name ?? "").toLowerCase();
             const type = i.type ?? "";
             if (type === "subclass" && name.includes("artillerist")) return true;
+            if (type === "class" && name.includes("artillerist")) return true;
+            if (type === "feat" && name.includes("artillerist")) return true;
             return false;
         });
     }
 
     _isBattleSmithAuto() {
         if (!this.actor) return false;
+        const systemSubclass = this.actor.system?.details?.subclass;
+        if (systemSubclass && typeof systemSubclass === "string" && (systemSubclass.toLowerCase().includes("battlesmith") || systemSubclass.toLowerCase().includes("battle smith"))) {
+            return true;
+        }
         const items = this.actor.items?.contents ?? [];
         return items.some(i => {
             const name = (i.name ?? "").toLowerCase();
             const type = i.type ?? "";
             if (type === "subclass" && (name.includes("battlesmith") || name.includes("battle smith"))) return true;
+            if (type === "class" && (name.includes("battlesmith") || name.includes("battle smith"))) return true;
+            if (type === "feat" && (name.includes("battlesmith") || name.includes("battle smith"))) return true;
             return false;
         });
     }
