@@ -271,9 +271,9 @@ export function resolveForaging(biomeKey, abundanceKey, timeAmount, timeUnit, ro
     if (itemCount === 0) return { success: false, dc, items: [], critFail: false };
 
     const getGroup = (tier) => {
-        if (["common_herb", "common_component", "liquid"].includes(tier)) return "C";
-        if (["uncommon_herb", "uncommon_component"].includes(tier)) return "U";
-        if (["monster_part", "rare_component"].includes(tier)) return "R";
+        if (["common_herb", "common_component", "liquid", "metal", "crafting_supply", "wood", "hide", "natural", "cloth", "paper", "tool"].includes(tier)) return "C";
+        if (["uncommon_herb", "uncommon_component", "essence", "gem", "monster_part", "arcane"].includes(tier)) return "U";
+        if (["rare_component", "rare_monster_part", "divine", "elemental", "rare_metal", "rare_essence", "rare_gem"].includes(tier)) return "R";
         return "VR";
     };
 
@@ -433,9 +433,9 @@ export function resolveForagingByDC(dc, biomeKey, rollTotal, timeAmount = 1, tim
     if (itemCount === 0) return { success: false, dc, items: [], critFail: false };
 
     const getGroup = (tier) => {
-        if (["common_herb", "common_component", "liquid"].includes(tier)) return "C";
-        if (["uncommon_herb", "uncommon_component"].includes(tier)) return "U";
-        if (["monster_part", "rare_component"].includes(tier)) return "R";
+        if (["common_herb", "common_component", "liquid", "metal", "crafting_supply", "wood", "hide", "natural", "cloth", "paper", "tool"].includes(tier)) return "C";
+        if (["uncommon_herb", "uncommon_component", "essence", "gem", "monster_part", "arcane"].includes(tier)) return "U";
+        if (["rare_component", "rare_monster_part", "divine", "elemental", "rare_metal", "rare_essence", "rare_gem"].includes(tier)) return "R";
         return "VR";
     };
 

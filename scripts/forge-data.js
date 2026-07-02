@@ -156,9 +156,9 @@ export function resolveForgeForagingByDC(dc, biomeKey, rollTotal, timeAmount = 1
     if (itemCount === 0) return { success: false, dc, items: [], critFail: false };
 
     const getGroup = (type) => {
-        if (["metal", "crafting_supply", "wood", "hide", "natural", "cloth", "paper", "tool"].includes(type)) return "C";
-        if (["essence", "gem", "monster_part", "arcane"].includes(type)) return "U";
-        if (["divine", "elemental", "rare_metal", "rare_essence", "rare_gem", "rare_monster_part"].includes(type)) return "R";
+        if (["metal", "crafting_supply", "wood", "hide", "natural", "cloth", "paper", "tool", "common_herb", "common_component", "liquid"].includes(type)) return "C";
+        if (["essence", "gem", "monster_part", "arcane", "uncommon_herb", "uncommon_component"].includes(type)) return "U";
+        if (["divine", "elemental", "rare_metal", "rare_essence", "rare_gem", "rare_monster_part", "rare_component"].includes(type)) return "R";
         return "VR";
     };
 
