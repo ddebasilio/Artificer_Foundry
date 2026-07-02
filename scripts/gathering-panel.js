@@ -689,20 +689,24 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
             
             // Map item types to human-readable rarity groups
             const getRarityGroup = (itemType, mode) => {
-                if (mode === "materials") {
-                    if (["metal", "crafting_supply", "wood", "hide", "natural", "cloth", "paper", "tool"].includes(itemType)) return "Common";
-                    if (["essence", "gem", "monster_part", "arcane"].includes(itemType)) return "Uncommon";
-                    if (["divine", "elemental", "rare_metal", "rare_essence", "rare_gem", "rare_monster_part"].includes(itemType)) return "Rare";
-                    return "Very Rare";
-                } else {
-                    if (["common_herb", "common_mushroom", "common_flower"].includes(itemType)) return "Common";
-                    if (["uncommon_herb", "uncommon_mushroom", "uncommon_flower", "uncommon_component"].includes(itemType)) return "Uncommon";
-                    if (["monster_part", "rare_component"].includes(itemType)) return "Rare";
-                    return "Very Rare";
-                }
+                if (!itemType) return "Common";
+                const t = itemType.toLowerCase();
+                
+                if (t === "common") return "Common";
+                if (t === "uncommon") return "Uncommon";
+                if (t === "rare") return "Rare";
+                if (t === "very_rare" || t === "very rare" || t === "very-rare") return "Very Rare";
+                if (t === "legendary") return "Legendary";
+                if (t === "artifact") return "Artifact";
+
+                if (t.includes("legendary")) return "Legendary";
+                if (t.includes("very_rare") || t.includes("very-rare") || t.includes("planar")) return "Very Rare";
+                if (t.includes("rare") || t.includes("divine") || t.includes("elemental")) return "Rare";
+                if (t.includes("uncommon") || t.includes("essence") || t.includes("gem") || t.includes("monster_part") || t.includes("arcane")) return "Uncommon";
+                return "Common";
             };
 
-            const groups = { "Common": [], "Uncommon": [], "Rare": [], "Very Rare": [] };
+            const groups = { "Common": [], "Uncommon": [], "Rare": [], "Very Rare": [], "Legendary": [], "Artifact": [] };
             for (const item of result.items) {
                 const grp = getRarityGroup(item.type, gatherMode);
                 groups[grp].push(item);
