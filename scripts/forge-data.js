@@ -162,7 +162,24 @@ export function resolveForgeForagingByDC(dc, biomeKey, rollTotal, timeAmount = 1
         return "VR";
     };
 
-    const biomePool = { ...getBiomeMaterials()[biomeKey] };
+    let biomePool = {};
+    if (biomeKey === "all") {
+        const allBiomes = getBiomeMaterials();
+        for (const [bKey, tiers] of Object.entries(allBiomes)) {
+            if (bKey === "all") continue;
+            for (const [t, names] of Object.entries(tiers)) {
+                if (!biomePool[t]) biomePool[t] = [];
+                for (const name of names) {
+                    if (!biomePool[t].includes(name)) biomePool[t].push(name);
+                }
+            }
+        }
+    } else {
+        const source = getBiomeMaterials()[biomeKey] ?? {};
+        for (const [t, names] of Object.entries(source)) {
+            biomePool[t] = [...names];
+        }
+    }
     const allIngredientsByTier = {};
     for (const bPool of Object.values(getBiomeMaterials())) {
         for (const [t, names] of Object.entries(bPool)) {

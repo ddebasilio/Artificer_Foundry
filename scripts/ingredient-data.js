@@ -243,7 +243,24 @@ export function resolveForaging(biomeKey, abundanceKey, timeAmount, timeUnit, ro
         return "VR";
     };
 
-    const biomePool = { ...getBiomeIngredients()[biomeKey] };
+    let biomePool = {};
+    if (biomeKey === "all") {
+        const allBiomes = getBiomeIngredients();
+        for (const [bKey, tiers] of Object.entries(allBiomes)) {
+            if (bKey === "all") continue;
+            for (const [t, names] of Object.entries(tiers)) {
+                if (!biomePool[t]) biomePool[t] = [];
+                for (const name of names) {
+                    if (!biomePool[t].includes(name)) biomePool[t].push(name);
+                }
+            }
+        }
+    } else {
+        const source = getBiomeIngredients()[biomeKey] ?? {};
+        for (const [t, names] of Object.entries(source)) {
+            biomePool[t] = [...names];
+        }
+    }
     const allIngredientsByTier = {};
     for (const bPool of Object.values(getBiomeIngredients())) {
         for (const [t, names] of Object.entries(bPool)) {
@@ -362,7 +379,24 @@ export function resolveForagingByDC(dc, biomeKey, rollTotal, timeAmount = 1, tim
         return "VR";
     };
 
-    const biomePool = getBiomeIngredients()[biomeKey] ?? {};
+    let biomePool = {};
+    if (biomeKey === "all") {
+        const allBiomes = getBiomeIngredients();
+        for (const [bKey, tiers] of Object.entries(allBiomes)) {
+            if (bKey === "all") continue;
+            for (const [t, names] of Object.entries(tiers)) {
+                if (!biomePool[t]) biomePool[t] = [];
+                for (const name of names) {
+                    if (!biomePool[t].includes(name)) biomePool[t].push(name);
+                }
+            }
+        }
+    } else {
+        const source = getBiomeIngredients()[biomeKey] ?? {};
+        for (const [t, names] of Object.entries(source)) {
+            biomePool[t] = [...names];
+        }
+    }
     const allIngredientsByTier = {};
     for (const bPool of Object.values(getBiomeIngredients())) {
         for (const [t, names] of Object.entries(bPool)) {
