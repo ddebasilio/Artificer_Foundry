@@ -35,7 +35,7 @@ export class GatheringPanel extends HandlebarsApplicationMixin(AbstractSidebarTa
 
     constructor(options = {}) {
         super(options);
-        this.biome      = game.settings?.get(MODULE_ID, "defaultBiome") || "forest";
+        this.biome      = game.settings?.get(MODULE_ID, "defaultBiome") || "all";
         this.abundance  = "medium";
         this.timeAmount = 1;
         this.timeUnit   = "hours";

@@ -81,7 +81,7 @@ Hooks.once('init', function () {
         scope: "world",
         config: true,
         type: String,
-        default: "forest"
+        default: "all"
     });
 
     game.settings.register(MODULE_ID, "activeGatherRequests", {
