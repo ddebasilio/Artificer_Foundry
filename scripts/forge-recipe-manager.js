@@ -12,7 +12,13 @@ export class ForgeRecipeManager {
     async loadRecipes() {
         if (this._loaded) return;
         const resp = await fetch("modules/artificer-foundry/data/forge-recipes.json");
-        this.recipes = await resp.json();
+        const data = await resp.json();
+        this.recipes = data.map(r => {
+            if (r.rarity) {
+                r.rarity = r.rarity.toLowerCase().replace(/[\s-]+/g, "_");
+            }
+            return r;
+        });
         this._loaded = true;
     }
 

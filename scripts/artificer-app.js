@@ -669,7 +669,8 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
         // Alchemy Recipes (Potion list)
         const filteredAlchemy = allAlchemyRecipes.filter(r => {
-            if (this.recipeRarityFilter !== "all" && r.rarity !== this.recipeRarityFilter) return false;
+            const normRarity = r.rarity ? r.rarity.toLowerCase().replace(/[\s-]+/g, "_") : "common";
+            if (this.recipeRarityFilter !== "all" && normRarity !== this.recipeRarityFilter) return false;
             if (this.recipeCraftableFilter && !checkAlchemyAvailable(r)) return false;
             if (!this.recipeShowKnown && r.isLearned) return false;
             if (!this.recipeShowUnknown && !r.isLearned) return false;
@@ -681,9 +682,10 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
             }
             return true;
         }).map(r => {
+            const normRarity = r.rarity ? r.rarity.toLowerCase().replace(/[\s-]+/g, "_") : "common";
             const isHealingPotion = /healing/i.test(r.name);
             const speedMult = this._getAlchemySpeedMultiplier();
-            const ct = getCraftingTime(r.rarity, speedMult, isHealingPotion);
+            const ct = getCraftingTime(normRarity, speedMult, isHealingPotion);
 
             // Check availability
             let availableTypes = 0;
@@ -697,6 +699,7 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
             }
             return {
                 ...r,
+                rarity: normRarity,
                 craftingTimeLabel: formatCraftingTime(ct.days),
                 craftingCost: ct.cost,
                 allAvailable: availableTypes === r.ingredients.length,
@@ -706,7 +709,8 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
         // Forge Blueprints List
         const filteredForge = allForgeRecipes.filter(r => {
-            if (this.recipeRarityFilter !== "all" && r.rarity !== this.recipeRarityFilter) return false;
+            const normRarity = r.rarity ? r.rarity.toLowerCase().replace(/[\s-]+/g, "_") : "common";
+            if (this.recipeRarityFilter !== "all" && normRarity !== this.recipeRarityFilter) return false;
             if (this.recipeCraftableFilter && !checkForgeAvailable(r)) return false;
             if (!this.recipeShowKnown && r.isLearned) return false;
             if (!this.recipeShowUnknown && !r.isLearned) return false;
@@ -718,8 +722,9 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
             }
             return true;
         }).map(r => {
+            const normRarity = r.rarity ? r.rarity.toLowerCase().replace(/[\s-]+/g, "_") : "common";
             const speedMult = this._getForgeSpeedMultiplier(r);
-            const ct = getForgeCraftingTime(r.rarity, speedMult);
+            const ct = getForgeCraftingTime(normRarity, speedMult);
 
             let availableTypes = 0;
             for (const ing of r.ingredients) {
@@ -732,6 +737,7 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
             }
             return {
                 ...r,
+                rarity: normRarity,
                 craftingTimeLabel: formatForgeCraftingTime(ct.days),
                 craftingCost: ct.cost,
                 allAvailable: availableTypes === r.ingredients.length,
