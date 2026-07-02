@@ -441,33 +441,21 @@
         <div class="recipe-list-container">
             <div class="recipe-list">
                 {{#if isAlchemyTab}}
-                    {{#each alchemyCategories}}
-                        <div class="category-group {{#if this.collapsed}}collapsed{{/if}}" data-category-id="{{this.id}}">
-                            <div class="category-header" data-category-id="{{this.id}}">
-                                <span class="category-name">
-                                    <i class="fas {{#if this.collapsed}}fa-chevron-right{{else}}fa-chevron-down{{/if}} toggle-icon"></i>
-                                    {{this.name}} ({{this.recipes.length}})
+                    {{#each alchemyRecipes}}
+                        <div class="recipe-item rarity-{{this.rarity}} {{#unless this.isLearned}}unknown{{/unless}} {{#if (eq ../selectedRecipe.id this.id)}}selected{{/if}}" data-recipe-id="{{this.id}}">
+                            <div class="recipe-item-header">
+                                <span class="recipe-name">
+                                    {{this.name}}
                                 </span>
-                            </div>
-                            <div class="category-recipes" style="{{#if this.collapsed}}display: none;{{/if}}">
-                                {{#each this.recipes}}
-                                    <div class="recipe-item rarity-{{this.rarity}} {{#unless this.isLearned}}unknown{{/unless}} {{#if (eq ../../selectedRecipe.id this.id)}}selected{{/if}}" data-recipe-id="{{this.id}}">
-                                        <div class="recipe-item-header">
-                                            <span class="recipe-name">
-                                                {{this.name}}
-                                            </span>
-                                            <div class="recipe-actions">
-                                                {{#if this.isLearned}}
-                                                    <i class="fas fa-check-circle known-badge" title="Known"></i>
-                                                    <a class="forget-recipe-btn" data-recipe-id="{{this.id}}" title="Forget"><i class="fas fa-trash-alt"></i></a>
-                                                {{else}}
-                                                    <i class="fas fa-lock unknown-lock-icon" title="Unknown"></i>
-                                                    <a class="learn-recipe-btn" data-recipe-id="{{this.id}}" title="Teach"><i class="fas fa-graduation-cap"></i></a>
-                                                {{/if}}
-                                            </div>
-                                        </div>
-                                    </div>
-                                {{/each}}
+                                <div class="recipe-actions">
+                                    {{#if this.isLearned}}
+                                        <i class="fas fa-check-circle known-badge" title="Known"></i>
+                                        <a class="forget-recipe-btn" data-recipe-id="{{this.id}}" title="Forget"><i class="fas fa-trash-alt"></i></a>
+                                    {{else}}
+                                        <i class="fas fa-lock unknown-lock-icon" title="Unknown"></i>
+                                        <a class="learn-recipe-btn" data-recipe-id="{{this.id}}" title="Teach"><i class="fas fa-graduation-cap"></i></a>
+                                    {{/if}}
+                                </div>
                             </div>
                         </div>
                     {{else}}

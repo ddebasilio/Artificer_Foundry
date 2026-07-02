@@ -931,6 +931,18 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
             workstationSlots.every(s => s.isFilled) &&
             hasEnoughForQuantity;
 
+        const getRarityWeight = (rarity) => {
+            if (!rarity) return 99;
+            const r = rarity.toLowerCase().replace(/_/g, " ");
+            if (r === "common") return 1;
+            if (r === "uncommon") return 2;
+            if (r === "rare") return 3;
+            if (r === "very rare") return 4;
+            if (r === "legendary") return 5;
+            if (r === "artifact") return 6;
+            return 99;
+        };
+
         // Group recipes into collapsible category submenus
         const groupRecipes = (list, collapsedSet) => {
             const groups = {};
@@ -942,6 +954,17 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                 }
                 groups[cat].recipes.push(r);
             }
+            
+            // Sort recipes inside each category by rarity, then name
+            for (const g of Object.values(groups)) {
+                g.recipes.sort((a, b) => {
+                    const wA = getRarityWeight(a.rarity);
+                    const wB = getRarityWeight(b.rarity);
+                    if (wA !== wB) return wA - wB;
+                    return a.name.localeCompare(b.name);
+                });
+            }
+
             return Object.entries(groups)
                 .map(([id, g]) => ({
                     id,
@@ -952,7 +975,12 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
                 .sort((a, b) => a.name.localeCompare(b.name));
         };
 
-        const alchemyCategories = groupRecipes(filteredAlchemy, this.collapsedAlchemyCategories);
+        const alchemyRecipes = [...filteredAlchemy].sort((a, b) => {
+            const wA = getRarityWeight(a.rarity);
+            const wB = getRarityWeight(b.rarity);
+            if (wA !== wB) return wA - wB;
+            return a.name.localeCompare(b.name);
+        });
         const forgeCategories = groupRecipes(filteredForge, this.collapsedForgeCategories);
 
         // Unified Queue projects
@@ -1069,7 +1097,7 @@ export class ArtificerApp extends HandlebarsApplicationMixin(ApplicationV2) {
             activeRecipeTab: this.activeRecipeTab,
             isAlchemyTab: this.activeRecipeTab === "alchemy",
             isForgeTab: this.activeRecipeTab === "forge",
-            alchemyCategories,
+            alchemyRecipes,
             forgeCategories,
 
             isAlchemist,
