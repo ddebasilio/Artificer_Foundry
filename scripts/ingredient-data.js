@@ -92,6 +92,40 @@ export function getSkillOptions() {
     return _biomeData?.skillOptions ?? [];
 }
 
+export function getItemTier(name) {
+    if (!name) return "common";
+    const nameLower = name.toLowerCase();
+
+    const pBiomes = getBiomeIngredients() || {};
+    for (const biomeData of Object.values(pBiomes)) {
+        if (!biomeData || typeof biomeData !== "object") continue;
+        for (const [tier, names] of Object.entries(biomeData)) {
+            if (Array.isArray(names) && names.some(n => n.toLowerCase() === nameLower)) {
+                return tier;
+            }
+        }
+    }
+
+    const getForgeBiomes = window.ArtificerFoundry?.getBiomeMaterials;
+    const fBiomes = getForgeBiomes ? getForgeBiomes() : {};
+    for (const biomeData of Object.values(fBiomes)) {
+        if (!biomeData || typeof biomeData !== "object") continue;
+        for (const [tier, names] of Object.entries(biomeData)) {
+            if (Array.isArray(names) && names.some(n => n.toLowerCase() === nameLower)) {
+                return tier;
+            }
+        }
+    }
+
+    const staticVeryRare = ["Phoenix Ash", "Shadow Essence", "Vampire Dust", "Paladin's Tear", "Celestial Feather", "Cloud Giant Heartstring", "Medusa Blood", "Storm Giant Blood", "Adamantine Ingot", "Mithral Ingot", "Superior Arcane Essence"];
+    if (staticVeryRare.some(n => n.toLowerCase() === nameLower)) return "very_rare_component";
+
+    const staticLegendary = ["Lich Finger Bone", "Unicorn Horn", "Dragon Heart", "Dragon Scale", "Demon Horn Fragment", "Legendary Core"];
+    if (staticLegendary.some(n => n.toLowerCase() === nameLower)) return "legendary_component";
+
+    return "common";
+}
+
 // ─── Substitution logic ──────────────────────────────────────────────────────
 
 export function canSubstitute(ingredientName, requiredName, recipeRarity) {
@@ -261,6 +295,32 @@ export function resolveForaging(biomeKey, abundanceKey, timeAmount, timeUnit, ro
             biomePool[t] = [...names];
         }
     }
+
+    const recipeIngredients = new Set();
+    const recipeManager = window.ArtificerFoundry?.recipeManager;
+    if (recipeManager?.recipes) {
+        for (const recipe of recipeManager.recipes) {
+            for (const ing of recipe.ingredients) {
+                recipeIngredients.add(ing.name);
+            }
+        }
+    }
+
+    for (const ingName of recipeIngredients) {
+        let exists = false;
+        for (const names of Object.values(biomePool)) {
+            if (names.some(n => n.toLowerCase() === ingName.toLowerCase())) {
+                exists = true;
+                break;
+            }
+        }
+        if (!exists) {
+            const tier = getItemTier(ingName);
+            if (!biomePool[tier]) biomePool[tier] = [];
+            biomePool[tier].push(ingName);
+        }
+    }
+
     const allIngredientsByTier = {};
     for (const bPool of Object.values(getBiomeIngredients())) {
         for (const [t, names] of Object.entries(bPool)) {
@@ -397,6 +457,32 @@ export function resolveForagingByDC(dc, biomeKey, rollTotal, timeAmount = 1, tim
             biomePool[t] = [...names];
         }
     }
+
+    const recipeIngredientsByDC = new Set();
+    const recipeManagerByDC = window.ArtificerFoundry?.recipeManager;
+    if (recipeManagerByDC?.recipes) {
+        for (const recipe of recipeManagerByDC.recipes) {
+            for (const ing of recipe.ingredients) {
+                recipeIngredientsByDC.add(ing.name);
+            }
+        }
+    }
+
+    for (const ingName of recipeIngredientsByDC) {
+        let exists = false;
+        for (const names of Object.values(biomePool)) {
+            if (names.some(n => n.toLowerCase() === ingName.toLowerCase())) {
+                exists = true;
+                break;
+            }
+        }
+        if (!exists) {
+            const tier = getItemTier(ingName);
+            if (!biomePool[tier]) biomePool[tier] = [];
+            biomePool[tier].push(ingName);
+        }
+    }
+
     const allIngredientsByTier = {};
     for (const bPool of Object.values(getBiomeIngredients())) {
         for (const [t, names] of Object.entries(bPool)) {

@@ -1,8 +1,8 @@
 import { ArtificerApp } from "./artificer-app.js";
 import { RecipeManager } from "./recipe-manager.js";
 import { ForgeRecipeManager } from "./forge-recipe-manager.js";
-import { loadIngredientData, getTypeLabels, getIngredientCosts } from "./ingredient-data.js";
-import { loadForgeData, getForgeTypeLabels, getForgeMaterialCosts } from "./forge-data.js";
+import { loadIngredientData, getTypeLabels, getIngredientCosts, getBiomeIngredients } from "./ingredient-data.js";
+import { loadForgeData, getForgeTypeLabels, getForgeMaterialCosts, getBiomeMaterials } from "./forge-data.js";
 import { loadPotionData } from "./potion-data.js";
 import { loadItemData } from "./item-data.js";
 import { GatheringPanel } from "./gathering-panel.js";
@@ -264,6 +264,8 @@ Hooks.once('ready', async function () {
     window.ArtificerFoundry = {
         recipeManager,
         forgeRecipeManager,
+        getBiomeIngredients,
+        getBiomeMaterials,
         showCraftingApp: (actor) => new CraftingApp(actor ?? null).render(true),
         showForgeApp: (actor) => new ForgeApp(actor ?? null).render(true),
         showLootGenerator: () => {

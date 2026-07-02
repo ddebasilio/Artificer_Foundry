@@ -3,7 +3,7 @@
  * Loaded from data/forge-materials.json at runtime.
  */
 
-import { getAbundanceModifiers, getTimeUnits, getIngredientCosts, getArtificerBag, getGatheringDice, rollFormula, calculateGroupWeights } from "./ingredient-data.js";
+import { getAbundanceModifiers, getTimeUnits, getIngredientCosts, getArtificerBag, getGatheringDice, rollFormula, calculateGroupWeights, getItemTier } from "./ingredient-data.js";
 
 let _forgeData = null;
 
@@ -180,6 +180,32 @@ export function resolveForgeForagingByDC(dc, biomeKey, rollTotal, timeAmount = 1
             biomePool[t] = [...names];
         }
     }
+
+    const forgeRecipeIngredients = new Set();
+    const forgeRecipeManager = window.ArtificerFoundry?.forgeRecipeManager;
+    if (forgeRecipeManager?.recipes) {
+        for (const recipe of forgeRecipeManager.recipes) {
+            for (const ing of recipe.ingredients) {
+                forgeRecipeIngredients.add(ing.name);
+            }
+        }
+    }
+
+    for (const ingName of forgeRecipeIngredients) {
+        let exists = false;
+        for (const names of Object.values(biomePool)) {
+            if (names.some(n => n.toLowerCase() === ingName.toLowerCase())) {
+                exists = true;
+                break;
+            }
+        }
+        if (!exists) {
+            const tier = getItemTier(ingName);
+            if (!biomePool[tier]) biomePool[tier] = [];
+            biomePool[tier].push(ingName);
+        }
+    }
+
     const allIngredientsByTier = {};
     for (const bPool of Object.values(getBiomeMaterials())) {
         for (const [t, names] of Object.entries(bPool)) {
